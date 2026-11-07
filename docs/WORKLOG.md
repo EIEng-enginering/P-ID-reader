@@ -9,3 +9,5 @@
 7. Benchmark loop found and fixed two reader defects (reversed text on /Rotate 180 pages; touching labels) and a generator defect (overlapping valve glyphs).
 8. Real-library survey exposed the real limits (docs/WIN_R01_STATUS.md §3).
 9. Frozen app built with PyInstaller (`C:\PIDWork\build\dist\PIDReader`, 367 MB): CLI import with OCR OK (11 s for a scanned sheet), isolated batch via frozen worker OK after the shared dispatcher fix, GUI launches.
+10. Installer rehearsal (this PC, zip form, temp InstallDir): install → exe + shortcut + Apps&features key present → CLI help OK → GUI launched and stayed alive → uninstall removed exe, shortcut and key and left project data. IExpress self-extractor (`PIDReader-Setup-<ver>.exe`) built by `packaging/build_installer.ps1`; its own run was not executed here to avoid installing into the owner's real profile unprompted.
+11. Final suite on Python 3.12.10: 200 passed, 5 skipped (Tesseract-binary and symlink-privilege dependent). Preflight PASS.
