@@ -476,6 +476,11 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage("Warning: this project lives in a synced folder; frequent database writes there can "
                                          "conflict with sync. Local app-data is safer.", 20000)
         self.refresh_all()
+        count = self.db.db.execute("SELECT count(*) FROM extraction").fetchone()[0]
+        self.statusBar().showMessage(
+            f"Project opened: {count} drawing(s). Double-click a drawing on the left to view it; F5 analyses it; "
+            "everything shown is an unverified proposal." if count else
+            "New project. Import PDFs with Ctrl+I (File menu).", 20000)
         if self.db.migration_backup:
             self.info(f"Project upgraded; previous copy kept at {self.db.migration_backup}")
 

@@ -205,3 +205,16 @@ def test_teach_mode_mouse_drag_emits_normalised_box(qapp):
     assert 0 <= b['x0'] < b['x1'] <= 1 and 0 <= b['y0'] < b['y1'] <= 1
     v.set_teach_mode(False)
     v.close()
+
+
+def test_window_larger_than_screen_is_fitted(qapp, tmp_path):
+    from PySide6.QtGui import QGuiApplication
+    from pid_reader.ui import main_window as mw
+    from pid_reader.ui.app import fit_window_to_screen
+    w = mw.MainWindow(str(tmp_path / 'f.sqlite'))
+    w.resize(6000, 4000)
+    w.show()
+    fit_window_to_screen(w)
+    area = QGuiApplication.primaryScreen().availableGeometry()
+    assert w.frameGeometry().width() <= area.width() and w.frameGeometry().height() <= area.height()
+    w.close()
