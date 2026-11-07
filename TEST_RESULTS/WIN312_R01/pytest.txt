@@ -1,10 +1,10 @@
-..............................sss....................................... [ 40%]
-...............................s........................................ [ 81%]
-..............s.................                                         [100%]
+..................................sss................................... [ 35%]
+...................................s.................................... [ 70%]
+..................s..........................................            [100%]
 =========================== short test summary info ===========================
 SKIPPED [1] tests\test_ocr.py:5: Optional local Tesseract not installed
 SKIPPED [1] tests\test_ocr.py:19: Optional local Tesseract not installed
 SKIPPED [1] tests\test_ocr.py:28: Optional local Tesseract not installed
 SKIPPED [1] tests\test_rev_o.py:168: Symlink creation needs Windows Developer Mode/elevation; see test_batch_rejects_windows_reparse_point
 SKIPPED [1] tests\test_text_links.py:215: Local Tesseract is optional
-171 passed, 5 skipped in 32.49s
+200 passed, 5 skipped in 101.21s (0:01:41)
