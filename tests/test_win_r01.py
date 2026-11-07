@@ -199,3 +199,39 @@ def test_batch_cancel_leaves_remaining_files_resumable(tmp_path):
         assert done_before < 3
         job = resume_batch(db, bid, isolated=True)          # safe resume
         assert job['state'] == 'COMPLETE' and job['counts']['imported'] == 3
+
+
+# ---- unified findings -------------------------------------------------------
+
+@pytest.mark.parametrize('fixture', ['synthetic_catalog_symbols.pdf', 'synthetic_signal_links.pdf'])
+def test_findings_cover_layers_and_review_round_trips(tmp_path, fixture):
+    from pid_reader.engineering.pipeline import analyze_drawing
+    from pid_reader.engineering import findings
+    pdf = (FIX / fixture).read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename=fixture)
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        analyze_drawing(db, eid, ocr_engine='rapidocr' if ocr_source.rapidocr_available() else None)
+        total = 0
+        for layer in findings.LAYERS:
+            items = findings.list_findings(db, eid, layer)
+            total += len(items)
+            for it in items:
+                assert it['state'] == 'PROPOSED'
+                assert it['page'] >= 1
+                if it['bbox'] is not None:
+                    assert 0 <= it['bbox']['x0'] < it['bbox']['x1'] <= 1
+        assert total > 0
+        # review one finding of the first populated layer, state flips, audit chain intact
+        layer = next(l for l in findings.LAYERS if findings.list_findings(db, eid, l))
+        first = findings.list_findings(db, eid, layer)[0]
+        decision = findings.DECISIONS[layer][-1] if findings.DECISIONS[layer][-1] == 'UNRESOLVED' else 'UNRESOLVED'
+        findings.review_finding(db, layer, first['id'], actor='Reviewer A', decision=decision,
+                                reason='Checked against printed drawing')
+        again = findings.list_findings(db, eid, layer)[0]
+        assert again['state'] == decision
+        assert db.verify_audit_chain()
+        with pytest.raises(ValueError):
+            findings.review_finding(db, layer, first['id'], actor='X', decision='NOPE', reason='bad one')
+        counts = findings.finding_counts(db, eid)
+        assert counts[layer]['reviewed'] >= 1
