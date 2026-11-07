@@ -66,3 +66,15 @@ Worksheet worker: `python -m pid_reader.worker run --input … --params … --ou
 *File → Back up project…* (or `backup-project`) writes a consistent SQLite copy. Opening a project from an older schema creates a
 `.pre-vN-<timestamp>.sqlite` copy beside it first. To recover: close the app, copy a backup over the project file, reopen, then
 *Audit → Verify audit chain*. Every import, analysis and decision is an audit event; a broken chain is reported in red.
+
+## 6. New in this update (Rev W integration + teach-by-example)
+
+* **Teach symbol** (button above the drawing): switch it on, drag a box round *one* symbol (a valve, a bubble, anything), name it, and the program
+  proposes look-alikes on that page (about ±15 % size, all four rotations). They appear as the cyan **Taught symbols** layer and in the Findings panel under
+  "Taught-symbol matches"; accept the right ones and reject the rest (reasoned, audited). No training, nothing leaves the PC. Limits: it finds shapes that
+  *look alike*; it does not know what they are; a bare circle matches every circle.
+* **Sheet info** tab: title-block candidates (drawing number, revision, sheet n of m, date), line sizes and numbers, set-points, notes; instrument tags grouped by
+  printed loop number (a reading aid, not a safety loop); reading checks (duplicates, tags outside bubbles, bubbles without tags, single-member loops). Click a row to jump to it.
+* **Reports tab:** Excel workbook (registers, valves incl. taught look-alikes, instruments, loops, lines, sheet info, findings, connections, checks, notes, OCR words),
+  canonical connectivity graph (JSON, GraphML), and the HTML report now contains an annotated drawing, sheet information, loops, checks, layers, findings and all OCR words.
+* **Command line:** `export-xlsx`, `graph-export`, `teach-symbol`, `sheet-info`.

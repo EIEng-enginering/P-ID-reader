@@ -14,3 +14,9 @@
 - Docs: USER_GUIDE, WIN_R01_STATUS, ADRs, issues W-001…W-012; `requirements-lock-win312.txt`.
 ### Unchanged by design
 - R1 contract ZIP, `api.read_pid` behaviour, worker protocol and exit codes, R1 schema v1, standalone DB schema v9.
+
+## Rev W integration + teach-by-example (7 Nov 2026, later)
+- Integrated ChatGPT Rev W (0.17.0-dev0: raster geometry, hardened publication/isolated-reader checks, benchmark registry); OpenCV 4/5 compatible; 312 tests green on Windows.
+- Added: teach-by-example symbol finder (additive tables, audited review, Findings layer, viewer teach mode), sheet-information extractor, reading checks and loop groups, Excel export, canonical graph JSON (validated against the spec schema) and GraphML, Sheet info tab, report sections, CLI commands.
+- Fixed: raster-layer row-limit crash in report/workbook/GUI; console encoding crash on OCR characters.
+- Tests: 327 passing, 6 skipped (Tesseract binary absent, symlink privilege).

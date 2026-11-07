@@ -57,3 +57,13 @@ engineering-validated. Gate vocabulary: `PASS` (executed, evidence kept), `FAIL`
 * Still failing on S023: **no valves** (filled/curved glyphs), no line-number records (`NPS 20`…), equipment blocks (heater, manifolds) not read as equipment, no flow direction, no loops, title block/tables not parsed.
 * Reports now include analysis layers, findings, proposed connectivity, all OCR words and an annotated drawing image (HTML); JSON has the same data without images.
 * Full-library run (608 sheets) was started and **stopped after 15 sheets** by the owner; throughput lesson: OCR processes must be thread-limited (`PID_OCR_THREADS`) — three unrestricted OCR engines on four cores ran ~7× slower than one.
+
+## 5. Update: Rev W integration and teach-by-example (later 7 Nov 2026)
+| Item | Status | Evidence |
+|---|---|---|
+| Rev W integrated, Windows 3.12, OpenCV 5 | PASS | 312 tests then; now 327 pass, 6 skip |
+| Teach-by-example (S023: one valve taught → 10 look-alikes found) | PASS on S023 and a synthetic sheet; **accuracy not measured** | `tests/test_win_r01.py`, packaged CLI run |
+| Sheet info (S023: drawing no., rev C, sheet 1 of 2, dates, 7 set-points, line sizes noisy) | PASS as candidates | packaged `sheet-info` |
+| Excel / GraphML / canonical JSON exports | PASS (schema-validated graph) | tests + packaged CLI |
+| Real-sheet recognition overall | **still weak**: no valve *class* recognition without teaching; line sizes noisy; most real sheets yield no tags | W-001..W-004 |
+| WP-10 DEXPI, WP-11 independent benchmark, WP-12 legal/host | NOT_RUN / BLOCKED (need owner, reviewer, legal, host) | |
