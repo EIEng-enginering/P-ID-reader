@@ -62,7 +62,13 @@ def _rapid_engine():
     if _RAPID is None:
         from rapidocr_onnxruntime import RapidOCR
         # detector side limit large enough that a whole tile is processed at native resolution
-        _RAPID = RapidOCR(det_limit_side_len=1280, det_limit_type='max')
+        import os
+        kwargs = dict(det_limit_side_len=1280, det_limit_type='max')
+        threads = os.environ.get('PID_OCR_THREADS', '')
+        if threads.isdigit() and int(threads) > 0:      # several OCR processes sharing a PC should not each use every core
+            n = int(threads)
+            kwargs.update(det_intra_op_num_threads=n, cls_intra_op_num_threads=n, rec_intra_op_num_threads=n)
+        _RAPID = RapidOCR(**kwargs)
     return _RAPID
 
 
@@ -198,13 +204,14 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
     chosen=tuple(range(1,count+1)) if pages is None else tuple(pages)
     if not chosen or len(chosen)!=len(set(chosen)) or any(type(n) is not int or not 1<=n<=count for n in chosen):
         raise ValueError('Unique, valid OCR page selection required')
+    auto_dpi = dpi is None
     if dpi is None:
         # Default 180 dpi; RapidOCR gets up to 240 dpi (small drawing lettering needs the pixels)
         # as far as the pixel budget allows for the largest selected page.
         dpi=180
         if engine=='rapidocr':
             biggest=max(pdf[n-1].get_size()[0]*pdf[n-1].get_size()[1] for n in chosen)
-            dpi=int(max(150,min(240,72*(max_pixels/biggest)**0.5*0.97)))
+            dpi=int(max(72,min(240,72*(max_pixels/biggest)**0.5*0.97)))
     document_sha=sha256(pdf_bytes).hexdigest()
     if engine == 'rapidocr':
         engine_version=_rapid_version()
@@ -228,7 +235,10 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
         if not all(isfinite(v) and v>0 for v in (width,height)):
             raise ValueError('Invalid OCR page dimensions')
         if ceil(width*scale)*ceil(height*scale)>max_pixels:
-            raise ValueError('OCR page render exceeds pixel budget')
+            if not auto_dpi:
+                raise ValueError('OCR page render exceeds pixel budget')
+            # automatic resolution: shrink this page's render just enough to fit the budget
+            scale*=(max_pixels/(ceil(width*scale)*ceil(height*scale)))**0.5*0.97
         bitmap=page.render(scale=scale)
         image=bitmap.to_pil().convert('RGB')
         if engine == 'rapidocr':
