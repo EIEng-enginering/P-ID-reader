@@ -120,8 +120,10 @@ def main(argv: list[str] | None = None) -> int:
     # Rev O: bounded batch import, source-revision proposal comparisons and indexed search.
     bi=sub.add_parser('batch-import');bi.add_argument('database');bi.add_argument('inputs',nargs='+')
     bi.add_argument('--actor',required=True);bi.add_argument('--stop-after',type=int)
+    bi.add_argument('--in-process',action='store_true',help='Read PDFs inside this process (default: isolated child with time/memory limits)')
     br=sub.add_parser('batch-resume');br.add_argument('database');br.add_argument('batch_id')
     br.add_argument('--stop-after',type=int)
+    br.add_argument('--in-process',action='store_true')
     bs=sub.add_parser('batch-status');bs.add_argument('database');bs.add_argument('batch_id')
     rc=sub.add_parser('compare-revisions');rc.add_argument('database');rc.add_argument('before_extraction_id')
     rc.add_argument('after_extraction_id');rc.add_argument('--output-json')
@@ -359,11 +361,11 @@ def main(argv: list[str] | None = None) -> int:
             elif args.cmd=='batch-import':
                 from .engineering.batch import start_batch,resume_batch
                 bid=start_batch(db,args.inputs,actor=args.actor)
-                job=resume_batch(db,bid,stop_after=args.stop_after)
+                job=resume_batch(db,bid,stop_after=args.stop_after,isolated=not args.in_process)
                 print(canonical_json({'batch_id':bid,'state':job['state'],'counts':job['counts']}))
             elif args.cmd=='batch-resume':
                 from .engineering.batch import resume_batch
-                job=resume_batch(db,args.batch_id,stop_after=args.stop_after)
+                job=resume_batch(db,args.batch_id,stop_after=args.stop_after,isolated=not args.in_process)
                 print(canonical_json({'batch_id':job['batch_id'],'state':job['state'],'counts':job['counts']}))
             elif args.cmd=='batch-status':
                 print(canonical_json(db.get_batch(args.batch_id)))

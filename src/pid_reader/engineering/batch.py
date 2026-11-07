@@ -8,7 +8,7 @@ accepting changed source bytes; no background service or live folder watcher.
 from __future__ import annotations
 import hashlib
 from pathlib import Path
-from ..api import ReadParams, read_pid, RefusedInput, LimitExceeded
+from ..api import ReadParams, read_pid, RefusedInput, LimitExceeded, Cancelled
 
 MAX_FILES = 250
 MAX_CANDIDATES = 500
@@ -85,7 +85,15 @@ def start_batch(db, inputs: list[str | Path], *, actor: str, params: ReadParams 
     return db.create_batch(manifest, actor=actor, params=params.as_dict())
 
 
-def resume_batch(db, batch_id: str, *, stop_after: int | None = None) -> dict:
+def resume_batch(db, batch_id: str, *, stop_after: int | None = None, isolated: bool = False,
+                 should_cancel=None, progress=None, timeout_s: int = 180, memory_mb: int = 2048) -> dict:
+    """Import the not-yet-recorded files of a batch.
+
+    ``isolated=True`` reads every PDF in a resource-limited child process
+    (timeout, memory cap, kill-on-cancel). If ``should_cancel()`` becomes true the
+    current file is *not* recorded, so a later resume re-reads it; the batch then
+    simply stays INCOMPLETE. ``progress(done, total, name)`` is called per file.
+    """
     if stop_after is not None and (type(stop_after) is not int or stop_after < 1):
         raise ValueError('stop_after must be a positive integer')
     job = db.get_batch(batch_id)
@@ -98,6 +106,10 @@ def resume_batch(db, batch_id: str, *, stop_after: int | None = None) -> dict:
         if stop_after is not None and new_items >= stop_after:
             break
         new_items += 1
+        if should_cancel is not None and should_cancel():
+            break
+        if progress is not None:
+            progress(len(job['completed_ordinals']) + new_items - 1, len(job['manifest']), item['name'])
         status = 'FAILED'
         extracted_id = None
         detail = 'Not processed'
@@ -111,9 +123,16 @@ def resume_batch(db, batch_id: str, *, stop_after: int | None = None) -> dict:
             source = path.read_bytes()
             if hashlib.sha256(source).hexdigest() != item['sha256']:
                 raise ValueError('Source file changed while being read')
-            result = read_pid(source, params, filename=item['name'], expected_sha256=item['sha256'])
+            if isolated:
+                from .isolation import read_pid_isolated
+                result = read_pid_isolated(source, params, filename=item['name'], expected_sha256=item['sha256'],
+                                           timeout_s=timeout_s, memory_mb=memory_mb, should_cancel=should_cancel)
+            else:
+                result = read_pid(source, params, filename=item['name'], expected_sha256=item['sha256'])
             extracted_id = db.add_extraction(result, source)
             status, detail = 'IMPORTED', 'Source extraction imported as proposals only'
+        except Cancelled:
+            break
         except (RefusedInput, LimitExceeded, ValueError, OSError, KeyError) as exc:
             detail = f'{type(exc).__name__}: {exc}'[:500]
         db.record_batch_outcome(batch_id, ordinal=item['ordinal'], status=status,

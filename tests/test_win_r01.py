@@ -107,3 +107,95 @@ def test_pipeline_cancel_stops_cleanly(tmp_path):
         with pytest.raises(Cancelled):
             analyze_drawing(db, eid, ocr_engine=None, progress=stop, cancel=token)
         assert db.verify_audit_chain()
+
+
+# ---- process isolation ------------------------------------------------------
+import os
+import sys
+import time
+
+
+def test_isolated_reader_matches_in_process_result():
+    from pid_reader.engineering.isolation import read_pid_isolated
+    pdf = (FIX / 'synthetic_pid_vector.pdf').read_bytes()
+    direct = read_pid(pdf, ReadParams(), filename='v.pdf')
+    isolated = read_pid_isolated(pdf, ReadParams(), filename='v.pdf')
+    strip = lambda r: {k: v for k, v in r.items() if k != 'provenance'}
+    assert strip(isolated) == strip(direct)
+    assert isolated['provenance']['input_sha256'] == direct['provenance']['input_sha256']
+
+
+def test_isolated_reader_maps_refusal_codes():
+    from pid_reader.api import RefusedInput
+    from pid_reader.engineering.isolation import read_pid_isolated
+    with pytest.raises(RefusedInput) as exc:
+        read_pid_isolated(b'%PDF-1.4 not really a pdf', ReadParams())
+    assert exc.value.code in ('PID_MALFORMED', 'PID_ENCRYPTED')
+
+
+def test_isolated_reader_cancel_kills_child():
+    from pid_reader.api import Cancelled
+    from pid_reader.engineering.isolation import read_pid_isolated
+    pdf = (FIX / 'synthetic_pid_vector.pdf').read_bytes()
+    t0 = time.monotonic()
+    with pytest.raises(Cancelled):
+        read_pid_isolated(pdf, ReadParams(), should_cancel=lambda: True)
+    assert time.monotonic() - t0 < 10
+
+
+def test_run_limited_timeout_kills_process():
+    from pid_reader.engineering.isolation import run_limited
+    t0 = time.monotonic()
+    code, _err, reason = run_limited([sys.executable, '-c', 'import time; time.sleep(60)'],
+                                     env=dict(os.environ), cwd=os.getcwd(), timeout_s=1, memory_mb=512)
+    assert reason == 'timeout' and time.monotonic() - t0 < 15
+
+
+def test_run_limited_memory_cap_stops_memory_hog():
+    from pid_reader.engineering.isolation import run_limited, memory_cap_enforced
+    if not memory_cap_enforced():
+        pytest.skip('memory cap not enforceable here (already inside a non-nestable job)')
+    code, _err, reason = run_limited(
+        [sys.executable, '-c', 'x = bytearray(1500 * 1024 * 1024); print(len(x))'],
+        env=dict(os.environ), cwd=os.getcwd(), timeout_s=60, memory_mb=512)
+    assert reason == '' and code != 0
+
+
+# ---- batch with isolation / cancellation -----------------------------------
+
+def _copy_fixtures(tmp_path, names):
+    import shutil
+    out = []
+    for n in names:
+        shutil.copy(FIX / n, tmp_path / n)
+        out.append(tmp_path / n)
+    return out
+
+
+def test_batch_isolated_imports_and_records_outcomes(tmp_path):
+    from pid_reader.engineering.batch import start_batch, resume_batch
+    files = _copy_fixtures(tmp_path, ['synthetic_pid_vector.pdf', 'synthetic_rev_o_a.pdf'])
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        bid = start_batch(db, files, actor='Tester')
+        ticks = []
+        job = resume_batch(db, bid, isolated=True, progress=lambda d, t, n: ticks.append((d, t, n)))
+        assert job['counts']['imported'] == 2 and job['state'] == 'COMPLETE'
+        assert len(ticks) == 2 and ticks[0][1] == 2
+        assert db.verify_audit_chain()
+
+
+def test_batch_cancel_leaves_remaining_files_resumable(tmp_path):
+    from pid_reader.engineering.batch import start_batch, resume_batch
+    files = _copy_fixtures(tmp_path, ['synthetic_pid_vector.pdf', 'synthetic_rev_o_a.pdf', 'synthetic_rev_o_b.pdf'])
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        bid = start_batch(db, files, actor='Tester')
+        calls = {'n': 0}
+        def cancel_after_first():
+            calls['n'] += 1
+            return calls['n'] > 3   # a few polls: lets file 1 start, then cancels
+        job = resume_batch(db, bid, isolated=True, should_cancel=cancel_after_first)
+        assert job['state'] == 'INCOMPLETE'
+        done_before = job['counts']['completed']
+        assert done_before < 3
+        job = resume_batch(db, bid, isolated=True)          # safe resume
+        assert job['state'] == 'COMPLETE' and job['counts']['imported'] == 3
