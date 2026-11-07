@@ -401,3 +401,23 @@ def test_text_poor_but_graphics_rich_sheet_is_flagged_for_ocr():
     c.save()
     assert _sparse_vector_pages(out.getvalue(), [1]) == [1]
     assert _sparse_vector_pages((FIX / 'synthetic_pid_vector.pdf').read_bytes(), [1]) == []
+
+
+def test_report_includes_analysis_layers_and_connectivity(tmp_path):
+    from pid_reader.engineering.pipeline import analyze_drawing
+    from pid_reader.engineering.reports import make_report, report_html, verify_report
+    pdf = (FIX / 'synthetic_catalog_symbols.pdf').read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename='c.pdf')
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        analyze_drawing(db, eid, ocr_engine=None)
+        report = make_report(db)
+        assert verify_report(report)
+        block = report['analysis'][0]
+        assert block['layers']['symbols']['count'] > 0 and block['layers']['geometry']['count'] > 0
+        assert block['connectivity']['node_counts']
+        html = report_html(report)
+        for needle in ('Analysis layers', 'Proposed connectivity', 'Findings', 'Outline symbols'):
+            assert needle in html
+        assert 'Valves / line styles' in html
+        assert make_report(db, include_analysis=False)['analysis'] == []

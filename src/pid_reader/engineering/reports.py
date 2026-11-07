@@ -24,8 +24,39 @@ COLUMNS = ["drawing_no", "revision_label", "source_name", "document_sha256",
            "page", "object_class", "tag_text", "state", "reviewed_by", "observation_id"]
 
 
+MAX_FINDINGS_PER_LAYER = 500
+
+
+def _analysis_section(store, eid: str, name: str) -> dict:
+    """Stored analysis layers and proposed connectivity for one drawing (all unverified proposals)."""
+    from .connectivity import drawing_connectivity
+    from .findings import LAYERS, LAYER_TITLES, list_findings
+    layers = {}
+    for layer in LAYERS:
+        items = list_findings(store, eid, layer, limit=2000)
+        by_kind = Counter(i["kind"] for i in items)
+        layers[layer] = {
+            "title": LAYER_TITLES[layer], "count": len(items), "by_kind": dict(sorted(by_kind.items())),
+            "reviewed": sum(1 for i in items if i["state"] != "PROPOSED"),
+            "listed": [{"id": i["id"], "page": i["page"], "kind": i["kind"], "label": i["label"], "state": i["state"],
+                        "bbox": i["bbox"]} for i in items[:MAX_FINDINGS_PER_LAYER]],
+            "truncated": max(0, len(items) - MAX_FINDINGS_PER_LAYER)}
+    graph = drawing_connectivity(store, eid)
+    nodes = graph.get("nodes", [])
+    return {
+        "extraction_id": eid, "source_name": name, "layers": layers,
+        "connectivity": {
+            "node_counts": dict(sorted(Counter(n["kind"] for n in nodes).items())),
+            "attachments": len(graph.get("edges", [])), "free_line_networks": graph.get("free_networks", 0),
+            "tagged_symbols": [{"label": n["label"], "page": n["page"], "bbox": n["bbox"]}
+                               for n in nodes if n["kind"] == "SYMBOL" and n.get("tags")],
+            "paths": [{"a": p["a_label"], "b": p["b_label"], "valve_glyphs": len(p["via_valve_glyphs"]),
+                       "through_tee": p["via_tee"]} for p in graph.get("paths", [])[:MAX_FINDINGS_PER_LAYER]],
+            "limitations": graph.get("limitations", "")}}
+
+
 def make_report(store, *, extraction_ids: list[str] | None = None,
-                max_records: int = 20000) -> dict:
+                max_records: int = 20000, include_analysis: bool = True) -> dict:
     """Build a frozen, hash-verified, read-only report from selected extractions.
 
     Refuse truncation; no summary may pretend to cover records it did not read.
@@ -46,6 +77,7 @@ def make_report(store, *, extraction_ids: list[str] | None = None,
             raise ValueError("Duplicated extraction ID")
     rows: list[dict] = []
     sources: list[dict] = []
+    analysis: list[dict] = []
     state_counts = Counter()
     class_counts = Counter()
     graph_edges = 0
@@ -61,6 +93,8 @@ def make_report(store, *, extraction_ids: list[str] | None = None,
                         "source_sha256": src["sha256"], "registration": registered,
                         "result_sha256": original["provenance"]["result_sha256"],
                         "selected_pages": [p["page"] for p in original["pages"]]})
+        if include_analysis:
+            analysis.append(_analysis_section(store, eid, src["filename"]))
         graph_edges += len(original["connections"])
         warnings_count += len(original["warnings"])
         page = register_page(store, extraction_id=eid, limit=250)
@@ -82,6 +116,7 @@ def make_report(store, *, extraction_ids: list[str] | None = None,
                     "by_review_state": dict(sorted(state_counts.items())),
                     "by_object_class": dict(sorted(class_counts.items()))},
         "readings": rows,
+        "analysis": analysis,
         "limits": {"source": "drawing revisions only", "engineering_validation": "NOT_PERFORMED",
                    "host_integration": "NOT_PERFORMED"},
     }
@@ -178,6 +213,39 @@ def report_html(report: dict, *, include_strokes: bool = False) -> str:
         lines.append("<tr><td>" + esc(src["source_name"]) + "</td><td>" + esc(label) + "</td><td>" +
                      esc(len(src["selected_pages"])) + "</td><td class=\"mono\">" + esc(src["source_sha256"]) + "</td></tr>")
     lines.append("</tbody></table>")
+    for block in report.get("analysis", []):
+        lines.append("<h2>Analysis layers &mdash; " + esc(block["source_name"]) + "</h2>")
+        lines.append("<table><thead><tr><th>Layer</th><th>Found</th><th>Of which</th><th>Reviewed</th></tr></thead><tbody>")
+        for layer in block["layers"].values():
+            kinds = ", ".join(f"{k.replace('_', ' ').lower()}: {n}" for k, n in layer["by_kind"].items()) or "&mdash;"
+            lines.append("<tr><td>" + esc(layer["title"]) + "</td><td>" + str(layer["count"]) + "</td><td>" + kinds +
+                         "</td><td>" + str(layer["reviewed"]) + "</td></tr>")
+        lines.append("</tbody></table>")
+        conn = block["connectivity"]
+        lines.append("<h2>Proposed connectivity &mdash; " + esc(block["source_name"]) + "</h2>")
+        lines.append("<p>Nodes: " + esc(", ".join(f"{k.replace('_', ' ').lower()}: {n}" for k, n in conn["node_counts"].items()) or "none") +
+                     " &bull; line-to-outline attachments: " + str(conn["attachments"]) +
+                     " &bull; paths: " + str(len(conn["paths"])) + "</p>")
+        if conn["tagged_symbols"]:
+            lines.append("<p>Tagged symbols: " + esc(", ".join(t["label"] for t in conn["tagged_symbols"])) + "</p>")
+        if conn["paths"]:
+            lines.append("<table><thead><tr><th>From</th><th>To</th><th>Valve glyphs between</th><th>Through a tee</th></tr></thead><tbody>")
+            for pth in conn["paths"]:
+                lines.append("<tr><td>" + esc(pth["a"]) + "</td><td>" + esc(pth["b"]) + "</td><td>" + str(pth["valve_glyphs"]) +
+                             "</td><td>" + ("yes" if pth["through_tee"] else "no") + "</td></tr>")
+            lines.append("</tbody></table>")
+        lines.append("<p><em>" + esc(conn["limitations"]) + "</em></p>")
+        lines.append("<h2>Findings &mdash; " + esc(block["source_name"]) + "</h2>")
+        for layer in block["layers"].values():
+            if not layer["listed"]:
+                continue
+            lines.append("<details><summary>" + esc(layer["title"]) + " (" + str(layer["count"]) + ")</summary>"
+                         "<table><thead><tr><th>Finding</th><th>Page</th><th>Review</th><th>Position (x, y)</th></tr></thead><tbody>")
+            for f in layer["listed"]:
+                pos = f"{f['bbox']['x0']:.3f}, {f['bbox']['y0']:.3f}" if f.get("bbox") else ""
+                lines.append("<tr><td>" + esc(f["label"]) + "</td><td>" + str(f["page"]) + "</td><td>" + esc(f["state"]) +
+                             "</td><td>" + pos + "</td></tr>")
+            lines.append("</tbody></table>" + ("<p>" + str(layer["truncated"]) + " more in the JSON record.</p>" if layer["truncated"] else "") + "</details>")
     lines.append("<h2>Readings</h2>")
     if not rows:
         lines.append("<p><em>No labelled readings were found on these drawings. This usually means the sheet is scanned, "
