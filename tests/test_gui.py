@@ -220,3 +220,4 @@ def test_window_larger_than_screen_is_fitted(qapp, tmp_path):
     assert w.width() < 6000 and w.height() < 4000
     assert w.width() <= max(area.width(), w.minimumSizeHint().width()) + 2
     w.close()
+

@@ -43,6 +43,9 @@ class RevisionTab(QWidget):
         lay = QVBoxLayout(self)
         row = QHBoxLayout()
         self.before, self.after = QComboBox(), QComboBox()
+        for box in (self.before, self.after):   # long drawing names must not widen the whole window
+            box.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+            box.setMinimumContentsLength(22)
         for lab, box in (("Before:", self.before), ("After:", self.after)):
             row.addWidget(QLabel(lab))
             row.addWidget(box, 1)
@@ -120,6 +123,8 @@ class BatchTab(QWidget):
         row2 = QHBoxLayout()
         row2.addWidget(QLabel("Earlier batches:"))
         self.history = QComboBox()
+        self.history.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
+        self.history.setMinimumContentsLength(22)
         row2.addWidget(self.history, 1)
         rb = QPushButton("Resume selected")
         rb.clicked.connect(self.resume)

@@ -15,7 +15,7 @@ from PySide6.QtGui import QAction, QActionGroup, QColor, QIcon, QKeySequence, QP
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox,
                                QDockWidget, QFileDialog, QFormLayout, QHBoxLayout, QInputDialog, QLabel, QLineEdit,
                                QMainWindow, QMessageBox, QPlainTextEdit, QProgressBar, QPushButton, QSpinBox,
-                               QTableWidget, QTableWidgetItem, QTabWidget, QToolButton, QTreeWidget,
+                               QMenu, QTableWidget, QTableWidgetItem, QTabWidget, QToolButton, QTreeWidget,
                                QTreeWidgetItem, QVBoxLayout, QWidget, QRadioButton, QButtonGroup)
 
 from .. import __version__
@@ -251,16 +251,25 @@ class MainWindow(QMainWindow):
         self.zoom_label = QLabel("100%")
         bar.addWidget(self.zoom_label)
         bar.addSpacing(12)
-        self.layer_boxes: dict[str, QCheckBox] = {}
+        # One compact "Layers" menu instead of nine checkboxes: the toolbar must fit a normal laptop screen.
+        self.layer_boxes: dict[str, QAction] = {}
+        layers_btn = QToolButton()
+        layers_btn.setText("Layers ▾")
+        layers_btn.setToolTip("Choose which detections are drawn on the sheet")
+        layers_btn.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+        layer_menu = QMenu(layers_btn)
         for layer in ("readings", "symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster", "examples"):
-            cb = QCheckBox(LAYER_LABELS[layer])
-            cb.setChecked(self.viewer.layer_visible(layer))
+            act = QAction(LAYER_LABELS[layer], layer_menu)
+            act.setCheckable(True)
+            act.setChecked(self.viewer.layer_visible(layer))
             swatch = QPixmap(12, 12)
             swatch.fill(QColor(LAYER_COLOURS[layer]))
-            cb.setIcon(QIcon(swatch))   # colour key that stays legible in light and dark themes
-            cb.toggled.connect(lambda on, l=layer: self.viewer.set_layer_visible(l, on))
-            self.layer_boxes[layer] = cb
-            bar.addWidget(cb)
+            act.setIcon(QIcon(swatch))   # colour key that stays legible in light and dark themes
+            act.toggled.connect(lambda on, l=layer: self.viewer.set_layer_visible(l, on))
+            layer_menu.addAction(act)
+            self.layer_boxes[layer] = act
+        layers_btn.setMenu(layer_menu)
+        bar.addWidget(layers_btn)
         self.teach_btn = QToolButton()
         self.teach_btn.setText("Teach symbol")
         self.teach_btn.setCheckable(True)
@@ -272,7 +281,7 @@ class MainWindow(QMainWindow):
         self.search_box = QLineEdit()
         self.search_box.setPlaceholderText("Find tag / text on this page and in project (Ctrl+F)")
         self.search_box.setClearButtonEnabled(True)
-        self.search_box.setMinimumWidth(280)
+        self.search_box.setMinimumWidth(180)
         self.search_box.returnPressed.connect(self.run_search)
         bar.addWidget(self.search_box)
         dl.addLayout(bar)
@@ -313,9 +322,11 @@ class MainWindow(QMainWindow):
         gw = QWidget()
         gl = QVBoxLayout(gw)
         gb = QHBoxLayout()
-        gb.addWidget(QLabel("Proposed connectivity for the open drawing, drawn at the items' page positions. "
+        graph_note = QLabel("Proposed connectivity for the open drawing, drawn at the items' page positions. "
                             "Squares: outline symbols • diamonds: valve glyphs • dots: line networks "
-                            "• dashed red: through a tee junction."), 1)
+                            "• dashed red: through a tee junction.")
+        graph_note.setWordWrap(True)
+        gb.addWidget(graph_note, 1)
         gref = QPushButton("Refresh"); gref.clicked.connect(self.refresh_graph); gb.addWidget(gref)
         gl.addLayout(gb)
         self.graph = GraphView()
