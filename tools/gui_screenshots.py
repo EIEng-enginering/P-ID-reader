@@ -40,7 +40,7 @@ w.layer_combo.setCurrentIndex(w.layer_combo.findData("symbols")); w.show_finding
 if w.finding_rows: w.finding_table.selectRow(0)
 w.viewer.fit()
 tag = f"scale{args.scale}"
-names = ["drawing", "registers", "graph", "revisions", "batch", "libraries", "reports", "audit"]
+names = ["drawing", "registers", "graph", "sheetinfo", "revisions", "batch", "libraries", "reports", "audit"]
 for i, n in enumerate(names):
     w.tabs.setCurrentIndex(i)
     if n == "libraries": w.library_tab.example("tag"); w.library_tab.example("cat")

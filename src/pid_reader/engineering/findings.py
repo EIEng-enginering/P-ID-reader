@@ -38,6 +38,10 @@ DECISIONS = {
 }
 
 
+# The store caps how many rows each layer will return per call; ask for no more than that.
+MAX_ROWS = {"raster": 1000, "raster_network": 1000, "raster_centrelines": 3500}
+
+
 def latest_analysis_ids(db, extraction_id: str) -> dict[str, str]:
     """Newest stored analysis id of each layer for a drawing (empty if none)."""
     q = {
@@ -74,6 +78,7 @@ def list_findings(db, extraction_id: str, layer: str, *, limit: int = 500) -> li
     """Findings of one layer: ``{layer, id, page, bbox, kind, label, state, detail}``."""
     if layer not in LAYERS:
         raise ValueError("Unknown analysis layer")
+    limit = min(limit, MAX_ROWS.get(layer, 2000))
     if layer == "examples":
         from .examples import latest_example_review, list_example_candidates
         return [{"layer": layer, "id": c["candidate_id"], "page": c["page"], "bbox": c["bbox"], "kind": c["class_hint"],

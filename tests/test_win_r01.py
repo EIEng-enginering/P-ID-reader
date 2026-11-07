@@ -680,3 +680,46 @@ def test_cli_export_xlsx_graph_teach_and_sheet_info(tmp_path, capsys):
     assert main(['sheet-info', db, eid]) == 0
     info = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
     assert {'sheet_fields', 'loops', 'checks'} <= set(info)
+
+
+def test_exports_work_when_scanned_sheet_has_raster_analysis(tmp_path):
+    """Regression: raster layers cap results at 1000 rows; reports/workbook/GUI asked for 2000 and crashed."""
+    from openpyxl import load_workbook
+    from pid_reader.engineering import findings
+    from pid_reader.engineering.pipeline import analyze_drawing
+    from pid_reader.engineering.reports import make_report, report_html
+    from pid_reader.engineering.xlsx_export import export_xlsx
+    scanned = _scanned_pdf()
+    extraction = read_pid(scanned, ReadParams(), filename='scan.pdf')                 # frozen reader: page refused, no objects
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=scanned)
+        run = analyze_drawing(db, eid, ocr_engine=None)
+        assert run['stages']['raster']['status'] == 'DONE', run['stages']['raster']
+        for layer in findings.LAYERS:
+            findings.list_findings(db, eid, layer, limit=2000)                        # must not raise for any layer
+        assert 'Sheet information' in report_html(make_report(db))
+        export_xlsx(db, tmp_path / 'scan.xlsx')
+        assert 'Findings' in load_workbook(tmp_path / 'scan.xlsx').sheetnames
+
+
+def test_cli_prints_ocr_text_even_if_console_codepage_cannot_encode_it(tmp_path, capsysbinary):
+    import io, json, sys
+    from pid_reader.cli import main
+    db = str(tmp_path / 'p.sqlite')
+    main(['init-project', db])
+    pdf = tmp_path / 's.pdf'
+    pdf.write_bytes((FIX / 'synthetic_pid_vector.pdf').read_bytes())
+    main(['import-pdf', db, str(pdf), '--ocr', 'off'])
+    capsysbinary.readouterr()
+    old = sys.stdout
+    sys.stdout = io.TextIOWrapper(io.BytesIO(), encoding='cp1252', errors='strict')   # a console that cannot encode U+FF08
+    try:
+        with ProjectStore(db) as store:
+            eid = store.db.execute("select extraction_id from extraction").fetchone()[0]
+            store.db.execute("PRAGMA foreign_keys=OFF")
+        assert main(['sheet-info', db, eid]) == 0
+        sys.stdout.flush()
+        text = sys.stdout.buffer.getvalue().decode('utf-8', 'replace')
+        assert json.loads(text.strip().splitlines()[-1])['sheet_fields']
+    finally:
+        sys.stdout = old

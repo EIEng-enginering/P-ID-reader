@@ -10,6 +10,11 @@ from .engineering.project import ProjectStore
 
 
 def main(argv: list[str] | None = None) -> int:
+    for stream in (sys.stdout, sys.stderr):      # OCR text can hold characters the Windows console codepage cannot encode
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError):
+            pass
     p=argparse.ArgumentParser(prog="pid-reader",description="Evidence-first P&ID reader development CLI")
     sub=p.add_subparsers(dest="cmd",required=True)
     create=sub.add_parser("init-project");create.add_argument("database")
