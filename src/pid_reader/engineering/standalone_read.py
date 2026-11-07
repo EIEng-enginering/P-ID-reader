@@ -35,6 +35,70 @@ def _rapid_models() -> list[dict]:
     return out
 
 
+_FUNCTION_FIRST = "PFTLAZHSWJX"
+_FUNCTION_REST = set("ITCRYSHLAEDQZVKXMOGFP")
+_NOT_FUNCTIONS = {"HOLD", "VENT", "NEW", "LINE", "NPS", "PLC", "SCADA", "CELL", "TITLE", "SIZE", "MAKE", "MODEL",
+                  "FAIL", "NOTE", "REV", "DATE", "SET", "POINT", "TBD", "ABOVE", "BELOW", "GROUND", "EXISTING"}
+SPARSE_WORDS = 120          # a vector sheet with fewer text words than this ...
+SPARSE_GRAPHICS = 800       # ... but this many strokes/curves probably has its lettering drawn as outlines
+
+
+def _sparse_vector_pages(pdf_bytes: bytes, pages: list[int]) -> list[int]:
+    """Pages that read as text-poor but graphics-rich: CAD plots whose tags are outlined, not text."""
+    import pdfplumber
+    from io import BytesIO
+    found = []
+    try:
+        with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
+            for number in pages:
+                page = pdf.pages[number - 1]
+                graphics = len(page.lines) + len(page.curves) + len(page.rects)
+                if graphics >= SPARSE_GRAPHICS and len(page.extract_words()) < SPARSE_WORDS:
+                    found.append(number)
+    except Exception:
+        return []
+    return found
+
+
+def _stacked_instrument_tags(words: list[dict]) -> list[dict]:
+    """Join instrument-bubble text written on two lines (``PIT`` above ``100``) into ``PIT-100``.
+
+    Pure geometry on OCR word boxes: a function-letter word with a 2-4 digit number directly below
+    it (centres aligned, gap under about one text height). Each number is used once. Proposals only.
+    """
+    import re
+    funcs = [w for w in words if re.fullmatch(r"[A-Z]{2,5}", w["text"]) and w["text"] not in _NOT_FUNCTIONS
+             and w["text"][0] in _FUNCTION_FIRST and set(w["text"][1:]) <= _FUNCTION_REST]
+    nums = [w for w in words if re.fullmatch(r"\d{2,4}[A-Z]?", w["text"])]
+    used: set[str] = set()
+    out = []
+    for f in sorted(funcs, key=lambda w: (w["bbox"]["y0"], w["bbox"]["x0"])):
+        fb = f["bbox"]
+        fh, fw = fb["y1"] - fb["y0"], fb["x1"] - fb["x0"]
+        fcx = (fb["x0"] + fb["x1"]) / 2
+        best = None
+        for n in nums:
+            if n["id"] in used:
+                continue
+            nb = n["bbox"]
+            ncx = (nb["x0"] + nb["x1"]) / 2
+            gap = nb["y0"] - fb["y1"]
+            below = (nb["y0"] + nb["y1"]) / 2 > (fb["y0"] + fb["y1"]) / 2   # OCR line boxes of stacked text overlap
+            if abs(ncx - fcx) <= 0.7 * max(fw, nb["x1"] - nb["x0"]) and below and -1.0 * fh <= gap <= 1.3 * fh:
+                key = (-len(n["text"]), round(abs(gap), 4))   # longest text first: drops OCR fragments such as "00" of "100"
+                if best is None or key < best[0]:
+                    best = (key, n)
+        if best:
+            n = best[1]
+            used.add(n["id"])
+            nb = n["bbox"]
+            out.append({"text": f"{f['text']}-{n['text']}", "func": f["text"], "num": n["text"],
+                        "bbox": {"x0": min(fb["x0"], nb["x0"]), "y0": min(fb["y0"], nb["y0"]),
+                                 "x1": max(fb["x1"], nb["x1"]), "y1": max(fb["y1"], nb["y1"])},
+                        "score": min(f["raw_ocr_score"], n["raw_ocr_score"]), "ids": f"{f['id']}+{n['id']}"})
+    return out
+
+
 def read_pid_standalone(pdf_bytes: bytes, params: ReadParams, cancel: CancelToken | None = None, *,
                         document_revision_id: str = "", filename: str = "", expected_sha256: str = "",
                         ocr_engine: str | None = "auto") -> dict:
@@ -42,13 +106,17 @@ def read_pid_standalone(pdf_bytes: bytes, params: ReadParams, cancel: CancelToke
     base = read_pid(pdf_bytes, params, cancel, document_revision_id=document_revision_id,
                     filename=filename, expected_sha256=expected_sha256)
     refused = [p["page"] for p in base["pages"] if p["classification"] == "RASTER_ONLY" and p["read_status"] == "REFUSED"]
-    if not refused or ocr_engine is None:
+    if ocr_engine is None:
+        return base
+    readable = [p["page"] for p in base["pages"] if p["read_status"] == "READ"]
+    sparse = _sparse_vector_pages(pdf_bytes, readable) if readable else []
+    if not refused and not sparse:
         return base
     from ..formats.ocr_source import ocr_pdf_preview, available_engines
     from ..formats.pdf_source import _parse_tag, _make_obj
     if ocr_engine == "auto" and not available_engines():
         return base  # visible refusal stays; the UI explains that no OCR engine is installed
-    ocr = ocr_pdf_preview(pdf_bytes, pages=tuple(refused), engine=ocr_engine)
+    ocr = ocr_pdf_preview(pdf_bytes, pages=tuple(sorted(set(refused) | set(sparse))), engine=ocr_engine)
     if cancel:
         cancel.check()
     result = dict(base)
@@ -62,15 +130,30 @@ def read_pid_standalone(pdf_bytes: bytes, params: ReadParams, cancel: CancelToke
     for page_entry in ocr["pages"]:
         number = page_entry["page"]
         for rec in result["pages"]:
-            if rec["page"] == number:
+            if rec["page"] == number and number in refused:
                 rec["read_status"] = "READ"
                 rec.pop("refusal_code", None)
                 rec["reason"] = (f"Image-only page read with offline OCR ({engine_name}); text positions and "
                                  "characters are unverified proposals.")
         count = 0
+        native_texts = {o["text"] for o in base["objects"] if o["page"] == number and o["text"]}
+        for st in _stacked_instrument_tags(page_entry["words"]):
+            if st["text"] in native_texts:
+                continue
+            letters = st["func"]
+            parsed = {"parse_status": "PARTIAL", "normalised_tag": st["text"], "measured_variable": letters[0],
+                      "function_letters": letters[1:], "loop_number": st["num"], "suffix": ""}
+            obj = _make_obj("INSTRUMENT", number, dict(st["bbox"]), st["text"], parsed,
+                            round(min(0.45, max(0.05, st["score"])), 3),
+                            {"source": "OCR", "ocr_engine": engine_name, "stacked_tag": "true", "ocr_word_ids": st["ids"],
+                             "raw_ocr_score": f"{st['score']:.4f}"})
+            if obj["id"] not in seen:
+                seen.add(obj["id"])
+                result["objects"].append(obj)
+                count += 1
         for word in page_entry["words"]:
             cls, parsed, conf = _parse_tag(word["text"])
-            if cls == "NOTE":
+            if cls == "NOTE" or word["text"] in native_texts:
                 continue
             bbox = dict(word["bbox"])
             if not (0 <= bbox["x0"] < bbox["x1"] <= 1 and 0 <= bbox["y0"] < bbox["y1"] <= 1):
@@ -85,8 +168,10 @@ def read_pid_standalone(pdf_bytes: bytes, params: ReadParams, cancel: CancelToke
             result["objects"].append(obj)
             count += 1
         result["warnings"].append({"code": "OTHER", "page": number,
-                                   "message": f"Page read by offline OCR ({count} tag-like items). OCR accuracy is not calibrated; "
-                                              "symbols and linework of scanned pages are not interpreted."})
+                                   "message": (f"Page read by offline OCR ({count} tag-like items). OCR accuracy is not calibrated; "
+                                               "symbols and linework of scanned pages are not interpreted.") if number in refused else
+                                              (f"Text layer is sparse but the sheet has many vector shapes (lettering is probably outlined), "
+                                               f"so the page was also read with offline OCR ({count} added tag-like items, unverified).")})
     result["objects"].sort(key=lambda x: (x["page"], x["bbox"]["y0"], x["bbox"]["x0"], x["class"], x["id"]))
     prov = dict(base["provenance"])
     prov["models"] = _rapid_models() if engine_name == "rapidocr" else []

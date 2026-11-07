@@ -52,14 +52,45 @@ def available_engines() -> list[str]:
 
 
 _RAPID = None
+TILE_PX = 1200          # large drawings are read tile by tile so 5-8 pt lettering is not shrunk away
+TILE_OVERLAP_PX = 150
+TILE_THRESHOLD_PX = 1500
 
 
 def _rapid_engine():
     global _RAPID
     if _RAPID is None:
         from rapidocr_onnxruntime import RapidOCR
-        _RAPID = RapidOCR()
+        # detector side limit large enough that a whole tile is processed at native resolution
+        _RAPID = RapidOCR(det_limit_side_len=1280, det_limit_type='max')
     return _RAPID
+
+
+def _rapid_lines(image):
+    """(quad, text, score) lines in image pixels; big images are tiled with overlap and de-duplicated."""
+    import numpy as np
+    engine = _rapid_engine()
+    width, height = image.size
+    if max(width, height) <= TILE_THRESHOLD_PX:
+        found, _t = engine(np.asarray(image))
+        return list(found or [])
+    lines = []
+    step = TILE_PX - TILE_OVERLAP_PX
+    for y in range(0, max(1, height - TILE_OVERLAP_PX), step):
+        for x in range(0, max(1, width - TILE_OVERLAP_PX), step):
+            crop = image.crop((x, y, min(width, x + TILE_PX), min(height, y + TILE_PX)))
+            found, _t = engine(np.asarray(crop))
+            for quad, text, conf in (found or []):
+                lines.append(([[p[0] + x, p[1] + y] for p in quad], text, conf))
+    # overlap duplicates: same text with nearly the same box -> keep the higher score
+    kept = []
+    for quad, text, conf in sorted(lines, key=lambda l: -float(l[2])):
+        cx = sum(p[0] for p in quad) / 4
+        cy = sum(p[1] for p in quad) / 4
+        if any(t == text and abs(cx - kx) < 12 and abs(cy - ky) < 12 for _q, t, _c, kx, ky in kept):
+            continue
+        kept.append((quad, text, conf, cx, cy))
+    return [(q, t, c) for q, t, c, _x, _y in kept]
 
 
 def _rapid_version() -> str:
@@ -77,10 +108,8 @@ def _rapid_words(image) -> list[tuple[str, float, int, int, int, int, bool]]:
     boxes in proportion to character counts, which is an approximation that is
     recorded on each word as ``split=PROPORTIONAL_FROM_LINE``.
     """
-    import numpy as np
-    found, _timing = _rapid_engine()(np.asarray(image))
     out = []
-    for quad, text, conf in (found or []):
+    for quad, text, conf in _rapid_lines(image):
         text = str(text).strip()
         if not text:
             continue
@@ -128,9 +157,9 @@ def _tesseract_words(image, timeout_seconds: int):
 
 
 def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
-                    dpi: int = 180, max_pixels: int = 12_000_000,
+                    dpi: int | None = None, max_pixels: int = 12_000_000,
                     timeout_seconds: int = 30, engine: str = 'tesseract') -> dict:
-    if type(dpi) is not int or not 72<=dpi<=300 or type(max_pixels) is not int or not 1<=max_pixels<=12_000_000:
+    if (dpi is not None and (type(dpi) is not int or not 72<=dpi<=300)) or type(max_pixels) is not int or not 1<=max_pixels<=12_000_000:
         raise ValueError('Unsupported OCR rendering profile')
     if type(timeout_seconds) is not int or not 1<=timeout_seconds<=300:
         raise ValueError('Unsupported OCR timeout')
@@ -169,6 +198,13 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
     chosen=tuple(range(1,count+1)) if pages is None else tuple(pages)
     if not chosen or len(chosen)!=len(set(chosen)) or any(type(n) is not int or not 1<=n<=count for n in chosen):
         raise ValueError('Unique, valid OCR page selection required')
+    if dpi is None:
+        # Default 180 dpi; RapidOCR gets up to 240 dpi (small drawing lettering needs the pixels)
+        # as far as the pixel budget allows for the largest selected page.
+        dpi=180
+        if engine=='rapidocr':
+            biggest=max(pdf[n-1].get_size()[0]*pdf[n-1].get_size()[1] for n in chosen)
+            dpi=int(max(150,min(240,72*(max_pixels/biggest)**0.5*0.97)))
     document_sha=sha256(pdf_bytes).hexdigest()
     if engine == 'rapidocr':
         engine_version=_rapid_version()

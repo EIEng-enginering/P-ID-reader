@@ -364,3 +364,40 @@ def test_html_and_csv_hide_unlabelled_strokes_but_json_keeps_them(tmp_path):
         assert csv_text.count('\n') < len(report['readings'])                  # strokes omitted by default
         full = report_csv(report, include_strokes=True)
         assert full.count('\n') >= len(report['readings'])
+
+
+# ---- outlined-lettering sheets: stacked instrument tags and sparse-text detection --------------
+
+def _w(i, text, x, y, w=0.006, h=0.006):
+    return {"id": f"w{i}", "text": text, "bbox": {"x0": x, "y0": y, "x1": x + w, "y1": y + h}, "raw_ocr_score": 0.9}
+
+
+def test_stacked_bubble_text_is_joined_into_one_instrument_tag():
+    from pid_reader.engineering.standalone_read import _stacked_instrument_tags
+    words = [_w(1, "PIT", .553, .441), _w(2, "100", .554, .446, h=.005), _w(3, "00", .554, .4461, h=.003),   # overlapping OCR boxes + fragment
+             _w(4, "PSHH", .386, .434, w=.009, h=.005), _w(5, "201", .387, .437, w=.007, h=.007),
+             _w(6, "HOLD", .519, .390, w=.01), _w(7, "100", .52, .396),                                   # words, not instrument functions
+             _w(8, "FC", .487, .517), _w(9, "16", .476, .515)]                                              # 2-letter text beside a size: not stacked
+    got = {t["text"] for t in _stacked_instrument_tags(words)}
+    assert got == {"PIT-100", "PSHH-201"}
+
+
+def test_stacked_tag_needs_alignment_below_the_letters():
+    from pid_reader.engineering.standalone_read import _stacked_instrument_tags
+    far_right = [_w(1, "PIC", .30, .30), _w(2, "102", .45, .305)]
+    above = [_w(1, "PIC", .30, .30), _w(2, "102", .30, .24)]
+    assert _stacked_instrument_tags(far_right) == [] and _stacked_instrument_tags(above) == []
+
+
+def test_text_poor_but_graphics_rich_sheet_is_flagged_for_ocr():
+    import io
+    from reportlab.pdfgen import canvas
+    from pid_reader.engineering.standalone_read import _sparse_vector_pages
+    out = io.BytesIO()
+    c = canvas.Canvas(out, pagesize=(600, 400), pageCompression=0, invariant=1)
+    for i in range(900):
+        c.line(10 + i % 500, 10 + i // 3 % 300, 15 + i % 500, 20 + i // 3 % 300)
+    c.drawString(20, 380, 'TITLE ONLY')
+    c.save()
+    assert _sparse_vector_pages(out.getvalue(), [1]) == [1]
+    assert _sparse_vector_pages((FIX / 'synthetic_pid_vector.pdf').read_bytes(), [1]) == []
