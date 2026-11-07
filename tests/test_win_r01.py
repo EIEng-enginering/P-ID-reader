@@ -347,3 +347,20 @@ def test_dexpi_adapter_refuses_instead_of_faking_conformance():
     assert dexpi.STATUS == 'NOT_IMPLEMENTED'
     with pytest.raises(dexpi.DexpiNotAvailable):
         dexpi.export_dexpi(object(), 'x.xml')
+
+
+def test_html_and_csv_hide_unlabelled_strokes_but_json_keeps_them(tmp_path):
+    from pid_reader.engineering.reports import make_report, report_csv, report_html
+    pdf = (FIX / 'synthetic_catalog_symbols.pdf').read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename='c.pdf')
+    strokes = [o for o in extraction['objects'] if o['class'] == 'LINE' and not o['text']]
+    assert strokes, 'fixture should contain unlabelled strokes'
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        db.add_extraction(extraction, source_pdf_bytes=pdf)
+        report = make_report(db)
+        assert len(report['readings']) == len(extraction['objects'])           # JSON/audit record is complete
+        html, csv_text = report_html(report), report_csv(report)
+        assert 'V-101' in html and 'Summary' in html and 'not listed' in html
+        assert csv_text.count('\n') < len(report['readings'])                  # strokes omitted by default
+        full = report_csv(report, include_strokes=True)
+        assert full.count('\n') >= len(report['readings'])

@@ -110,45 +110,88 @@ def _spreadsheet_safe(value) -> str:
     return text
 
 
-def report_csv(report: dict) -> str:
+def _named(report: dict, include_strokes: bool) -> list[dict]:
+    """Readings that carry text. Unlabelled line-stroke fragments (class LINE, no text) are
+    geometry, not readings an engineer can use; they stay in the JSON audit record."""
+    rows = report["readings"]
+    return rows if include_strokes else [r for r in rows if (r.get("tag_text") or "").strip()]
+
+
+def report_csv(report: dict, *, include_strokes: bool = False) -> str:
     if not verify_report(report):
         raise ValueError("Report integrity check failed")
     stream = StringIO(newline="")
     writer = csv.writer(stream, lineterminator="\n")
     writer.writerow(["DRAWING READINGS ONLY - NO PLANT VERIFICATION"])
     writer.writerow(COLUMNS)
-    for row in report["readings"]:
+    for row in _named(report, include_strokes):
         writer.writerow([_spreadsheet_safe(row.get(c)) for c in COLUMNS])
     return stream.getvalue()
 
 
-def report_html(report: dict) -> str:
+HTML_COLUMNS = [("drawing_no", "Drawing"), ("revision_label", "Rev"), ("page", "Page"), ("object_class", "Class"),
+                ("tag_text", "Tag / text"), ("state", "Review"), ("reviewed_by", "Reviewed by")]
+
+
+def report_html(report: dict, *, include_strokes: bool = False) -> str:
     if not verify_report(report):
         raise ValueError("Report integrity check failed")
     def esc(x):
         return escape("" if x is None else str(x), quote=True)
+    rows = _named(report, include_strokes)
+    hidden = len(report["readings"]) - len(rows)
+    summary = report["summary"]
+    # group by source file, then by class, so an engineer can scan equipment / valves / instruments first
+    order = {c: i for i, c in enumerate(("VESSEL", "TANK", "COLUMN", "HEAT_EXCHANGER", "PUMP", "COMPRESSOR", "FILTER",
+                                         "VALVE_ONOFF", "VALVE_MANUAL", "VALVE_CONTROL", "PSV", "RUPTURE_DISC",
+                                         "INSTRUMENT", "LINE", "NOTE"))}
+    rows = sorted(rows, key=lambda r: (r.get("source_name") or "", order.get(r["object_class"], 99),
+                                       r["page"], r.get("tag_text") or ""))
     lines = ["<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">",
              "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
              "<title>P&amp;ID Drawing Readings Report</title>",
-             "<style>body{font:14px/1.5 system-ui,sans-serif;margin:2rem;color:#233242}" 
-             "h1{font-size:1.5rem}aside{border-left:4px solid #be6412;padding:.7rem;background:#f8f6f2}" 
-             "table{border-collapse:collapse;width:100%;font-size:.83rem}" 
-             "td,th{border-bottom:1px solid #ccc;padding:.45rem;text-align:left;vertical-align:top;overflow-wrap:anywhere}" 
-             "th{background:#edf0f2;position:sticky;top:0}" 
+             "<style>body{font:14px/1.5 system-ui,sans-serif;margin:2rem;color:#233242}"
+             "h1{font-size:1.5rem}h2{font-size:1.1rem;margin-top:1.6rem}"
+             "aside{border-left:4px solid #be6412;padding:.7rem;background:#f8f6f2}"
+             "table{border-collapse:collapse;width:100%;font-size:.85rem}"
+             "td,th{border-bottom:1px solid #ccc;padding:.4rem;text-align:left;vertical-align:top;overflow-wrap:anywhere}"
+             "th{background:#edf0f2;position:sticky;top:0}.small{width:auto}.mono{font-family:Consolas,monospace;font-size:.75rem}"
              "@media print{th{position:static}body{margin:1cm}}</style></head><body>",
              "<h1>P&amp;ID drawing-reading report</h1>",
              "<aside><strong>Not a plant verification.</strong> " + esc(report["notice"]) + "</aside>",
-             "<p>Source revisions: " + str(report["selection"]["source_count"]) +
-             "; source observations: " + str(report["summary"]["reading_count"]) +
-             "; source graph proposals: " + str(report["summary"]["source_graph_proposals"]) + "</p>",
-             "<p>SHA-256 of structured report: <code>" + esc(report["report_sha256"]) + "</code></p>",
-             "<table><thead><tr>" + "".join("<th>" + esc(c.replace("_", " ").title()) + "</th>" for c in COLUMNS) +
-             "</tr></thead><tbody>"]
-    for row in report["readings"]:
-        lines.append("<tr>" + "".join("<td>" + esc(row.get(c)) + "</td>" for c in COLUMNS) + "</tr>")
-    lines.extend(["</tbody></table><p>Unregistered sources and unresolved readings remain explicitly unverified.</p>",
+             "<h2>Summary</h2>",
+             "<p>Drawings: " + str(report["selection"]["source_count"]) + " &bull; readings listed: " + str(len(rows)) +
+             (" &bull; unlabelled line-stroke fragments not listed: " + str(hidden) + " (kept in the JSON record)" if hidden else "") +
+             " &bull; proposed connections in source: " + str(summary["source_graph_proposals"]) + "</p>",
+             "<table class=\"small\"><thead><tr><th>Class</th><th>Count</th></tr></thead><tbody>"]
+    for cls, n in summary["by_object_class"].items():
+        lines.append("<tr><td>" + esc(cls) + "</td><td>" + str(n) + "</td></tr>")
+    lines.append("</tbody></table>")
+    lines.append("<table class=\"small\"><thead><tr><th>Review state</th><th>Count</th></tr></thead><tbody>")
+    for st, n in summary["by_review_state"].items():
+        lines.append("<tr><td>" + esc(st) + "</td><td>" + str(n) + "</td></tr>")
+    lines.append("</tbody></table>")
+    lines.append("<h2>Drawings</h2><table><thead><tr><th>File</th><th>Registered as</th><th>Pages</th><th>Source SHA-256</th></tr></thead><tbody>")
+    for src in report["sources"]:
+        reg = src.get("registration")
+        label = f"{reg['drawing_no']} rev {reg['revision_label']} ({reg['facility']} / {reg['area']})" if reg else "not registered"
+        lines.append("<tr><td>" + esc(src["source_name"]) + "</td><td>" + esc(label) + "</td><td>" +
+                     esc(len(src["selected_pages"])) + "</td><td class=\"mono\">" + esc(src["source_sha256"]) + "</td></tr>")
+    lines.append("</tbody></table>")
+    lines.append("<h2>Readings</h2>")
+    if not rows:
+        lines.append("<p><em>No labelled readings were found on these drawings. This usually means the sheet is scanned, "
+                     "very dense, or uses tag styles the reader does not yet recognise &mdash; it does not mean the sheet has no "
+                     "equipment. Open it in the application, run the analysis and review it by eye.</em></p>")
+    else:
+        lines.append("<table><thead><tr>" + "".join("<th>" + esc(h) + "</th>" for _c, h in HTML_COLUMNS) + "</tr></thead><tbody>")
+        for row in rows:
+            lines.append("<tr>" + "".join("<td>" + esc(row.get(c)) + "</td>" for c, _h in HTML_COLUMNS) + "</tr>")
+        lines.append("</tbody></table>")
+    lines.extend(["<p class=\"mono\">Report SHA-256: " + esc(report["report_sha256"]) + "</p>",
+                  "<p>Unregistered sources and unresolved readings remain explicitly unverified.</p>",
                   "</body></html>"])
-    return "\n".join(lines) + "\n"
+    return chr(10).join(lines) + chr(10)
 
 
 def encode_report(report: dict, fmt: str) -> bytes:
