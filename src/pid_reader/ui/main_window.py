@@ -1,0 +1,938 @@
+"""P&ID Reader main window (PySide6).
+
+Layout: drawing list (left dock) | tabs: Drawing, Registers, Graph, Revisions,
+Batch, Libraries, Reports, Audit (centre) | findings + details (right dock).
+Every reading, symbol, link and connection shown is a *proposal read from the
+drawing*; review decisions are recorded with a named reviewer and are append-only.
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from PySide6.QtCore import QSettings, Qt, QTimer
+from PySide6.QtGui import QAction, QActionGroup, QColor, QIcon, QKeySequence, QPixmap
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox,
+                               QDockWidget, QFileDialog, QFormLayout, QHBoxLayout, QInputDialog, QLabel, QLineEdit,
+                               QMainWindow, QMessageBox, QPlainTextEdit, QProgressBar, QPushButton, QSpinBox,
+                               QTableWidget, QTableWidgetItem, QTabWidget, QToolButton, QTreeWidget,
+                               QTreeWidgetItem, QVBoxLayout, QWidget, QRadioButton, QButtonGroup)
+
+from .. import __version__
+from ..engineering import findings as F
+from ..engineering.connectivity import drawing_connectivity
+from ..engineering.project import ProjectStore
+from ..engineering.workspace import register_page
+from .graphview import GraphView
+from .tabs import AuditTab, BatchTab, LibraryTab, ReportTab, RevisionTab, _fill, _table
+from .tasks import CallbackCancelToken, Task
+from .viewer import LAYER_COLOURS, LAYER_LABELS, DrawingView
+
+ORG, APP = "EnhanceIntegrationEngineering", "PIDReader"
+LIMITS_TEXT = (
+    "P&ID Reader reads what is printed on a drawing revision and proposes interpretations.\n\n"
+    "• Nothing it shows verifies the plant, a drawing's currency, or its as-built status.\n"
+    "• It never approves safeguards, assigns SIL, establishes IPL independence or accepts HAZOP/LOPA findings.\n"
+    "• Symbol, valve and connection results are geometric proposals; unknown shapes stay unknown.\n"
+    "• OCR confidence is a raw engine score, not measured accuracy.\n"
+    "• Accuracy on industrial drawings has NOT been independently measured.\n"
+    "• A human reviewer must accept, edit or reject each reading; every decision is audited.")
+
+REGISTER_GROUPS = {
+    "All named readings": dict(named_only=True),
+    "Equipment": dict(object_classes=("VESSEL", "TANK", "COLUMN", "HEAT_EXCHANGER", "PUMP", "COMPRESSOR", "FILTER")),
+    "Valves": dict(object_classes=("VALVE_ONOFF", "VALVE_MANUAL", "VALVE_CONTROL", "PSV", "RUPTURE_DISC")),
+    "Instruments": dict(object_classes=("INSTRUMENT",)),
+    "Piping lines": dict(object_classes=("LINE",), named_only=True),
+    "Notes": dict(object_classes=("NOTE",)),
+    "Unlabelled line strokes": dict(object_classes=("LINE",)),
+}
+READING_DECISIONS = ("ACCEPTED_AS_READING", "EDITED_AND_ACCEPTED", "REJECTED", "IGNORED_REGION")
+DECISION_TEXT = {
+    "ACCEPTED_AS_READING": "Accept as printed on the drawing", "EDITED_AND_ACCEPTED": "Accept with corrected text",
+    "REJECTED": "Reject (wrong / not what it says)", "IGNORED_REGION": "Ignore this region",
+    "UNRESOLVED": "Leave unresolved", "CONNECTED_AS_DRAWN": "Connected as drawn", "NOT_CONNECTED_AS_DRAWN": "Not connected as drawn",
+    "SUPPORTED_AS_DRAWN": "Supported as drawn",
+}
+STATE_COLOURS = {"PROPOSED": "#6d6d6d", "REJECTED": "#c62828", "UNRESOLVED": "#ef6c00"}
+
+
+class ReviewDialog(QDialog):
+    def __init__(self, parent, title: str, decisions: tuple[str, ...], *, text_options: list[str] | None = None,
+                 allow_edit_text: bool = False, current_text: str = ""):
+        super().__init__(parent)
+        self.setWindowTitle(title)
+        self.setMinimumWidth(460)
+        lay = QVBoxLayout(self)
+        self.group = QButtonGroup(self)
+        self.buttons: dict[str, QRadioButton] = {}
+        for d in decisions:
+            rb = QRadioButton(DECISION_TEXT.get(d, d.replace("_", " ").capitalize()))
+            self.group.addButton(rb)
+            self.buttons[d] = rb
+            lay.addWidget(rb)
+        self.buttons[decisions[0]].setChecked(True)
+        self.text = QComboBox()
+        self.text.setEditable(True)
+        if text_options is not None:
+            lay.addWidget(QLabel("Tag text (choose an option read from the drawing, or type a correction)"))
+            self.text.addItems(text_options)
+            lay.addWidget(self.text)
+        elif allow_edit_text:
+            lay.addWidget(QLabel("Corrected text (only for “Accept with corrected text”)"))
+            self.text.addItem(current_text)
+            lay.addWidget(self.text)
+        else:
+            self.text.hide()
+        lay.addWidget(QLabel("Reason / evidence checked (required except for a plain acceptance)"))
+        self.reason = QPlainTextEdit()
+        self.reason.setFixedHeight(70)
+        lay.addWidget(self.reason)
+        bb = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        bb.accepted.connect(self.accept)
+        bb.rejected.connect(self.reject)
+        lay.addWidget(bb)
+
+    def decision(self) -> str:
+        return next(d for d, b in self.buttons.items() if b.isChecked())
+
+    def values(self) -> tuple[str, str, str]:
+        return self.decision(), self.reason.toPlainText().strip(), self.text.currentText().strip()
+
+
+class MainWindow(QMainWindow):
+    def __init__(self, db_path: str | None = None):
+        super().__init__()
+        self.settings = QSettings(ORG, APP)
+        self.db: ProjectStore | None = None
+        self.db_path = ""
+        self.current_extraction_id = ""
+        self.current_pdf: bytes | None = None
+        self.current_result: dict | None = None
+        self.page = 1
+        self.page_count = 1
+        self.findings: dict[str, list[dict]] = {}
+        self.finding_rows: list[dict] = []
+        self.register_rows: list[dict] = []
+        self.register_offset = 0
+        self.register_total = 0
+        self.task: Task | None = None
+        self.drawing_items: dict[str, str] = {}
+        self.setWindowTitle("P&ID Reader")
+        self.resize(1500, 900)
+        self._build_ui()
+        self._build_menus()
+        self.resizeDocks([self.dock_drawings, self.dock_findings], [240, 380], Qt.Orientation.Horizontal)
+        self.statusBar().showMessage("Open or create a project to begin.")
+        remembered = self.settings.value("last_project", "", str) or ""
+        if db_path:                      # explicitly requested: create it if needed
+            self.open_project(db_path)
+        elif remembered and Path(remembered).exists():
+            self.open_project(remembered)
+        else:
+            self._set_enabled(False)
+
+    # ------------------------------------------------------------------ context API (used by tabs)
+    def reviewer(self) -> str:
+        name = self.settings.value("reviewer", "", str)
+        if not name:
+            name, ok = QInputDialog.getText(self, "Reviewer name", "Your name (recorded on every review decision):")
+            if not ok or not name.strip():
+                return ""
+            self.settings.setValue("reviewer", name.strip())
+            name = name.strip()
+        return name
+
+    def ocr_engine(self) -> str:
+        return self.settings.value("ocr_engine", "auto", str)
+
+    def settings_set(self, key: str, value) -> None:
+        self.settings.setValue(key, value)
+
+    def info(self, text: str) -> None:
+        self.statusBar().showMessage(text, 15000)
+        self.details.appendPlainText(text)
+
+    def refresh_all(self) -> None:
+        if not self.db:
+            return
+        self.refresh_drawings()
+        self.refresh_register()
+        self.revision_tab.refresh()
+        self.batch_tab.refresh()
+        self.library_tab.refresh()
+        self.audit_tab.refresh()
+
+    def backup_project(self) -> None:
+        if not self.db:
+            return
+        dest, _ = QFileDialog.getSaveFileName(self, "Back up project", "project-backup.sqlite", "SQLite (*.sqlite)")
+        if dest:
+            try:
+                out = self.db.backup(dest)
+                self.info(f"Backup written: {out}")
+            except Exception as exc:
+                QMessageBox.warning(self, "Backup failed", str(exc))
+
+    def run_task(self, title: str, fn, on_done) -> None:
+        if self.task is not None:
+            QMessageBox.information(self, "Busy", f"“{self.task.title}” is still running.")
+            return
+        task = Task(title, fn, self)
+        self.task = task
+        self.progress.setVisible(True)
+        self.cancel_btn.setVisible(True)
+        self.progress.setValue(0)
+        self.statusBar().showMessage(title + "…")
+        task.progress.connect(lambda f, m: (self.progress.setValue(int(f * 100)), self.statusBar().showMessage(m)))
+
+        def finish():
+            self.task = None
+            self.progress.setVisible(False)
+            self.cancel_btn.setVisible(False)
+            task.deleteLater()
+
+        def ok(result):
+            finish()
+            try:
+                on_done(result)
+            except Exception as exc:
+                QMessageBox.warning(self, title, f"{type(exc).__name__}: {exc}")
+
+        task.result.connect(ok)
+        task.error.connect(lambda m: (finish(), QMessageBox.warning(self, title + " failed", m)))
+        task.stopped.connect(lambda: (finish(), self.statusBar().showMessage(title + " cancelled; finished work was kept."),
+                                      self.refresh_all()))
+        task.start()
+
+    def cancel_task(self) -> None:
+        if self.task:
+            self.task.cancel()
+            self.statusBar().showMessage("Cancelling…")
+
+    # ------------------------------------------------------------------ UI construction
+    def _build_ui(self) -> None:
+        # left dock: drawings
+        self.drawing_tree = QTreeWidget()
+        self.drawing_tree.setHeaderLabels(["Drawing", "Pages"])
+        self.drawing_tree.setAccessibleName("Drawings in project")
+        self.drawing_tree.setMinimumWidth(230)
+        self.drawing_tree.itemActivated.connect(self._drawing_activated)
+        self.drawing_tree.itemDoubleClicked.connect(self._drawing_activated)
+        dock = QDockWidget("Drawings", self)
+        dock.setObjectName("dock_drawings")
+        dock.setWidget(self.drawing_tree)
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock)
+        self.dock_drawings = dock
+
+        # centre tabs
+        self.tabs = QTabWidget()
+        self.viewer = DrawingView()
+        self.viewer.itemActivated.connect(self._overlay_clicked)
+        self.viewer.pageStep.connect(self.step_page)
+        self.viewer.zoomChanged.connect(lambda z: self.zoom_label.setText(f"{z * 100:.0f}%"))
+        draw = QWidget()
+        dl = QVBoxLayout(draw)
+        dl.setContentsMargins(0, 0, 0, 0)
+        bar = QHBoxLayout()
+        self.prev_btn = QToolButton(); self.prev_btn.setText("◀"); self.prev_btn.setToolTip("Previous page (PgUp)")
+        self.next_btn = QToolButton(); self.next_btn.setText("▶"); self.next_btn.setToolTip("Next page (PgDn)")
+        self.prev_btn.clicked.connect(lambda: self.step_page(-1))
+        self.next_btn.clicked.connect(lambda: self.step_page(1))
+        self.page_spin = QSpinBox(); self.page_spin.setMinimum(1); self.page_spin.setAccessibleName("Page number")
+        self.page_spin.valueChanged.connect(self.goto_page)
+        self.page_label = QLabel("/ 1")
+        bar.addWidget(self.prev_btn); bar.addWidget(self.page_spin); bar.addWidget(self.page_label); bar.addWidget(self.next_btn)
+        for text, fn, tip in (("−", lambda: self.viewer.zoom_by(1 / 1.25), "Zoom out (-)"),
+                              ("+", lambda: self.viewer.zoom_by(1.25), "Zoom in (+)"),
+                              ("Fit", self.viewer.fit, "Fit page (0)"), ("100%", lambda: self._zoom_100(), "Actual pixels (1)")):
+            b = QToolButton(); b.setText(text); b.setToolTip(tip); b.clicked.connect(fn); bar.addWidget(b)
+        self.zoom_label = QLabel("100%")
+        bar.addWidget(self.zoom_label)
+        bar.addSpacing(12)
+        self.layer_boxes: dict[str, QCheckBox] = {}
+        for layer in ("readings", "symbols", "linework", "catalogue", "text_links", "geometry", "signals"):
+            cb = QCheckBox(LAYER_LABELS[layer])
+            cb.setChecked(self.viewer.layer_visible(layer))
+            swatch = QPixmap(12, 12)
+            swatch.fill(QColor(LAYER_COLOURS[layer]))
+            cb.setIcon(QIcon(swatch))   # colour key that stays legible in light and dark themes
+            cb.toggled.connect(lambda on, l=layer: self.viewer.set_layer_visible(l, on))
+            self.layer_boxes[layer] = cb
+            bar.addWidget(cb)
+        bar.addStretch(1)
+        self.search_box = QLineEdit()
+        self.search_box.setPlaceholderText("Find tag / text on this page and in project (Ctrl+F)")
+        self.search_box.setClearButtonEnabled(True)
+        self.search_box.setMinimumWidth(280)
+        self.search_box.returnPressed.connect(self.run_search)
+        bar.addWidget(self.search_box)
+        dl.addLayout(bar)
+        dl.addWidget(self.viewer, 1)
+        self.tabs.addTab(draw, "Drawing")
+
+        # registers
+        reg = QWidget()
+        rl = QVBoxLayout(reg)
+        rb = QHBoxLayout()
+        self.reg_group = QComboBox(); self.reg_group.addItems(list(REGISTER_GROUPS))
+        self.reg_state = QComboBox(); self.reg_state.addItems(["All states", "PROPOSED", "ACCEPTED_AS_READING",
+                                                               "EDITED_AND_ACCEPTED", "REJECTED", "IGNORED_REGION"])
+        self.reg_scope = QComboBox(); self.reg_scope.addItems(["Whole project", "Open drawing"])
+        self.reg_text = QLineEdit(); self.reg_text.setPlaceholderText("Filter by tag or text"); self.reg_text.setClearButtonEnabled(True)
+        self.reg_text.returnPressed.connect(self._reg_reset)
+        for w in (self.reg_group, self.reg_state, self.reg_scope):
+            w.currentIndexChanged.connect(self._reg_reset)
+        rb.addWidget(self.reg_group); rb.addWidget(self.reg_state); rb.addWidget(self.reg_scope); rb.addWidget(self.reg_text, 1)
+        for text, fn in (("Find", self._reg_reset), ("◀ Prev", lambda: self._reg_page(-1)), ("Next ▶", lambda: self._reg_page(1))):
+            b = QPushButton(text); b.clicked.connect(fn); rb.addWidget(b)
+        rl.addLayout(rb)
+        self.reg_table = _table(["Tag / text", "Class", "Page", "Drawing", "Rev", "Review", "Reviewed by", "Source file"])
+        self.reg_table.itemSelectionChanged.connect(self._register_selected)
+        rl.addWidget(self.reg_table, 1)
+        rb2 = QHBoxLayout()
+        self.reg_label = QLabel("")
+        rb2.addWidget(self.reg_label, 1)
+        for text, dec in (("Accept", "ACCEPTED_AS_READING"), ("Correct…", "EDITED_AND_ACCEPTED"), ("Reject", "REJECTED")):
+            b = QPushButton(text)
+            b.clicked.connect(lambda _=False, d=dec: self.review_reading(d))
+            rb2.addWidget(b)
+        exp = QPushButton("Export this view (CSV)"); exp.clicked.connect(self.export_register_csv); rb2.addWidget(exp)
+        rl.addLayout(rb2)
+        self.tabs.addTab(reg, "Registers")
+
+        # graph
+        gw = QWidget()
+        gl = QVBoxLayout(gw)
+        gb = QHBoxLayout()
+        gb.addWidget(QLabel("Proposed connectivity for the open drawing, drawn at the items' page positions. "
+                            "Squares: outline symbols • diamonds: valve glyphs • dots: line networks "
+                            "• dashed red: through a tee junction."), 1)
+        gref = QPushButton("Refresh"); gref.clicked.connect(self.refresh_graph); gb.addWidget(gref)
+        gl.addLayout(gb)
+        self.graph = GraphView()
+        self.graph.nodeClicked.connect(self._graph_node)
+        gl.addWidget(self.graph, 1)
+        self.path_table = _table(["From", "To", "Via valve glyphs", "Through tee", "Status"])
+        self.path_table.setMaximumHeight(170)
+        gl.addWidget(self.path_table)
+        self.tabs.addTab(gw, "Graph")
+
+        self.revision_tab = RevisionTab(self); self.tabs.addTab(self.revision_tab, "Revisions")
+        self.batch_tab = BatchTab(self); self.tabs.addTab(self.batch_tab, "Batch import")
+        self.library_tab = LibraryTab(self); self.tabs.addTab(self.library_tab, "Libraries")
+        self.report_tab = ReportTab(self); self.tabs.addTab(self.report_tab, "Reports")
+        self.audit_tab = AuditTab(self); self.tabs.addTab(self.audit_tab, "Audit")
+        self.setCentralWidget(self.tabs)
+
+        # right dock: findings + details
+        side = QWidget()
+        sl = QVBoxLayout(side)
+        fr = QHBoxLayout()
+        self.layer_combo = QComboBox()
+        for layer in F.LAYERS:
+            self.layer_combo.addItem(F.LAYER_TITLES[layer], layer)
+        self.layer_combo.currentIndexChanged.connect(self.show_findings)
+        self.state_combo = QComboBox()
+        self.state_combo.addItems(["All", "Unreviewed", "Reviewed"])
+        self.state_combo.currentIndexChanged.connect(self.show_findings)
+        fr.addWidget(self.layer_combo, 1); fr.addWidget(self.state_combo)
+        sl.addLayout(fr)
+        self.finding_table = _table(["Finding", "Page", "State"])
+        self.finding_table.itemSelectionChanged.connect(self._finding_selected)
+        sl.addWidget(self.finding_table, 2)
+        self.review_btn = QPushButton("Review selected…  (Ctrl+Return)")
+        self.review_btn.clicked.connect(self.review_finding)
+        sl.addWidget(self.review_btn)
+        self.details = QPlainTextEdit(); self.details.setReadOnly(True)
+        self.details.setAccessibleName("Details of selection")
+        sl.addWidget(self.details, 1)
+        d2 = QDockWidget("Findings and details", self)
+        d2.setObjectName("dock_findings")
+        d2.setWidget(side)
+        d2.setMinimumWidth(340)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, d2)
+        self.dock_findings = d2
+
+        self.progress = QProgressBar(); self.progress.setMaximumWidth(220); self.progress.setVisible(False)
+        self.cancel_btn = QPushButton("Cancel"); self.cancel_btn.setVisible(False); self.cancel_btn.clicked.connect(self.cancel_task)
+        self.statusBar().addPermanentWidget(self.progress)
+        self.statusBar().addPermanentWidget(self.cancel_btn)
+
+    def _build_menus(self) -> None:
+        def act(menu, text, fn, shortcut=None):
+            a = QAction(text, self)
+            if shortcut:
+                a.setShortcut(QKeySequence(shortcut))
+            a.triggered.connect(lambda _=False: fn())
+            menu.addAction(a)
+            self._actions.append(a)
+            return a
+        self._actions: list[QAction] = []
+        m = self.menuBar().addMenu("&File")
+        act(m, "&New project…", self.new_project, "Ctrl+N")
+        act(m, "&Open project…", lambda: self.open_project(), "Ctrl+O")
+        self.recent_menu = m.addMenu("Open &recent")
+        m.addSeparator()
+        self.import_act = act(m, "&Import PDF(s)…", self.import_pdfs, "Ctrl+I")
+        self.import_dir_act = act(m, "Import &folder…", self.import_folder, "Ctrl+Shift+I")
+        m.addSeparator()
+        act(m, "&Back up project…", self.backup_project, "Ctrl+B")
+        act(m, "E&xit", self.close, "Ctrl+Q")
+        m = self.menuBar().addMenu("&Drawing")
+        self.analyze_act = act(m, "&Analyse open drawing", self.analyze, "F5")
+        self.register_act = act(m, "&Register drawing (number, revision)…", self.register_drawing, "Ctrl+R")
+        m.addSeparator()
+        act(m, "Next page", lambda: self.step_page(1), "Ctrl+Right")
+        act(m, "Previous page", lambda: self.step_page(-1), "Ctrl+Left")
+        act(m, "Fit page", self.viewer.fit, "Ctrl+0")
+        act(m, "Find…", lambda: (self.tabs.setCurrentIndex(0), self.search_box.setFocus()), "Ctrl+F")
+        act(m, "Review selected finding…", self.review_finding, "Ctrl+Return")
+        m = self.menuBar().addMenu("&Tools")
+        act(m, "Reviewer &name…", self.set_reviewer)
+        om = m.addMenu("&OCR engine for scanned pages")
+        grp = QActionGroup(self)
+        for label, val in (("Automatic (Tesseract if installed, else RapidOCR)", "auto"), ("RapidOCR (bundled)", "rapidocr"),
+                           ("Tesseract", "tesseract"), ("Off (refuse scanned pages)", "off")):
+            a = QAction(label, self, checkable=True)
+            a.setChecked(self.ocr_engine() == val)
+            a.triggered.connect(lambda _=False, v=val: self.settings.setValue("ocr_engine", v))
+            grp.addAction(a)
+            om.addAction(a)
+        act(m, "&Verify audit chain", lambda: (self.tabs.setCurrentWidget(self.audit_tab), self.audit_tab.verify()))
+        m = self.menuBar().addMenu("&Help")
+        act(m, "What this software does and does not do", self.show_limits, "F1")
+        act(m, "&About", self.show_about)
+
+    def _set_enabled(self, on: bool) -> None:
+        for w in (self.tabs, self.dock_drawings, self.dock_findings):
+            w.setEnabled(on)
+        for a in (self.import_act, self.import_dir_act, self.analyze_act, self.register_act):
+            a.setEnabled(on)
+
+    # ------------------------------------------------------------------ project
+    def _recent(self) -> list[str]:
+        return [p for p in (self.settings.value("recent", [], list) or []) if isinstance(p, str)]
+
+    def _remember(self, path: str) -> None:
+        recent = [path] + [p for p in self._recent() if p != path]
+        self.settings.setValue("recent", recent[:8])
+        self.settings.setValue("last_project", path)
+        self.recent_menu.clear()
+        for p in recent[:8]:
+            a = QAction(p, self)
+            a.triggered.connect(lambda _=False, q=p: self.open_project(q))
+            self.recent_menu.addAction(a)
+
+    def default_project_dir(self) -> Path:
+        import os
+        base = Path(os.environ.get("LOCALAPPDATA") or Path.home() / ".local" / "share") / "PIDReader" / "projects"
+        base.mkdir(parents=True, exist_ok=True)
+        return base
+
+    def new_project(self) -> None:
+        path, _ = QFileDialog.getSaveFileName(self, "New project database", str(self.default_project_dir() / "project.sqlite"),
+                                              "P&ID Reader project (*.sqlite)")
+        if path:
+            if Path(path).exists():
+                QMessageBox.warning(self, "Already exists", "Choose a new file name or use Open project.")
+                return
+            self.open_project(path)
+
+    def open_project(self, path: str | None = None) -> None:
+        if not path:
+            path, _ = QFileDialog.getOpenFileName(self, "Open project", str(self.default_project_dir()),
+                                                  "P&ID Reader project (*.sqlite)")
+        if not path:
+            return
+        if self.task:
+            QMessageBox.information(self, "Busy", "Wait for or cancel the running task first.")
+            return
+        try:
+            new = ProjectStore(path)
+        except Exception as exc:
+            QMessageBox.critical(self, "Cannot open project", f"{type(exc).__name__}: {exc}")
+            return
+        if self.db:
+            self.db.close()
+        self.db, self.db_path = new, str(path)
+        self.current_extraction_id = ""
+        self.current_pdf = None
+        self.viewer.clear_page()
+        self.findings = {}
+        self.setWindowTitle(f"P&ID Reader — {Path(path).name}")
+        self._remember(self.db_path)
+        self._set_enabled(True)
+        if "OneDrive" in self.db_path or "Dropbox" in self.db_path:
+            self.statusBar().showMessage("Warning: this project lives in a synced folder; frequent database writes there can "
+                                         "conflict with sync. Local app-data is safer.", 20000)
+        self.refresh_all()
+        if self.db.migration_backup:
+            self.info(f"Project upgraded; previous copy kept at {self.db.migration_backup}")
+
+    def set_reviewer(self) -> None:
+        name, ok = QInputDialog.getText(self, "Reviewer name", "Name recorded on review decisions:",
+                                        text=self.settings.value("reviewer", "", str))
+        if ok and name.strip():
+            self.settings.setValue("reviewer", name.strip())
+
+    # ------------------------------------------------------------------ drawings
+    def refresh_drawings(self) -> None:
+        self.drawing_tree.clear()
+        rows = self.db.db.execute(
+            """SELECT e.extraction_id, d.source_name, d.page_count, d.source_bytes IS NOT NULL AS has_pdf,
+               (SELECT r.drawing_no FROM drawing_registration r WHERE r.extraction_id=e.extraction_id ORDER BY r.rowid DESC LIMIT 1) dno,
+               (SELECT r.revision_label FROM drawing_registration r WHERE r.extraction_id=e.extraction_id ORDER BY r.rowid DESC LIMIT 1) rev,
+               (SELECT r.facility FROM drawing_registration r WHERE r.extraction_id=e.extraction_id ORDER BY r.rowid DESC LIMIT 1) fac,
+               (SELECT r.area FROM drawing_registration r WHERE r.extraction_id=e.extraction_id ORDER BY r.rowid DESC LIMIT 1) area
+               FROM extraction e JOIN document_revision d ON d.sha256=e.document_sha256
+               ORDER BY fac, area, dno, e.imported_utc""").fetchall()
+        groups: dict[str, QTreeWidgetItem] = {}
+        self.drawing_items = {}
+        for r in rows:
+            key = f"{r['fac']} / {r['area']}" if r["fac"] else "Not yet registered"
+            if key not in groups:
+                groups[key] = QTreeWidgetItem(self.drawing_tree, [key, ""])
+                groups[key].setExpanded(True)
+            label = f"{r['dno']} rev {r['rev']}" if r["dno"] else r["source_name"]
+            it = QTreeWidgetItem(groups[key], [label, str(r["page_count"])])
+            it.setData(0, Qt.ItemDataRole.UserRole, r["extraction_id"])
+            it.setToolTip(0, r["source_name"] + ("" if r["has_pdf"] else "  (PDF bytes not stored)"))
+            self.drawing_items[r["extraction_id"]] = label
+            if r["extraction_id"] == self.current_extraction_id:
+                self.drawing_tree.setCurrentItem(it)
+        self.drawing_tree.resizeColumnToContents(0)
+
+    def _drawing_activated(self, item, _col=0) -> None:
+        eid = item.data(0, Qt.ItemDataRole.UserRole)
+        if eid:
+            self.open_drawing(eid)
+
+    def open_drawing(self, extraction_id: str, page: int = 1) -> None:
+        try:
+            result = self.db.export_extraction(extraction_id)
+            pdf = self.db.get_source_pdf(result["document"]["sha256"])
+        except Exception as exc:
+            QMessageBox.warning(self, "Cannot open drawing", f"{type(exc).__name__}: {exc}")
+            return
+        self.current_extraction_id, self.current_result, self.current_pdf = extraction_id, result, pdf
+        self.page_count = result["document"]["page_count"]
+        self.page_spin.blockSignals(True)
+        self.page_spin.setMaximum(self.page_count)
+        self.page_spin.blockSignals(False)
+        self.page_label.setText(f"/ {self.page_count}")
+        self.findings = {layer: F.list_findings(self.db, extraction_id, layer, limit=2000) for layer in F.LAYERS}
+        self.tabs.setCurrentIndex(0)
+        self.goto_page(page)
+        self.show_findings()
+        self.refresh_graph()
+        unread = [p["page"] for p in result["pages"] if p["read_status"] != "READ"]
+        msg = f"Opened {self.drawing_items.get(extraction_id, '')}: {result['summary']['object_count']} readings."
+        if unread:
+            msg += f" Pages not read: {unread} (image-only; enable OCR or check Tools → OCR engine)."
+        self.info(msg)
+
+    def goto_page(self, page: int) -> None:
+        if not self.current_extraction_id:
+            return
+        page = max(1, min(self.page_count, int(page)))
+        self.page = page
+        self.page_spin.blockSignals(True)
+        self.page_spin.setValue(page)
+        self.page_spin.blockSignals(False)
+        self.viewer.load_page(self.current_pdf, page)
+        self._apply_overlays()
+        self.prev_btn.setEnabled(page > 1)
+        self.next_btn.setEnabled(page < self.page_count)
+
+    def step_page(self, delta: int) -> None:
+        self.goto_page(self.page + delta)
+
+    def _zoom_100(self) -> None:
+        self.viewer.resetTransform()
+        self.viewer.zoomChanged.emit(1.0)
+
+    def _apply_overlays(self) -> None:
+        if not self.current_result:
+            return
+        page = self.page
+        readings = []
+        for o in self.current_result["objects"]:
+            if o["page"] == page and o["class"] != "LINE" or (o["page"] == page and o["text"]):
+                readings.append({"id": o["id"], "bbox": o["bbox"], "tip": f"{o['class']}: {o['text']}"})
+        self.viewer.set_overlay("readings", readings)
+        for layer in F.LAYERS:
+            items = [{"id": f["id"], "bbox": f["bbox"], "tip": f"{f['label']} — {f['state'].replace('_', ' ').lower()}"}
+                     for f in self.findings.get(layer, []) if f["page"] == page and f["bbox"]]
+            self.viewer.set_overlay(layer, items)
+
+    def _overlay_clicked(self, layer: str, item_id: str) -> None:
+        if layer == "readings":
+            o = next((x for x in self.current_result["objects"] if x["id"] == item_id), None)
+            if o:
+                self.details.setPlainText(json.dumps({"reading": o, "note": "Unverified reading from the drawing."}, indent=2))
+            return
+        idx = self.layer_combo.findData(layer)
+        self.layer_combo.setCurrentIndex(idx)
+        for r, f in enumerate(self.finding_rows):
+            if f["id"] == item_id:
+                self.finding_table.selectRow(r)
+                return
+        self.state_combo.setCurrentIndex(0)
+        self.show_findings()
+        for r, f in enumerate(self.finding_rows):
+            if f["id"] == item_id:
+                self.finding_table.selectRow(r)
+                return
+
+    def run_search(self) -> None:
+        q = self.search_box.text().strip()
+        if not q:
+            self.viewer.set_overlay("search", [])
+            return
+        hits = []
+        if self.current_result:
+            hits = [{"id": o["id"], "bbox": o["bbox"], "tip": o["text"]} for o in self.current_result["objects"]
+                    if o["page"] == self.page and q.lower() in o["text"].lower()]
+        self.viewer.set_overlay("search", hits)
+        self.viewer.set_layer_visible("search", True)
+        if hits:
+            self.viewer.highlight(hits[0]["bbox"])
+        self.reg_text.setText(q)
+        self.reg_scope.setCurrentIndex(0)
+        self._reg_reset()
+        self.statusBar().showMessage(f"{len(hits)} match(es) on this page; project-wide results in Registers.", 8000)
+
+    # ------------------------------------------------------------------ import / analysis
+    def import_pdfs(self) -> None:
+        names, _ = QFileDialog.getOpenFileNames(self, "Import P&ID PDFs", "", "PDF files (*.pdf)")
+        if names:
+            self._import([Path(n) for n in names])
+
+    def import_folder(self) -> None:
+        d = QFileDialog.getExistingDirectory(self, "Import all PDFs in folder")
+        if d:
+            files = sorted(Path(d).glob("*.pdf"))
+            if not files:
+                QMessageBox.information(self, "No PDFs", "That folder has no PDF files.")
+                return
+            self._import(files)
+
+    def _import(self, paths: list[Path]) -> None:
+        db_path, ocr = self.db_path, self.ocr_engine()
+
+        def job(report, cancelled):
+            from ..api import ReadParams
+            from ..engineering.isolation import read_pid_isolated
+            ids = []
+            with ProjectStore(db_path) as db:
+                for i, p in enumerate(paths):
+                    if cancelled():
+                        break
+                    report(i / len(paths), f"Reading {p.name} ({i + 1}/{len(paths)})")
+                    data = p.read_bytes()
+                    try:
+                        result = read_pid_isolated(data, ReadParams(), filename=p.name, ocr_engine=ocr,
+                                                   should_cancel=cancelled, timeout_s=600)
+                    except Exception as exc:
+                        if cancelled():
+                            break
+                        ids.append((None, p.name, f"{getattr(exc, 'code', type(exc).__name__)}: {exc}"))
+                        continue
+                    ids.append((db.add_extraction(result, source_pdf_bytes=data), p.name, ""))
+            return ids
+
+        def done(ids):
+            ok = [i for i in ids if i[0]]
+            bad = [i for i in ids if not i[0]]
+            self.refresh_all()
+            if ok:
+                self.open_drawing(ok[0][0])
+            if bad:
+                QMessageBox.warning(self, "Some files were not imported",
+                                    "\n".join(f"{n}: {why}" for _i, n, why in bad[:12]))
+            self.info(f"Imported {len(ok)} drawing(s); {len(bad)} refused or failed. Run Analyse (F5) to find symbols, valves and links.")
+
+        self.run_task("Importing PDFs", job, done)
+
+    def analyze(self) -> None:
+        eid = self.current_extraction_id
+        if not eid:
+            QMessageBox.information(self, "No drawing open", "Import or open a drawing first.")
+            return
+        db_path, ocr = self.db_path, self.ocr_engine()
+        catalogue = self.settings.value("catalogue_id", None, str) or None
+
+        def job(report, cancelled):
+            from ..engineering.pipeline import analyze_drawing
+            with ProjectStore(db_path) as db:
+                return analyze_drawing(db, eid, ocr_engine=None if ocr == "off" else ocr, catalogue_id=catalogue,
+                                       progress=lambda s, f, m: report(f, m), cancel=CallbackCancelToken(cancelled))
+
+        def done(out):
+            lines = [f"{k}: {v['status']} {v['detail']}" for k, v in out["stages"].items()]
+            self.details.setPlainText("Analysis finished (all results are unreviewed proposals):\n" + "\n".join(lines))
+            self.open_drawing(eid, self.page)
+
+        self.run_task("Analysing drawing", job, done)
+
+    def register_drawing(self) -> None:
+        eid = self.current_extraction_id
+        if not eid:
+            QMessageBox.information(self, "No drawing open", "Open a drawing first.")
+            return
+        actor = self.reviewer()
+        if not actor:
+            return
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Register drawing")
+        form = QFormLayout(dlg)
+        fields = {k: QLineEdit() for k in ("drawing_no", "revision_label", "facility", "area")}
+        form.addRow("Drawing number (as printed)", fields["drawing_no"])
+        form.addRow("Revision (as printed)", fields["revision_label"])
+        form.addRow("Facility", fields["facility"])
+        form.addRow("Area / unit", fields["area"])
+        bb = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        bb.accepted.connect(dlg.accept); bb.rejected.connect(dlg.reject)
+        form.addRow(bb)
+        if dlg.exec() != QDialog.DialogCode.Accepted:
+            return
+        try:
+            self.db.register_drawing(eid, actor=actor, reason="Catalogue entry from GUI",
+                                     **{k: v.text().strip() for k, v in fields.items()})
+        except Exception as exc:
+            QMessageBox.warning(self, "Not registered", str(exc))
+            return
+        self.refresh_all()
+        self.info("Drawing registered. Registration is a catalogue entry, not proof it is the current or as-built revision.")
+
+    # ------------------------------------------------------------------ findings
+    def show_findings(self) -> None:
+        layer = self.layer_combo.currentData()
+        items = list(self.findings.get(layer, []))
+        mode = self.state_combo.currentText()
+        if mode == "Unreviewed":
+            items = [f for f in items if f["state"] == "PROPOSED"]
+        elif mode == "Reviewed":
+            items = [f for f in items if f["state"] != "PROPOSED"]
+        self.finding_rows = items
+        t = self.finding_table
+        t.setRowCount(len(items))
+        for r, f in enumerate(items):
+            for c, v in enumerate((f["label"], f["page"], f["state"].replace("_", " ").title())):
+                it = QTableWidgetItem(str(v))
+                if c == 2:
+                    it.setForeground(QColor(STATE_COLOURS.get(f["state"], "#2e7d32")))
+                t.setItem(r, c, it)
+        t.resizeColumnsToContents()
+        total = len(self.findings.get(layer, []))
+        self.layer_combo.setItemText(self.layer_combo.currentIndex(),
+                                     f"{F.LAYER_TITLES[layer]} ({total})")
+
+    def _selected_finding(self) -> dict | None:
+        rows = self.finding_table.selectionModel().selectedRows() if self.finding_table.selectionModel() else []
+        if rows and 0 <= rows[0].row() < len(self.finding_rows):
+            return self.finding_rows[rows[0].row()]
+        return None
+
+    def _finding_selected(self) -> None:
+        f = self._selected_finding()
+        if not f:
+            return
+        self.details.setPlainText(json.dumps({"layer": f["layer"], "state": f["state"], "proposal": f["detail"],
+                                              "note": "Proposal read from the drawing; not verified."}, indent=2, default=str))
+        if f["page"] != self.page:
+            self.goto_page(f["page"])
+        self.viewer.highlight(f["bbox"])
+
+    def review_finding(self) -> None:
+        f = self._selected_finding()
+        if not f:
+            QMessageBox.information(self, "Nothing selected", "Select a finding first.")
+            return
+        actor = self.reviewer()
+        if not actor:
+            return
+        options = [o["text_candidate"] for o in f["detail"].get("options", [])] if f["layer"] == "text_links" else None
+        dlg = ReviewDialog(self, f"Review: {f['label']}", F.DECISIONS[f["layer"]], text_options=options)
+        if dlg.exec() != QDialog.DialogCode.Accepted:
+            return
+        decision, reason, text = dlg.values()
+        if not reason and decision != "ACCEPTED_AS_READING":
+            reason = "Reviewed in desktop application"
+        if len(reason) < 5:
+            reason = "Checked against printed drawing"
+        try:
+            F.review_finding(self.db, f["layer"], f["id"], actor=actor, decision=decision, reason=reason,
+                             selected_text=text if f["layer"] == "text_links" and decision in
+                             ("ACCEPTED_AS_READING", "EDITED_AND_ACCEPTED") else None)
+        except Exception as exc:
+            QMessageBox.warning(self, "Review refused", str(exc))
+            return
+        self.findings[f["layer"]] = F.list_findings(self.db, self.current_extraction_id, f["layer"], limit=2000)
+        self.show_findings()
+        self._apply_overlays()
+        self.statusBar().showMessage("Decision recorded (append-only audit).", 6000)
+
+    # ------------------------------------------------------------------ registers
+    def _reg_reset(self) -> None:
+        self.register_offset = 0
+        self.refresh_register()
+
+    def _reg_page(self, d: int) -> None:
+        new = self.register_offset + d * 100
+        if 0 <= new < max(1, self.register_total):
+            self.register_offset = new
+            self.refresh_register()
+
+    def _reg_query(self, **extra) -> dict:
+        kw = dict(REGISTER_GROUPS[self.reg_group.currentText()])
+        state = self.reg_state.currentText()
+        kw.update(text=self.reg_text.text().strip(), state="" if state == "All states" else state)
+        if self.reg_scope.currentIndex() == 1 and self.current_extraction_id:
+            kw["extraction_id"] = self.current_extraction_id
+        kw.update(extra)
+        return kw
+
+    def refresh_register(self) -> None:
+        if not self.db:
+            return
+        try:
+            page = register_page(self.db, limit=100, offset=self.register_offset, **self._reg_query())
+        except Exception as exc:
+            self.reg_label.setText(f"Query refused: {exc}")
+            return
+        self.register_rows, self.register_total = page["rows"], page["total"]
+        _fill(self.reg_table, [[(r["reviewed_edit"] or {}).get("text") or r["tag_text"], r["object_class"], r["page"],
+                                r["drawing_no"] or "", r["revision_label"] or "", r["state"].replace("_", " ").title(),
+                                r["reviewed_by"] or "", r["source_name"]] for r in self.register_rows])
+        first = self.register_offset + 1 if self.register_rows else 0
+        self.reg_label.setText(f"{first}–{self.register_offset + len(self.register_rows)} of {self.register_total} "
+                               "readings (unverified)")
+
+    def _selected_reading(self) -> dict | None:
+        rows = self.reg_table.selectionModel().selectedRows() if self.reg_table.selectionModel() else []
+        return self.register_rows[rows[0].row()] if rows and rows[0].row() < len(self.register_rows) else None
+
+    def _register_selected(self) -> None:
+        row = self._selected_reading()
+        if not row:
+            return
+        self.details.setPlainText(json.dumps({"source": {k: row[k] for k in ("source_name", "page", "document_sha256",
+                                              "drawing_no", "revision_label")}, "reading": row["tag_text"],
+                                              "class": row["object_class"], "review": row["state"],
+                                              "reviewed_by": row["reviewed_by"]}, indent=2))
+        if row["extraction_id"] != self.current_extraction_id:
+            self.open_drawing(row["extraction_id"], row["page"])
+            self.tabs.setCurrentWidget(self.reg_table.parentWidget())
+        elif row["page"] != self.page:
+            self.goto_page(row["page"])
+        self.viewer.highlight(row["bbox"])
+
+    def review_reading(self, decision: str) -> None:
+        row = self._selected_reading()
+        if not row:
+            QMessageBox.information(self, "Nothing selected", "Select a reading in the table first.")
+            return
+        actor = self.reviewer()
+        if not actor:
+            return
+        edited, reason = None, ""
+        if decision != "ACCEPTED_AS_READING":
+            dlg = ReviewDialog(self, f"{DECISION_TEXT[decision]}: {row['tag_text']}", (decision,),
+                               allow_edit_text=decision == "EDITED_AND_ACCEPTED", current_text=row["tag_text"])
+            if dlg.exec() != QDialog.DialogCode.Accepted:
+                return
+            _d, reason, text = dlg.values()
+            if decision == "EDITED_AND_ACCEPTED":
+                if not text or text == row["tag_text"]:
+                    QMessageBox.information(self, "Nothing corrected", "Type the corrected text first.")
+                    return
+                edited = {"text": text}
+            if len(reason) < 5:
+                reason = "Reviewed in desktop application"
+        try:
+            self.db.review(row["observation_id"], actor=actor, decision=decision, reason=reason, edited=edited)
+        except Exception as exc:
+            QMessageBox.warning(self, "Review refused", str(exc))
+            return
+        keep = self.reg_table.currentRow()
+        self.refresh_register()
+        if 0 <= keep < self.reg_table.rowCount():
+            self.reg_table.selectRow(keep)
+        self.statusBar().showMessage("Reading review recorded (original text is kept; append-only audit).", 6000)
+
+    def export_register_csv(self) -> None:
+        import csv
+        from ..engineering.reports import _spreadsheet_safe
+        dest, _ = QFileDialog.getSaveFileName(self, "Export register view", "register.csv", "CSV (*.csv)")
+        if not dest:
+            return
+        try:
+            offset, rows = 0, []
+            while True:
+                page = register_page(self.db, limit=250, offset=offset, **self._reg_query())
+                rows.extend(page["rows"])
+                offset += 250
+                if offset >= page["total"] or offset > 100000:
+                    break
+            with open(dest, "w", newline="", encoding="utf-8-sig") as fh:
+                w = csv.writer(fh)
+                w.writerow(["tag_or_text", "class", "page", "drawing_no", "revision", "review_state", "reviewed_by",
+                            "source_file", "source_sha256", "unverified_notice"])
+                for r in rows:
+                    w.writerow([_spreadsheet_safe(v) for v in (
+                        (r["reviewed_edit"] or {}).get("text") or r["tag_text"], r["object_class"], r["page"],
+                        r["drawing_no"] or "", r["revision_label"] or "", r["state"], r["reviewed_by"] or "",
+                        r["source_name"], r["document_sha256"], "Reading from drawing; not verified")])
+            self.info(f"Exported {len(rows)} rows to {dest}")
+        except Exception as exc:
+            QMessageBox.warning(self, "Export failed", str(exc))
+
+    # ------------------------------------------------------------------ graph
+    def refresh_graph(self) -> None:
+        if not self.current_extraction_id:
+            return
+        try:
+            g = drawing_connectivity(self.db, self.current_extraction_id)
+        except Exception as exc:
+            self.info(f"Graph unavailable: {type(exc).__name__}: {exc}")
+            return
+        self.graph.set_graph(g)
+        _fill(self.path_table, [[p["a_label"], p["b_label"], len(p["via_valve_glyphs"]), "yes" if p["via_tee"] else "no",
+                                 "proposed, unverified"] for p in g.get("paths", [])])
+        self._graph = g
+
+    def _graph_node(self, node_id: str) -> None:
+        node = next((n for n in getattr(self, "_graph", {}).get("nodes", []) if n["id"] == node_id), None)
+        if not node:
+            return
+        self.details.setPlainText(json.dumps({"node": node, "note": "Proposed from drawn lines; not verified."}, indent=2))
+        self.tabs.setCurrentIndex(0)
+        if node["page"] != self.page:
+            self.goto_page(node["page"])
+        self.viewer.highlight(node["bbox"])
+
+    # ------------------------------------------------------------------ help
+    def show_limits(self) -> None:
+        QMessageBox.information(self, "What this software does and does not do", LIMITS_TEXT)
+
+    def show_about(self) -> None:
+        from ..formats.ocr_source import available_engines
+        QMessageBox.about(self, "About P&ID Reader",
+                          f"<b>P&amp;ID Reader</b> {__version__}<br>Development build — not engineering validated.<br><br>"
+                          f"Offline OCR engines available: {', '.join(available_engines()) or 'none'}<br>"
+                          f"Project: {self.db_path or '(none)'}<br><br>" + LIMITS_TEXT.replace("\n", "<br>"))
+
+    def closeEvent(self, event) -> None:
+        if self.task:
+            if QMessageBox.question(self, "Task running", "A task is still running. Cancel it and exit?") != QMessageBox.StandardButton.Yes:
+                event.ignore()
+                return
+            self.task.cancel()
+            self.task.wait(8000)
+        self.settings.setValue("geometry", self.saveGeometry())
+        self.settings.setValue("state", self.saveState())
+        if self.db:
+            self.db.close()
+        event.accept()

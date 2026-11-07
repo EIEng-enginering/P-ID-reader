@@ -155,7 +155,8 @@ def main(argv: list[str] | None = None) -> int:
     aa.add_argument("database");aa.add_argument("extraction_id")
     aa.add_argument("--ocr",choices=("auto","tesseract","rapidocr","off"),default="auto")
     aa.add_argument("--catalogue-id",default=None)
-    sub.add_parser("gui").add_argument("database")
+    gp=sub.add_parser("gui",help="Open the desktop application");gp.add_argument("database",nargs="?",default=None)
+    sub.add_parser("gui-legacy",help="Original Rev Q development viewer (kept for audit)").add_argument("database")
     args=p.parse_args(argv)
     try:
         if args.cmd=="ocr-preview":
@@ -177,6 +178,9 @@ def main(argv: list[str] | None = None) -> int:
                 print(text)
             return 0
         if args.cmd=="gui":
+            from .ui.app import run_app
+            return run_app(args.database)
+        if args.cmd=="gui-legacy":
             from .ui.desktop import run_ui
             return run_ui(args.database)
         with ProjectStore(args.database) as db:

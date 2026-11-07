@@ -23,7 +23,9 @@ class DrawingView(QGraphicsView):
     zoomChanged = Signal(float)
 
     def __init__(self, parent=None):
-        super().__init__(QGraphicsScene(), parent)
+        scene = QGraphicsScene()
+        super().__init__(scene, parent)
+        self._scene = scene  # keep a Python reference: PySide would otherwise free the scene
         self.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
         self.setRenderHints(QPainter.RenderHint.SmoothPixmapTransform | QPainter.RenderHint.Antialiasing)
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
