@@ -1,0 +1,24 @@
+requirement,source,implementation,test_evidence,status
+Standalone Windows app: project/facility mgmt,Assignment §6.1,ui/main_window.py (projects, drawing tree by facility/area, register drawing),tests/test_gui.py,PASS (scripted); manual UX NOT_RUN
+Import single/multiple/folder PDFs,Assignment §6.2,ui import + engineering/batch.py + isolation.py,tests/test_win_r01.py batch tests; test_gui.py,PASS
+Viewer zoom/pan/search/overlays,Assignment §6.3,ui/viewer.py,tests/test_gui.py + screenshots,PASS (scripted); manual NOT_RUN
+Automatic extraction,Assignment §6.4,engineering/pipeline.py + standalone_read.py,tests/test_win_r01.py,PASS on synthetic; real sheets weak (W-001)
+Registers (equipment/valve/instrument/line),Assignment §6.5,workspace.register_page + Registers tab,tests/test_gui.py,PASS
+Searchable database,Assignment §6.6,SQLite store + search_project + register filters,tests (rev_o/rev_p/gui),PASS (not performance benchmarked)
+Interactive source-linked graph,Assignment §6.7,engineering/connectivity.py + ui/graphview.py,tests/test_gui.py (graph builds),PASS proposal-only; loops/off-page NOT_IMPLEMENTED
+Human review/correction/acceptance,Assignment §6.8,engineering/findings.py + review dialogs,tests/test_win_r01.py findings; test_gui.py,PASS
+Revision comparison,Assignment §6.9,engineering/revisions.py + Revisions tab,tests/test_rev_o.py,PASS (unique class+tag only)
+Batch progress/cancel/safe recovery,Assignment §6.10,batch.resume_batch(isolated,cancel,progress),tests/test_win_r01.py + test_gui.py,PASS
+Configurable symbol/tag libraries,Assignment §6.11,Libraries tab + symbol_catalog/tag_profiles JSON,tests/test_rev_n.py (engine); GUI editor smoke only,PARTIAL
+Structured reports/exports,Assignment §6.12,engineering/reports.py (HTML/CSV/JSON),tests/test_rev_p.py,PASS; PDF/DOCX/XLSX/DEXPI NOT_IMPLEMENTED
+Integration interfaces,Assignment §6.13,api/worker/cli/pipeline/findings Python + CLI,tests,PASS
+Offline installer/package,Assignment §6.14,packaging/*,docs/WORKLOG.md rehearsal,PASS on dev PC; unsigned; clean-VM NOT_RUN
+No model training required; offline pretrained OCR,Assignment §7,RapidOCR ONNX (Apache-2.0) + templates,tests/test_win_r01.py,PASS
+Preserve unknown/uncertain,Assignment §7,UNRESOLVED states; proposals never auto-accepted,tests,PASS
+R1 contract preserved,Assignment §8,api/worker unchanged; standalone separate,preflight + 16 R1 checker tests,PASS
+No safeguard/SIL/IPL claims,Assignment §8,UI/report limitation text; no such code,review,PASS
+Worksheet host integration G4-G7,Assignment §8,tools/build_worksheet_package.py,none,NOT_RUN (no host copy)
+Benchmark >=120 drawings with >=30 reserved,Assignment §10,tools/make_benchmark_corpus.py + score_benchmark.py,TEST_RESULTS/WIN312_R01/benchmark,PASS prepared; final split NOT_RUN; not independent
+Backup/restore/crash recovery,Assignment §10,ProjectStore.backup + migration backups,tests/test_project.py etc.,PASS unit; Windows crash-injection NOT_RUN
+Windows display scaling,Assignment §10,PassThrough rounding policy; screenshots 100/125/150%,TEST_RESULTS/WIN312_R01/screenshots,PARTIAL (visual only)
+Hostile PDF/cancellation,Assignment §10,isolation.py,tests (cancel/memory),PARTIAL (resource caps; no fuzzing)
