@@ -14,6 +14,7 @@ def main(argv: list[str] | None = None) -> int:
     sub=p.add_subparsers(dest="cmd",required=True)
     create=sub.add_parser("init-project");create.add_argument("database")
     imp=sub.add_parser("import-pdf");imp.add_argument("database");imp.add_argument("pdf");imp.add_argument("--output-json");imp.add_argument("--revision-id",default="")
+    imp.add_argument("--ocr",choices=("auto","tesseract","rapidocr","off"),default="auto",help="OCR for image-only pages (offline); off = refuse them as the frozen R1 reader does")
     lst=sub.add_parser("list");lst.add_argument("database");lst.add_argument("--text",default="");lst.add_argument("--limit",type=int,default=100)
     show=sub.add_parser("show");show.add_argument("database");show.add_argument("observation_id")
     graph=sub.add_parser("connections");graph.add_argument("database");graph.add_argument("observation_id")
@@ -120,10 +121,12 @@ def main(argv: list[str] | None = None) -> int:
     # Rev O: bounded batch import, source-revision proposal comparisons and indexed search.
     bi=sub.add_parser('batch-import');bi.add_argument('database');bi.add_argument('inputs',nargs='+')
     bi.add_argument('--actor',required=True);bi.add_argument('--stop-after',type=int)
+    bi.add_argument('--ocr',choices=('auto','tesseract','rapidocr','off'),default='auto')
     bi.add_argument('--in-process',action='store_true',help='Read PDFs inside this process (default: isolated child with time/memory limits)')
     br=sub.add_parser('batch-resume');br.add_argument('database');br.add_argument('batch_id')
     br.add_argument('--stop-after',type=int)
     br.add_argument('--in-process',action='store_true')
+    br.add_argument('--ocr',choices=('auto','tesseract','rapidocr','off'),default='auto')
     bs=sub.add_parser('batch-status');bs.add_argument('database');bs.add_argument('batch_id')
     rc=sub.add_parser('compare-revisions');rc.add_argument('database');rc.add_argument('before_extraction_id')
     rc.add_argument('after_extraction_id');rc.add_argument('--output-json')
@@ -182,7 +185,11 @@ def main(argv: list[str] | None = None) -> int:
             elif args.cmd=="import-pdf":
                 source=Path(args.pdf)
                 data=source.read_bytes()
-                doc=read_pid(data,ReadParams(),filename=source.name,document_revision_id=args.revision_id)
+                if args.ocr=="off":
+                    doc=read_pid(data,ReadParams(),filename=source.name,document_revision_id=args.revision_id)
+                else:
+                    from .engineering.standalone_read import read_pid_standalone
+                    doc=read_pid_standalone(data,ReadParams(),filename=source.name,document_revision_id=args.revision_id,ocr_engine=args.ocr)
                 extraction=db.add_extraction(doc,source_pdf_bytes=data)
                 if args.output_json:
                     Path(args.output_json).write_text(canonical_json(doc),encoding="utf-8")
@@ -361,11 +368,11 @@ def main(argv: list[str] | None = None) -> int:
             elif args.cmd=='batch-import':
                 from .engineering.batch import start_batch,resume_batch
                 bid=start_batch(db,args.inputs,actor=args.actor)
-                job=resume_batch(db,bid,stop_after=args.stop_after,isolated=not args.in_process)
+                job=resume_batch(db,bid,stop_after=args.stop_after,isolated=not args.in_process,ocr_engine=args.ocr)
                 print(canonical_json({'batch_id':bid,'state':job['state'],'counts':job['counts']}))
             elif args.cmd=='batch-resume':
                 from .engineering.batch import resume_batch
-                job=resume_batch(db,args.batch_id,stop_after=args.stop_after,isolated=not args.in_process)
+                job=resume_batch(db,args.batch_id,stop_after=args.stop_after,isolated=not args.in_process,ocr_engine=args.ocr)
                 print(canonical_json({'batch_id':job['batch_id'],'state':job['state'],'counts':job['counts']}))
             elif args.cmd=='batch-status':
                 print(canonical_json(db.get_batch(args.batch_id)))

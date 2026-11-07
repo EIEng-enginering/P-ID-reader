@@ -86,13 +86,16 @@ def start_batch(db, inputs: list[str | Path], *, actor: str, params: ReadParams 
 
 
 def resume_batch(db, batch_id: str, *, stop_after: int | None = None, isolated: bool = False,
-                 should_cancel=None, progress=None, timeout_s: int = 180, memory_mb: int = 2048) -> dict:
+                 should_cancel=None, progress=None, timeout_s: int = 180, memory_mb: int = 2048,
+                 ocr_engine: str | None = None) -> dict:
     """Import the not-yet-recorded files of a batch.
 
     ``isolated=True`` reads every PDF in a resource-limited child process
     (timeout, memory cap, kill-on-cancel). If ``should_cancel()`` becomes true the
     current file is *not* recorded, so a later resume re-reads it; the batch then
     simply stays INCOMPLETE. ``progress(done, total, name)`` is called per file.
+    ``ocr_engine`` (auto|tesseract|rapidocr|off) enables the standalone reader that OCRs
+    image-only pages; ``None`` keeps the R1-compatible reader that refuses them.
     """
     if stop_after is not None and (type(stop_after) is not int or stop_after < 1):
         raise ValueError('stop_after must be a positive integer')
@@ -126,7 +129,12 @@ def resume_batch(db, batch_id: str, *, stop_after: int | None = None, isolated: 
             if isolated:
                 from .isolation import read_pid_isolated
                 result = read_pid_isolated(source, params, filename=item['name'], expected_sha256=item['sha256'],
-                                           timeout_s=timeout_s, memory_mb=memory_mb, should_cancel=should_cancel)
+                                           timeout_s=timeout_s, memory_mb=memory_mb, should_cancel=should_cancel,
+                                           ocr_engine=ocr_engine)
+            elif ocr_engine is not None:
+                from .standalone_read import read_pid_standalone
+                result = read_pid_standalone(source, params, filename=item['name'], expected_sha256=item['sha256'],
+                                             ocr_engine=None if ocr_engine == 'off' else ocr_engine)
             else:
                 result = read_pid(source, params, filename=item['name'], expected_sha256=item['sha256'])
             extracted_id = db.add_extraction(result, source)

@@ -60,7 +60,8 @@ def atomic_publish(result: dict, destination: Path, scratch: Path) -> None:
             staged.unlink(missing_ok=True)
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, _reader=None) -> int:
+    """``_reader`` lets the standalone worker substitute a reader; the R1 entry point leaves it unset."""
     parser = argparse.ArgumentParser(prog="pid_reader.worker")
     sub = parser.add_subparsers(dest="command", required=True)
     run = sub.add_parser("run")
@@ -94,7 +95,7 @@ def main(argv: list[str] | None = None) -> int:
             raise LimitExceeded("PID_LIMIT_BYTES", "Input exceeds the configured byte limit.")
         input_data = src.read_bytes()
         progress(event="start", bytes=len(input_data), sha256=sha256_hex(input_data))
-        result = read_pid(input_data, params, CancelToken(),
+        result = (_reader or read_pid)(input_data, params, CancelToken(),
                           document_revision_id=args.document_revision_id,
                           filename=args.filename, expected_sha256=args.expected_sha256)
         atomic_publish(result, output, workdir)

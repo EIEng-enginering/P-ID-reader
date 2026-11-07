@@ -105,15 +105,20 @@ def _package_parent() -> str:
 
 
 def _worker_command(input_path: Path, params_path: Path, output_path: Path, workdir: Path,
-                    filename: str, expected_sha256: str) -> tuple[list[str], dict]:
+                    filename: str, expected_sha256: str, ocr_engine: str | None = None) -> tuple[list[str], dict]:
     args = ["run", "--input", str(input_path), "--params", str(params_path), "--output", str(output_path),
             "--workdir", str(workdir), "--filename", filename, "--expected-sha256", expected_sha256]
     env = dict(os.environ)
+    standalone = ocr_engine is not None
+    if standalone:
+        env["PID_OCR_ENGINE"] = ocr_engine
     if getattr(sys, "frozen", False):
-        return [sys.executable, "--pid-worker", *args], env
+        flag = "--pid-worker-standalone" if standalone else "--pid-worker"
+        return [sys.executable, flag, *args], env
     env["PYTHONPATH"] = _package_parent()
     env["PYTHONIOENCODING"] = "utf-8"
-    return [sys.executable, "-X", "utf8", "-m", "pid_reader.worker", *args], env
+    module = "pid_reader.engineering.standalone_worker" if standalone else "pid_reader.worker"
+    return [sys.executable, "-X", "utf8", "-m", module, *args], env
 
 
 def run_limited(cmd: list[str], *, env: dict, cwd: str, timeout_s: int, memory_mb: int,
@@ -179,8 +184,12 @@ def read_pid_isolated(pdf_bytes: bytes, params: ReadParams, *, filename: str = "
                       expected_sha256: str = "", timeout_s: int = DEFAULT_TIMEOUT_S,
                       memory_mb: int = DEFAULT_MEMORY_MB,
                       should_cancel: Callable[[], bool] | None = None,
-                      scratch_root: str | Path | None = None) -> dict:
+                      scratch_root: str | Path | None = None,
+                      ocr_engine: str | None = None) -> dict:
     """Return the validated R1 result produced by a resource-limited child process.
+
+    ``ocr_engine`` (auto|tesseract|rapidocr|off) switches to the standalone reader that
+    also OCRs image-only pages; ``None`` runs the frozen R1 reader.
 
     Raises RefusedInput / LimitExceeded / Cancelled exactly as ``read_pid`` would
     and :class:`WorkerTimeout` (a LimitExceeded, code ``PID_TIMEOUT``).
@@ -202,7 +211,7 @@ def read_pid_isolated(pdf_bytes: bytes, params: ReadParams, *, filename: str = "
         params_path = base / "params.json"
         params_path.write_text(canonical_json(params.as_dict()), encoding="utf-8")
         output_path = outdir / "result.json"
-        cmd, env = _worker_command(input_path, params_path, output_path, workdir, filename, expected_sha256)
+        cmd, env = _worker_command(input_path, params_path, output_path, workdir, filename, expected_sha256, ocr_engine)
         code, stderr, reason = run_limited(cmd, env=env, cwd=str(base), timeout_s=timeout_s,
                                            memory_mb=memory_mb, should_cancel=should_cancel)
         if reason == "cancel":

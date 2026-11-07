@@ -32,7 +32,8 @@ def _escaped_like(v: str) -> str:
 
 def register_page(store, *, extraction_id: str = "", text: str = "",
                   object_class: str = "", state: str = "", drawing_no: str = "",
-                  limit: int = 100, offset: int = 0) -> dict:
+                  limit: int = 100, offset: int = 0,
+                  object_classes: tuple = (), named_only: bool = False) -> dict:
     """Page through all source observations, retaining review *as a drawing reading*.
 
     A report/UI page is a current database view, not a frozen as-built snapshot.
@@ -56,6 +57,12 @@ def register_page(store, *, extraction_id: str = "", text: str = "",
         where.append("o.tag_text LIKE ? ESCAPE '\\'"); params.append(_escaped_like(text))
     if object_class:
         where.append("o.class=?"); params.append(object_class)
+    if object_classes:
+        if (len(object_classes) > 20 or not all(isinstance(c, str) and 0 < len(c) <= 40 for c in object_classes)):
+            raise ValueError("Invalid object class list")
+        where.append("o.class IN (" + ",".join("?" * len(object_classes)) + ")"); params.extend(object_classes)
+    if named_only:
+        where.append("TRIM(o.tag_text)<>''")
     if drawing_no:
         where.append("reg.drawing_no=?"); params.append(drawing_no)
     if state == "PROPOSED":

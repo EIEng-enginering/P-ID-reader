@@ -235,3 +235,60 @@ def test_findings_cover_layers_and_review_round_trips(tmp_path, fixture):
             findings.review_finding(db, layer, first['id'], actor='X', decision='NOPE', reason='bad one')
         counts = findings.finding_counts(db, eid)
         assert counts[layer]['reviewed'] >= 1
+
+
+# ---- scanned (image-only) drawings via standalone reader --------------------
+
+def _scanned_pdf():
+    import io
+    import pypdfium2 as pdfium
+    from reportlab.lib.utils import ImageReader
+    from reportlab.pdfgen import canvas
+    src = (FIX / 'synthetic_pid_vector.pdf').read_bytes()
+    image = pdfium.PdfDocument(src)[0].render(scale=2.2).to_pil().convert('L')
+    out = io.BytesIO()
+    c = canvas.Canvas(out, pagesize=(595, 842), pageCompression=0, invariant=1)
+    c.drawImage(ImageReader(image), 0, 0, 595, 842)
+    c.save()
+    return out.getvalue()
+
+
+def test_frozen_r1_reader_still_refuses_scanned_page():
+    from pid_reader.api import RefusedInput
+    scanned = _scanned_pdf()
+    result = read_pid(scanned, ReadParams(), filename='scan.pdf')
+    assert result['pages'][0]['read_status'] == 'REFUSED'
+    assert not result['objects']
+
+
+@pytest.mark.skipif(not ocr_source.rapidocr_available(), reason='RapidOCR (optional) not installed')
+def test_standalone_reader_ocr_reads_scanned_page_and_passes_r1_schema_check(tmp_path):
+    from pid_reader.engineering.standalone_read import read_pid_standalone
+    scanned = _scanned_pdf()
+    result = read_pid_standalone(scanned, ReadParams(), filename='scan.pdf', ocr_engine='rapidocr')
+    assert result['pages'][0]['read_status'] == 'READ'
+    texts = {o['text'] for o in result['objects']}
+    assert 'V-101' in texts
+    assert all(o['attributes']['source'] == 'OCR' and o['confidence'] <= 0.55 and o['status'] == 'UNVERIFIED'
+               for o in result['objects'])
+    assert result['provenance']['models'] and all(m['licence'] == 'Apache-2.0' for m in result['provenance']['models'])
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
+    import check_extraction
+    schema = Path(__file__).resolve().parents[1] / 'contracts/worksheet_r1_schemas/pid_extraction.schema.json'
+    assert check_extraction.check(result) == []
+    assert check_extraction.schema_check(result, schema) == []
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(result, source_pdf_bytes=scanned)
+        assert db.list_objects(extraction_id=eid, text='V-101')
+
+
+@pytest.mark.skipif(not ocr_source.rapidocr_available(), reason='RapidOCR (optional) not installed')
+def test_isolated_standalone_reader_matches_in_process_for_scanned_page():
+    from pid_reader.engineering.isolation import read_pid_isolated
+    from pid_reader.engineering.standalone_read import read_pid_standalone
+    scanned = _scanned_pdf()
+    child = read_pid_isolated(scanned, ReadParams(), filename='scan.pdf', ocr_engine='rapidocr', timeout_s=120)
+    direct = read_pid_standalone(scanned, ReadParams(), filename='scan.pdf', ocr_engine='rapidocr')
+    key = lambda r: sorted((o['text'], o['class'], o['page']) for o in r['objects'])
+    assert key(child) == key(direct)
