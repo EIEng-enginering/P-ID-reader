@@ -147,3 +147,61 @@ def test_cancel_batch_keeps_state_resumable(window, qapp, tmp_path):
     window.refresh_all()
     bid = window.batch_tab.history.currentData()
     assert window.db.get_batch(bid)["state"] == "COMPLETE"
+
+
+def test_sheet_info_tab_and_taught_symbol_overlay(window, qapp, tmp_path):
+    import io
+    from reportlab.pdfgen import canvas
+    from pid_reader.engineering.examples import teach_symbol
+    out = io.BytesIO()
+    c = canvas.Canvas(out, pagesize=(842, 595), pageCompression=0, invariant=1)
+    for x, y in ((150, 400), (350, 400), (550, 400)):
+        c.line(x - 60, y, x - 14, y); c.line(x + 14, y, x + 60, y)
+        for dx, dy in ((-14, -10), (-14, 10), (14, -10), (14, 10)):
+            c.line(x, y, x + dx, y + dy)
+        c.line(x - 14, y - 10, x - 14, y + 10); c.line(x + 14, y - 10, x + 14, y + 10)
+    c.drawString(700, 30, 'Page 1 of 3'); c.save()
+    pdf = tmp_path / 'valves.pdf'
+    pdf.write_bytes(out.getvalue())
+    window._import([pdf])
+    wait_idle(window, qapp)
+    assert window.sheet_tab.fields.rowCount() >= 1                       # title block / text items shown
+    assert any('1 of 3' in (window.sheet_tab.fields.item(r, 1).text()) for r in range(window.sheet_tab.fields.rowCount()))
+    box = {"x0": (150 - 17) / 842, "y0": 1 - (400 + 13) / 595, "x1": (150 + 17) / 842, "y1": 1 - (400 - 13) / 595}
+    teach_symbol(window.db, window.current_extraction_id, page=1, bbox=box, label='Block valve', class_hint='VALVE',
+                 actor='GUI Tester', threshold=0.75)
+    from pid_reader.engineering import findings as F
+    window.findings['examples'] = F.list_findings(window.db, window.current_extraction_id, 'examples')
+    window._apply_overlays()
+    assert len(window.viewer._layers.get('examples', [])) >= 2
+    window.layer_combo.setCurrentIndex(window.layer_combo.findData('examples'))
+    window.show_findings()
+    assert window.finding_table.rowCount() >= 2
+    window.viewer.set_teach_mode(True)                                    # teach mode toggles drag mode without error
+    assert window.viewer._teach
+    window.viewer.set_teach_mode(False)
+
+
+def test_teach_mode_mouse_drag_emits_normalised_box(qapp):
+    from PySide6.QtCore import QPoint, Qt
+    from PySide6.QtTest import QTest
+    from pid_reader.ui.viewer import DrawingView
+    v = DrawingView()
+    v.resize(900, 650)
+    v.show()
+    assert v.load_page((FIX / 'synthetic_catalog_symbols.pdf').read_bytes(), 1)
+    qapp.processEvents()
+    got = []
+    v.boxDrawn.connect(got.append)
+    v.set_teach_mode(True)
+    vp = v.viewport()
+    QTest.mousePress(vp, Qt.MouseButton.LeftButton, Qt.KeyboardModifier.NoModifier, QPoint(300, 250))
+    QTest.mouseMove(vp, QPoint(350, 300))
+    QTest.mouseMove(vp, QPoint(400, 340))
+    QTest.mouseRelease(vp, Qt.MouseButton.LeftButton, Qt.KeyboardModifier.NoModifier, QPoint(400, 340))
+    qapp.processEvents()
+    assert len(got) == 1
+    b = got[0]
+    assert 0 <= b['x0'] < b['x1'] <= 1 and 0 <= b['y0'] < b['y1'] <= 1
+    v.set_teach_mode(False)
+    v.close()

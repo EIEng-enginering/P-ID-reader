@@ -8,12 +8,12 @@ from PySide6.QtWidgets import QGraphicsRectItem, QGraphicsScene, QGraphicsView
 LAYER_COLOURS = {
     "readings": "#1f77d4", "symbols": "#9c27b0", "linework": "#e67e22", "catalogue": "#009688",
     "text_links": "#2e9e5b", "geometry": "#d32f2f", "signals": "#e91e8c",
-    "raster": "#7a3dc0", "search": "#f2c200",
+    "raster": "#7a3dc0", "examples": "#00acc1", "search": "#f2c200",
 }
 LAYER_LABELS = {
     "readings": "Text readings", "symbols": "Outline symbols", "linework": "Valves / lines",
     "catalogue": "Template matches", "text_links": "Tag links", "geometry": "Line contacts",
-    "signals": "Signal strokes", "raster": "Raster valve glyphs", "search": "Search hits",
+    "signals": "Signal strokes", "raster": "Raster valve glyphs", "examples": "Taught symbols", "search": "Search hits",
 }
 MAX_RENDER_SIDE = 4200
 
@@ -22,6 +22,7 @@ class DrawingView(QGraphicsView):
     itemActivated = Signal(str, str)       # layer, item id
     pageStep = Signal(int)                 # -1 / +1 requested by keyboard
     zoomChanged = Signal(float)
+    boxDrawn = Signal(dict)                # normalised box drawn in teach mode
 
     def __init__(self, parent=None):
         scene = QGraphicsScene()
@@ -42,6 +43,9 @@ class DrawingView(QGraphicsView):
         self._press = QPointF()
         self._fit_on_resize = True
         self.page_size = (0, 0)
+        self._teach = False
+        self._last_rubber = None
+        self.rubberBandChanged.connect(self._rubber_changed)
         self._page_frame = None
 
     # ------------------------------------------------------------ page
@@ -204,8 +208,29 @@ class DrawingView(QGraphicsView):
         self._press = event.position()
         super().mousePressEvent(event)
 
+    # ------------------------------------------------------------ teach mode (draw a box round one symbol)
+    def set_teach_mode(self, on: bool) -> None:
+        self._teach = on
+        self._last_rubber = None
+        self.setDragMode(QGraphicsView.DragMode.RubberBandDrag if on else QGraphicsView.DragMode.ScrollHandDrag)
+        self.viewport().setCursor(Qt.CursorShape.CrossCursor if on else Qt.CursorShape.ArrowCursor)
+
+    def _rubber_changed(self, rect, from_scene, to_scene) -> None:
+        if not rect.isNull() and self._teach:
+            self._last_rubber = (from_scene, to_scene)
+
     def mouseReleaseEvent(self, event) -> None:
         super().mouseReleaseEvent(event)
+        if self._teach:
+            pts, self._last_rubber = self._last_rubber, None
+            w, h = self.page_size
+            if pts and w and event.button() == Qt.MouseButton.LeftButton:
+                (ax, ay), (bx, by) = (pts[0].x(), pts[0].y()), (pts[1].x(), pts[1].y())
+                box = {"x0": max(0.0, min(ax, bx) / w), "y0": max(0.0, min(ay, by) / h),
+                       "x1": min(1.0, max(ax, bx) / w), "y1": min(1.0, max(ay, by) / h)}
+                if box["x1"] - box["x0"] > 0.002 and box["y1"] - box["y0"] > 0.002:
+                    self.boxDrawn.emit(box)
+            return
         if event.button() != Qt.MouseButton.LeftButton:
             return
         if (event.position() - self._press).manhattanLength() > 4:

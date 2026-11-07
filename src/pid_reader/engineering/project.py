@@ -80,6 +80,8 @@ class ProjectStore:
         self.db.row_factory = sqlite3.Row
         self.db.execute("PRAGMA foreign_keys=ON")
         self.db.executescript(DDL)
+        from .examples import ensure_schema as _ensure_example_tables
+        _ensure_example_tables(self.db)   # additive teach-by-example tables, no schema-version bump
         for name in IMMUTABLE:
             for action in ("UPDATE", "DELETE"):
                 self.db.execute(f"CREATE TRIGGER IF NOT EXISTS block_{action.lower()}_{name} "

@@ -44,14 +44,22 @@ def _analysis_section(store, eid: str, name: str) -> dict:
     graph = drawing_connectivity(store, eid)
     nodes = graph.get("nodes", [])
     from .findings import latest_analysis_ids
-    ocr_words, ocr_info = [], None
+    ocr_words, ocr_info, ocr_full = [], None, []
     ocr_id = latest_analysis_ids(store, eid).get("ocr")
     if ocr_id:
         meta = store.get_ocr_analysis(ocr_id)
         ocr_info = {"engine_version": meta.get("engine_version"), "algorithm": meta.get("algorithm"), "dpi": meta.get("dpi")}
         for w in store.list_ocr_words(ocr_id, limit=2000):
+            ocr_full.append(w)
             ocr_words.append({"text": w["text"], "page": w["page"], "x": round(w["bbox"]["x0"], 4), "y": round(w["bbox"]["y0"], 4)})
+    from .checks import consistency_checks, instrument_loops
+    from .sheet_fields import sheet_fields
+    extraction = store.export_extraction(eid)
+    fields = sheet_fields(extraction, ocr_full)
+    symbol_details = [f["detail"] for f in list_findings(store, eid, "symbols", limit=2000)]
     return {
+        "sheet_fields": fields, "loops": instrument_loops(extraction),
+        "checks": consistency_checks(extraction, symbol_details, fields),
         "extraction_id": eid, "source_name": name, "layers": layers,
         "ocr": {"info": ocr_info, "word_count": len(ocr_words), "words": ocr_words},
         "connectivity": {
@@ -65,7 +73,9 @@ def _analysis_section(store, eid: str, name: str) -> dict:
 
 
 LAYER_RGB = {"readings": (31, 119, 212), "symbols": (156, 39, 176), "linework": (230, 126, 34),
-             "catalogue": (0, 150, 136), "text_links": (46, 158, 91), "geometry": (211, 47, 47), "signals": (233, 30, 140)}
+             "catalogue": (0, 150, 136), "text_links": (46, 158, 91), "geometry": (211, 47, 47), "signals": (233, 30, 140),
+             "raster": (122, 61, 192), "raster_network": (150, 150, 150), "raster_centrelines": (120, 120, 160),
+             "examples": (0, 172, 193)}
 
 
 def annotated_pages(store, eid: str, *, max_pages: int = 8, max_side: int = 2600) -> list[tuple[int, str, list[str]]]:
@@ -108,7 +118,7 @@ def annotated_pages(store, eid: str, *, max_pages: int = 8, max_side: int = 2600
             for f in items:
                 if f["page"] == number and f["bbox"]:
                     label = f["label"][:18] if layer == "text_links" and f["kind"] != "NO_TEXT" else ""
-                    box(f["bbox"], LAYER_RGB[layer], label, 3 if layer == "symbols" else 2)
+                    box(f["bbox"], LAYER_RGB.get(layer, (110, 110, 110)), label, 3 if layer in ("symbols", "examples") else 2)
                     n += 1
             if n:
                 legend.append(f"{layer}: {n}")
@@ -290,6 +300,41 @@ def report_html(report: dict, *, include_strokes: bool = False) -> str:
             lines.append("<p><img alt=\"Annotated page " + str(number) + "\" style=\"max-width:100%;border:1px solid #ccc\" "
                          "src=\"data:image/png;base64," + b64 + "\"></p>")
     for block in report.get("analysis", []):
+        fields = block.get("sheet_fields")
+        if fields:
+            lines.append("<h2>Sheet information &mdash; " + esc(block["source_name"]) + "</h2>")
+            lines.append("<p><em>Candidates read from the drawing text; a reviewer decides which is right.</em></p>")
+            lines.append("<table><thead><tr><th>Item</th><th>Value</th><th>Page</th></tr></thead><tbody>")
+            for fld, items in fields["title_block"].items():
+                for it in items:
+                    lines.append("<tr><td>Title block: " + esc(fld.replace("_", " ")) + "</td><td>" + esc(it["text"][:160]) +
+                                 "</td><td>" + str(it["page"]) + "</td></tr>")
+            for label, key in (("Line size", "line_sizes"), ("Line label", "line_labels"), ("Line number", "line_numbers"),
+                               ("Set-point", "set_points")):
+                for it in fields[key]:
+                    lines.append("<tr><td>" + label + "</td><td>" + esc(it["text"]) + "</td><td>" + str(it["page"]) + "</td></tr>")
+            lines.append("</tbody></table>")
+            lines.append("<details><summary>Text and notes read (" + str(len(fields["notes"])) + ")</summary><ul>" +
+                         "".join("<li>" + esc(n["text"][:200]) + "</li>" for n in fields["notes"]) + "</ul></details>")
+        loops = block.get("loops") or []
+        if loops:
+            lines.append("<h2>Instrument tags grouped by printed loop number &mdash; " + esc(block["source_name"]) + "</h2>")
+            lines.append("<p><em>Tags that share a loop number on this drawing. This is a reading aid: other members may be on "
+                         "other sheets and no safety function is implied.</em></p>")
+            lines.append("<table><thead><tr><th>Loop</th><th>Members</th><th>Count</th></tr></thead><tbody>")
+            for lp in loops:
+                lines.append("<tr><td>" + esc(lp["loop"]) + "</td><td>" + esc(", ".join(m["tag"] for m in lp["members"])) +
+                             "</td><td>" + str(lp["member_count"]) + "</td></tr>")
+            lines.append("</tbody></table>")
+        checks = block.get("checks") or []
+        if checks:
+            lines.append("<h2>Reading checks &mdash; " + esc(block["source_name"]) + "</h2>")
+            lines.append("<p><em>Prompts to look at the drawing. They flag possible reading problems, not plant facts.</em></p>")
+            lines.append("<table><thead><tr><th>Level</th><th>Check</th><th>Message</th><th>Page</th></tr></thead><tbody>")
+            for c in checks:
+                lines.append("<tr><td>" + esc(c["severity"]) + "</td><td>" + esc(c["check"].replace("_", " ").lower()) + "</td><td>" +
+                             esc(c["message"]) + "</td><td>" + esc(c["page"] if c["page"] else "") + "</td></tr>")
+            lines.append("</tbody></table>")
         lines.append("<h2>Analysis layers &mdash; " + esc(block["source_name"]) + "</h2>")
         lines.append("<table><thead><tr><th>Layer</th><th>Found</th><th>Of which</th><th>Reviewed</th></tr></thead><tbody>")
         for layer in block["layers"].values():

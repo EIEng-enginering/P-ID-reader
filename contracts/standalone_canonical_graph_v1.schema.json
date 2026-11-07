@@ -1,0 +1,593 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/pid-reader/graph/v1/graph.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "drawing_revision",
+    "source_sha256",
+    "nodes",
+    "ports",
+    "edges",
+    "hypotheses",
+    "generated_from",
+    "review_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "drawing_revision": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "label",
+          "review_state",
+          "provenance",
+          "score",
+          "attributes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^n_[a-f0-9]{16}$"
+          },
+          "kind": {
+            "enum": [
+              "EQUIPMENT",
+              "VALVE",
+              "INSTRUMENT",
+              "NOZZLE",
+              "PIPE_SEGMENT",
+              "JUNCTION",
+              "OFFPAGE_CONNECTOR",
+              "ANNOTATION",
+              "UNKNOWN"
+            ]
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "review_state": {
+            "enum": [
+              "PROPOSED_UNVERIFIED",
+              "REVIEWED_DRAWING",
+              "REJECTED",
+              "SUPERSEDED"
+            ]
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_sha256",
+              "page_index",
+              "source_object_ids",
+              "producer",
+              "producer_version",
+              "coordinate_frame_id",
+              "bbox_normalized"
+            ],
+            "properties": {
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "page_index": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "source_object_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "producer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "producer_version": {
+                "type": "string"
+              },
+              "coordinate_frame_id": {
+                "type": "string"
+              },
+              "bbox_normalized": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "x0",
+                  "y0",
+                  "x1",
+                  "y1"
+                ],
+                "properties": {
+                  "x0": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y0": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "x1": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y1": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              },
+              "model_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "config_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          },
+          "score": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "HEURISTIC",
+                  "CALIBRATED",
+                  "NONE"
+                ]
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 1
+              },
+              "calibration_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": [
+                "number",
+                "string",
+                "boolean",
+                "null"
+              ]
+            }
+          },
+          "hypothesis_group_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "uniqueItems": true
+    },
+    "ports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "owner_node_id",
+          "kind",
+          "x",
+          "y",
+          "review_state",
+          "provenance"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^p_[a-f0-9]{16}$"
+          },
+          "owner_node_id": {
+            "type": "string",
+            "pattern": "^n_[a-f0-9]{16}$"
+          },
+          "kind": {
+            "enum": [
+              "PROCESS",
+              "SIGNAL",
+              "UNKNOWN"
+            ]
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "review_state": {
+            "enum": [
+              "PROPOSED_UNVERIFIED",
+              "REVIEWED_DRAWING",
+              "REJECTED",
+              "SUPERSEDED"
+            ]
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_sha256",
+              "page_index",
+              "source_object_ids",
+              "producer",
+              "producer_version",
+              "coordinate_frame_id",
+              "bbox_normalized"
+            ],
+            "properties": {
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "page_index": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "source_object_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "producer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "producer_version": {
+                "type": "string"
+              },
+              "coordinate_frame_id": {
+                "type": "string"
+              },
+              "bbox_normalized": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "x0",
+                  "y0",
+                  "x1",
+                  "y1"
+                ],
+                "properties": {
+                  "x0": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y0": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "x1": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y1": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              },
+              "model_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "config_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "uniqueItems": true
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "from_port_id",
+          "to_port_id",
+          "kind",
+          "direction",
+          "review_state",
+          "provenance",
+          "score"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^e_[a-f0-9]{16}$"
+          },
+          "from_port_id": {
+            "type": "string",
+            "pattern": "^p_[a-f0-9]{16}$"
+          },
+          "to_port_id": {
+            "type": "string",
+            "pattern": "^p_[a-f0-9]{16}$"
+          },
+          "kind": {
+            "enum": [
+              "CONNECTS_ON_DRAWING",
+              "SIGNAL_LINE_CANDIDATE",
+              "OFFPAGE_MATCH_CANDIDATE",
+              "NO_CONNECTION",
+              "UNKNOWN"
+            ]
+          },
+          "direction": {
+            "enum": [
+              "UNKNOWN",
+              "FORWARD",
+              "REVERSE",
+              "BIDIRECTIONAL"
+            ]
+          },
+          "review_state": {
+            "enum": [
+              "PROPOSED_UNVERIFIED",
+              "REVIEWED_DRAWING",
+              "REJECTED",
+              "SUPERSEDED"
+            ]
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_sha256",
+              "page_index",
+              "source_object_ids",
+              "producer",
+              "producer_version",
+              "coordinate_frame_id",
+              "bbox_normalized"
+            ],
+            "properties": {
+              "source_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "page_index": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "source_object_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              },
+              "producer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "producer_version": {
+                "type": "string"
+              },
+              "coordinate_frame_id": {
+                "type": "string"
+              },
+              "bbox_normalized": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "x0",
+                  "y0",
+                  "x1",
+                  "y1"
+                ],
+                "properties": {
+                  "x0": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y0": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "x1": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y1": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              },
+              "model_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "config_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          },
+          "score": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "HEURISTIC",
+                  "CALIBRATED",
+                  "NONE"
+                ]
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 1
+              },
+              "calibration_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "hypothesis_group_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "uniqueItems": true
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "member_ids",
+          "cardinality",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^h_[a-f0-9]{16}$"
+          },
+          "member_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "uniqueItems": true
+          },
+          "cardinality": {
+            "const": 1
+          },
+          "status": {
+            "enum": [
+              "UNRESOLVED",
+              "RESOLVED_BY_REVIEW",
+              "SUPERSEDED"
+            ]
+          },
+          "selected_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "uniqueItems": true
+    },
+    "generated_from": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_policy": {
+      "const": "PROPOSALS_ONLY"
+    }
+  }
+}

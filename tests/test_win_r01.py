@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import sqlite3
 import pytest
 
 from pid_reader.api import ReadParams, read_pid
@@ -433,3 +434,249 @@ def test_tag_from_bubble_lines_accepts_stacked_and_single_line_forms_only():
     assert t(["HOLD", "100"]) is None                                 # not an instrument function
     assert t(["NEW", "2015"]) is None
     assert t([]) is None
+
+
+# ---- sheet information -------------------------------------------------------
+
+def _ow(text, x, y, w=0.05, h=0.01, page=1):
+    return {"text": text, "page": page, "bbox": {"x0": x, "y0": y, "x1": x + w, "y1": y + h}}
+
+
+def test_sheet_fields_title_block_line_sizes_and_set_points():
+    from pid_reader.engineering.sheet_fields import sheet_fields, flatten
+    empty = {"objects": []}
+    words = [_ow("REV", .85, .93, .02), _ow("C", .88, .93, .01), _ow("0209-01-ML-02-001", .70, .94, .12),
+             _ow("Page", .60, .96, .03), _ow("1", .64, .96, .01), _ow("of", .66, .96, .01), _ow("2", .68, .96, .01),
+             _ow("February", .10, .96, .05), _ow("2015", .16, .96, .03),
+             _ow("NPS", .40, .50, .02), _ow("20", .43, .50, .01),
+             _ow("NPS", .50, .60, .02), _ow("30", .53, .60, .01), _ow("x", .55, .60, .01), _ow("NPS", .57, .60, .02), _ow("20", .60, .60, .01),
+             _ow("SP=3450kPa(g)", .55, .70, .10), _ow("6\"-P-1501-A1A", .30, .30, .12),
+             _ow("dN", .20, .20, .02), _ow("1", .23, .20, .01)]
+    f = sheet_fields(empty, words)
+    tb = f["title_block"]
+    assert tb["drawing_number"][0]["text"] == "0209-01-ML-02-001" and tb["drawing_number"][0]["in_title_block_zone"]
+    assert [i["text"] for i in tb["revision"]] == ["C"]
+    assert tb["sheet"][0]["text"] == "1 of 2" and any("2015" in d["text"] for d in tb["date"])
+    sizes = {i["size"] for i in f["line_sizes"]}
+    assert {"20", "30 x 20"} <= sizes and "1" not in sizes            # lowercase "dN 1" is not a DN size
+    assert f["set_points"][0]["value"] == "3450" and f["set_points"][0]["gauge_or_abs"] == "gauge"
+    assert f["line_numbers"][0]["text"] == '6"-P-1501-A1A'
+    assert all(i["status"] == "PROPOSED_UNVERIFIED" for i in f["line_sizes"] + f["set_points"])
+    assert flatten(f)
+
+
+def test_sheet_fields_prefers_native_text_and_keeps_alternatives():
+    from pid_reader.engineering.sheet_fields import sheet_fields
+    ex = {"objects": [{"text": "DWG-A1-ZZ-001", "page": 1, "bbox": {"x0": .7, "y0": .9, "x1": .8, "y1": .92}}]}
+    ocr = [_ow("DWG-A1-ZZ-001", .71, .905, .08, .01), _ow("OTHER-12-AB-345", .2, .5, .1)]   # first overlaps native text
+    f = sheet_fields(ex, ocr)
+    texts = [i["text"] for i in f["title_block"]["drawing_number"]]
+    assert texts.count("DWG-A1-ZZ-001") == 1 and "OTHER-12-AB-345" in texts        # no duplicate, alternative kept
+    assert texts[0] == "DWG-A1-ZZ-001"                                              # title-block zone candidate first
+
+
+# ---- teach-by-example symbol search -------------------------------------------
+
+def _valve_sheet():
+    """Page with several identical bow-tie valves (one vertical), a plain circle and text."""
+    import io
+    from reportlab.pdfgen import canvas
+    out = io.BytesIO()
+    c = canvas.Canvas(out, pagesize=(842, 595), pageCompression=0, invariant=1)
+
+    def bow(x, y, a=14, b=10):
+        for dx, dy in ((-a, -b), (-a, b), (a, -b), (a, b)):
+            c.line(x, y, x + dx, y + dy)
+        c.line(x - a, y - b, x - a, y + b)
+        c.line(x + a, y - b, x + a, y + b)
+    for x, y in ((150, 400), (350, 400), (550, 400), (250, 200)):
+        c.line(x - 60, y, x - 14, y)
+        c.line(x + 14, y, x + 60, y)
+        bow(x, y)
+    c.circle(650, 200, 18)
+    c.drawString(50, 560, 'TEACH TEST SHEET')
+    c.save()
+    return out.getvalue()
+
+
+def test_find_similar_locates_other_valves_and_not_the_example_or_circle():
+    from pid_reader.engineering.example_matching import find_similar
+    pdf = _valve_sheet()
+    # example = the valve at (150,400) in page points, converted to a normalised top-left box
+    box = {"x0": (150 - 17) / 842, "y0": 1 - (400 + 13) / 595, "x1": (150 + 17) / 842, "y1": 1 - (400 - 13) / 595}
+    r = find_similar(pdf, 1, box, threshold=0.75)
+    centres = sorted(((m["bbox"]["x0"] + m["bbox"]["x1"]) / 2 * 842, (1 - (m["bbox"]["y0"] + m["bbox"]["y1"]) / 2) * 595) for m in r["matches"])
+    near = lambda p, q: abs(p[0] - q[0]) < 12 and abs(p[1] - q[1]) < 12
+    for target in ((350, 400), (550, 400)):
+        assert any(near(c, target) for c in centres), (target, centres)
+    assert not any(near(c, (150, 400)) for c in centres)           # the example itself is not proposed
+    assert not any(near(c, (650, 200)) for c in centres)           # a plain circle is not a valve
+    assert all(m["score"] >= 0.75 for m in r["matches"])
+
+
+def test_find_similar_refuses_bad_examples():
+    from pid_reader.engineering.example_matching import find_similar
+    pdf = _valve_sheet()
+    with pytest.raises(ValueError):
+        find_similar(pdf, 1, {"x0": .01, "y0": .01, "x1": .03, "y1": .03})           # blank paper
+    with pytest.raises(ValueError):
+        find_similar(pdf, 1, {"x0": .1, "y0": .1, "x1": .101, "y1": .101})           # too small
+    with pytest.raises(ValueError):
+        find_similar(pdf, 1, {"x0": 0, "y0": 0, "x1": 1, "y1": 1})                   # whole page
+    with pytest.raises(ValueError):
+        find_similar(pdf, 2, {"x0": .1, "y0": .1, "x1": .2, "y1": .2})               # no such page
+
+
+def test_teach_symbol_is_stored_reviewed_audited_and_idempotent(tmp_path):
+    from pid_reader.engineering import findings
+    from pid_reader.engineering.examples import teach_symbol
+    pdf = _valve_sheet()
+    extraction = read_pid(pdf, ReadParams(), filename='valves.pdf')
+    box = {"x0": (150 - 17) / 842, "y0": 1 - (400 + 13) / 595, "x1": (150 + 17) / 842, "y1": 1 - (400 - 13) / 595}
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        aid, result = teach_symbol(db, eid, page=1, bbox=box, label='Block valve', class_hint='VALVE', actor='Tester', threshold=0.75)
+        assert result['matches']
+        again, _ = teach_symbol(db, eid, page=1, bbox=box, label='Block valve', class_hint='VALVE', actor='Tester', threshold=0.75)
+        assert again == aid                                                      # same result -> same record
+        items = findings.list_findings(db, eid, 'examples')
+        assert len(items) == len(result['matches']) and all(i['state'] == 'PROPOSED' for i in items)
+        assert 'Block valve' in items[0]['label']
+        findings.review_finding(db, 'examples', items[0]['id'], actor='Reviewer', decision='ACCEPTED_AS_READING', reason='Looks like a block valve')
+        assert findings.list_findings(db, eid, 'examples')[0]['state'] == 'ACCEPTED_AS_READING'
+        with pytest.raises(ValueError):
+            findings.review_finding(db, 'examples', items[0]['id'], actor='R', decision='CONNECTED_AS_DRAWN', reason='wrong vocabulary')
+        with pytest.raises(sqlite3.IntegrityError):
+            db.db.execute("UPDATE example_match_candidate SET page=9")           # append-only
+        assert db.verify_audit_chain()
+        kinds = [r[0] for r in db.db.execute("SELECT event_type FROM audit_event")]
+        assert 'SYMBOL_EXAMPLE_TAUGHT' in kinds and 'SYMBOL_EXAMPLE_REVIEW' in kinds
+
+
+# ---- checks, loops, canonical graph ----------------------------------------------
+
+def _obj(text, cls, x, y, page=1, source='TEXT'):
+    return {"id": f"o-{text}-{x}", "class": cls, "page": page, "text": text, "confidence": .5,
+            "bbox": {"x0": x, "y0": y, "x1": x + .02, "y1": y + .01}, "attributes": {"source": source}}
+
+
+def test_instrument_loops_group_by_loop_number():
+    from pid_reader.engineering.checks import instrument_loops
+    ex = {"objects": [_obj("PIC-102", "INSTRUMENT", .1, .1), _obj("PY-102", "INSTRUMENT", .2, .1),
+                      _obj("PCV-102", "INSTRUMENT", .3, .1), _obj("PIT-101", "INSTRUMENT", .4, .1),
+                      _obj("P-102", "PUMP", .5, .1)]}
+    loops = {l["loop"]: [m["tag"] for m in l["members"]] for l in instrument_loops(ex)}
+    assert loops == {"102": ["PCV-102", "PIC-102", "PY-102"], "101": ["PIT-101"]}
+
+
+def test_consistency_checks_flag_probable_misreads_without_claiming_plant_facts():
+    from pid_reader.engineering.checks import consistency_checks
+    ex = {"objects": [_obj("PIC-102", "INSTRUMENT", .10, .10), _obj("PIC-102", "INSTRUMENT", .50, .50),
+                      _obj("P-201", "PUMP", .30, .30), _obj("PT-900", "INSTRUMENT", .80, .80)]}
+    box = lambda x, y: {"x0": x - .01, "y0": y - .01, "x1": x + .04, "y1": y + .03}
+    symbols = [{"page": 1, "bbox": box(.30, .30), "candidate_class": "INSTRUMENT_BUBBLE_CANDIDATE",
+                "outline_kind": "CLOSED_NEAR_CIRCULAR_OUTLINE"},                                  # equipment tag in a bubble
+               {"page": 1, "bbox": {"x0": .6, "y0": .2, "x1": .613, "y1": .219}, "candidate_class": "UNCLASSIFIED_OUTLINE",
+                "outline_kind": "CLOSED_NEAR_CIRCULAR_OUTLINE"}]                                   # bubble, no tag
+    kinds = {c["check"] for c in consistency_checks(ex, symbols, {"title_block": {}})}
+    assert {"DUPLICATE_TAG", "TAG_VS_SYMBOL", "INSTRUMENT_OUTSIDE_BUBBLE", "BUBBLE_WITHOUT_TAG", "SINGLE_MEMBER_LOOP",
+            "TITLE_BLOCK_FIELD_MISSING"} <= kinds
+    assert all(c["severity"] in ("INFO", "REVIEW") for c in consistency_checks(ex, symbols))
+
+
+def test_canonical_graph_validates_against_spec_schema_and_graphml_parses(tmp_path):
+    import json
+    import jsonschema
+    import xml.etree.ElementTree as ET
+    from pid_reader.engineering.graph_export import canonical_graph, to_graphml
+    from pid_reader.engineering.pipeline import analyze_drawing
+    schema = json.loads((Path(__file__).resolve().parents[1] / 'contracts' / 'standalone_canonical_graph_v1.schema.json').read_text('utf-8'))
+    pdf = (FIX / 'synthetic_catalog_symbols.pdf').read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename='c.pdf')
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        analyze_drawing(db, eid, ocr_engine=None)
+        g = canonical_graph(db, eid)
+        errors = [e.message for e in jsonschema.Draft202012Validator(schema).iter_errors(g)]
+        assert errors == [], errors[:3]
+        assert g['review_policy'] == 'PROPOSALS_ONLY' and g['nodes']
+        assert all(n['review_state'] == 'PROPOSED_UNVERIFIED' for n in g['nodes'])
+        ids = {n['id'] for n in g['nodes']}; pids = {p['id'] for p in g['ports']}
+        assert all(p['owner_node_id'] in ids for p in g['ports'])                      # foreign keys
+        assert all(e['from_port_id'] in pids and e['to_port_id'] in pids for e in g['edges'])
+        assert len(ids) == len(g['nodes']) and canonical_graph(db, eid) == g          # unique and deterministic
+        root = ET.fromstring(to_graphml(g))
+        assert len(root.findall('.//{*}node')) == len(g['nodes'])
+
+
+def test_report_html_includes_sheet_information_loops_and_checks(tmp_path):
+    from pid_reader.engineering.pipeline import analyze_drawing
+    from pid_reader.engineering.reports import make_report, report_html, verify_report
+    pdf = (FIX / 'synthetic_catalog_symbols.pdf').read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename='c.pdf')
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        analyze_drawing(db, eid, ocr_engine=None)
+        report = make_report(db)
+        assert verify_report(report)
+        block = report['analysis'][0]
+        assert {'sheet_fields', 'loops', 'checks'} <= set(block)
+        html = report_html(report)
+        for needle in ('Sheet information', 'Instrument tags grouped by printed loop number', 'Reading checks'):
+            assert needle in html
+        assert 'no safety function is implied' in html
+
+
+def test_xlsx_export_has_registers_loops_and_is_formula_safe(tmp_path):
+    from openpyxl import load_workbook
+    from pid_reader.engineering.pipeline import analyze_drawing
+    from pid_reader.engineering.xlsx_export import export_xlsx
+    pdf = (FIX / 'synthetic_catalog_symbols.pdf').read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename='=cmd|evil.pdf')                 # hostile file name
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        analyze_drawing(db, eid, ocr_engine=None)
+        out = export_xlsx(db, tmp_path / 'out.xlsx')
+        assert out.exists() and not list(tmp_path.glob('.pid-xlsx-*'))                # atomic, no temp left
+        wb = load_workbook(out)
+        assert {'Read me', 'Equipment', 'Valves', 'Instruments', 'Loops', 'Lines', 'Sheet info', 'Findings',
+                'Connections', 'Checks', 'Notes', 'OCR words'} <= set(wb.sheetnames)
+        tags = {r[2] for r in wb['Equipment'].iter_rows(min_row=2, values_only=True)} | \
+               {r[2] for r in wb['Instruments'].iter_rows(min_row=2, values_only=True)}
+        assert {'V-101', 'PT-101'} <= tags
+        assert len(list(wb['Findings'].iter_rows(min_row=2))) > 5
+        for ws in wb.worksheets:
+            for row in ws.iter_rows(values_only=True):
+                for v in row:
+                    assert not (isinstance(v, str) and v.startswith(('=', '+', '@'))), (ws.title, v)    # no live formulas
+        assert wb['Equipment']['A2'].value.startswith("'=") or wb['Equipment']['A2'].value == "'=cmd|evil.pdf"
+        with pytest.raises(FileNotFoundError):
+            export_xlsx(db, tmp_path / 'nofolder' / 'x.xlsx')
+
+
+def test_cli_export_xlsx_graph_teach_and_sheet_info(tmp_path, capsys):
+    import json
+    from pid_reader.cli import main
+    pdf = tmp_path / 'valves.pdf'
+    pdf.write_bytes(_valve_sheet())
+    db = str(tmp_path / 'p.sqlite')
+    assert main(['init-project', db]) == 0
+    capsys.readouterr()
+    assert main(['import-pdf', db, str(pdf), '--ocr', 'off']) == 0
+    eid = json.loads(capsys.readouterr().out.strip().splitlines()[-1])['extraction_id']
+    box = ['0.1573', '0.3277', '0.2027', '0.3496']      # normalised box round the valve at (150,400) pt
+    assert main(['teach-symbol', db, eid, '--page', '1', '--box', *box, '--label', 'Block valve', '--kind', 'VALVE',
+                 '--actor', 'Tester', '--threshold', '0.75']) == 0
+    taught = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert taught['matches'] >= 2
+    assert main(['export-xlsx', db, str(tmp_path / 'o.xlsx')]) == 0 and (tmp_path / 'o.xlsx').exists()
+    capsys.readouterr()
+    assert main(['analyze-all', db, eid, '--ocr', 'off']) == 0
+    capsys.readouterr()
+    for fmt, name in (('json', 'g.json'), ('graphml', 'g.graphml')):
+        assert main(['graph-export', db, eid, str(tmp_path / name), '--format', fmt]) == 0
+    assert json.loads((tmp_path / 'g.json').read_text('utf-8'))['review_policy'] == 'PROPOSALS_ONLY'
+    capsys.readouterr()
+    assert main(['sheet-info', db, eid]) == 0
+    info = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert {'sheet_fields', 'loops', 'checks'} <= set(info)

@@ -24,7 +24,7 @@ from ..engineering.connectivity import drawing_connectivity
 from ..engineering.project import ProjectStore
 from ..engineering.workspace import register_page
 from .graphview import GraphView
-from .tabs import AuditTab, BatchTab, LibraryTab, ReportTab, RevisionTab, _fill, _table
+from .tabs import AuditTab, BatchTab, LibraryTab, ReportTab, RevisionTab, SheetInfoTab, _fill, _table
 from .tasks import CallbackCancelToken, Task
 from .viewer import LAYER_COLOURS, LAYER_LABELS, DrawingView
 
@@ -230,6 +230,7 @@ class MainWindow(QMainWindow):
         self.viewer = DrawingView()
         self.viewer.itemActivated.connect(self._overlay_clicked)
         self.viewer.pageStep.connect(self.step_page)
+        self.viewer.boxDrawn.connect(self.teach_symbol)
         self.viewer.zoomChanged.connect(lambda z: self.zoom_label.setText(f"{z * 100:.0f}%"))
         draw = QWidget()
         dl = QVBoxLayout(draw)
@@ -251,7 +252,7 @@ class MainWindow(QMainWindow):
         bar.addWidget(self.zoom_label)
         bar.addSpacing(12)
         self.layer_boxes: dict[str, QCheckBox] = {}
-        for layer in ("readings", "symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster"):
+        for layer in ("readings", "symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster", "examples"):
             cb = QCheckBox(LAYER_LABELS[layer])
             cb.setChecked(self.viewer.layer_visible(layer))
             swatch = QPixmap(12, 12)
@@ -260,6 +261,13 @@ class MainWindow(QMainWindow):
             cb.toggled.connect(lambda on, l=layer: self.viewer.set_layer_visible(l, on))
             self.layer_boxes[layer] = cb
             bar.addWidget(cb)
+        self.teach_btn = QToolButton()
+        self.teach_btn.setText("Teach symbol")
+        self.teach_btn.setCheckable(True)
+        self.teach_btn.setToolTip("Draw a box round ONE symbol (a valve, bubble, anything); the program then proposes "
+                                  "look-alikes on this sheet for you to review. No training involved.")
+        self.teach_btn.toggled.connect(self.viewer.set_teach_mode)
+        bar.addWidget(self.teach_btn)
         bar.addStretch(1)
         self.search_box = QLineEdit()
         self.search_box.setPlaceholderText("Find tag / text on this page and in project (Ctrl+F)")
@@ -318,6 +326,7 @@ class MainWindow(QMainWindow):
         gl.addWidget(self.path_table)
         self.tabs.addTab(gw, "Graph")
 
+        self.sheet_tab = SheetInfoTab(self); self.tabs.addTab(self.sheet_tab, "Sheet info")
         self.revision_tab = RevisionTab(self); self.tabs.addTab(self.revision_tab, "Revisions")
         self.batch_tab = BatchTab(self); self.tabs.addTab(self.batch_tab, "Batch import")
         self.library_tab = LibraryTab(self); self.tabs.addTab(self.library_tab, "Libraries")
@@ -526,11 +535,34 @@ class MainWindow(QMainWindow):
         self.goto_page(page)
         self.show_findings()
         self.refresh_graph()
+        self.refresh_sheet_info()
         unread = [p["page"] for p in result["pages"] if p["read_status"] != "READ"]
         msg = f"Opened {self.drawing_items.get(extraction_id, '')}: {result['summary']['object_count']} readings."
         if unread:
             msg += f" Pages not read: {unread} (image-only; enable OCR or check Tools → OCR engine)."
         self.info(msg)
+
+    def refresh_sheet_info(self) -> None:
+        if not self.current_result:
+            return
+        try:
+            from ..engineering.checks import consistency_checks, instrument_loops
+            from ..engineering.sheet_fields import sheet_fields
+            ids = F.latest_analysis_ids(self.db, self.current_extraction_id)
+            words = self.db.list_ocr_words(ids["ocr"], limit=2000) if "ocr" in ids else []
+            fields = sheet_fields(self.current_result, words)
+            symbols = [f["detail"] for f in self.findings.get("symbols", [])]
+            self.sheet_tab.show(self.drawing_items.get(self.current_extraction_id, ""), fields,
+                                instrument_loops(self.current_result), consistency_checks(self.current_result, symbols, fields))
+        except Exception as exc:
+            self.info(f"Sheet information unavailable: {type(exc).__name__}: {exc}")
+
+    def show_position(self, page: int, x: float, y: float) -> None:
+        """Jump the drawing view to a normalised position (used by the Sheet info tables)."""
+        self.tabs.setCurrentIndex(0)
+        if page != self.page:
+            self.goto_page(page)
+        self.viewer.highlight({"x0": x, "y0": y, "x1": min(1.0, x + 0.02), "y1": min(1.0, y + 0.012)})
 
     def goto_page(self, page: int) -> None:
         if not self.current_extraction_id:
@@ -584,6 +616,57 @@ class MainWindow(QMainWindow):
             if f["id"] == item_id:
                 self.finding_table.selectRow(r)
                 return
+
+    def teach_symbol(self, bbox: dict) -> None:
+        """A box was drawn in teach mode: ask what it is, search for look-alikes in the background, show them."""
+        if not self.current_extraction_id:
+            return
+        actor = self.reviewer()
+        self.teach_btn.setChecked(False)
+        if not actor:
+            return
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Teach symbol")
+        form = QFormLayout(dlg)
+        label = QLineEdit()
+        label.setPlaceholderText("e.g. Gate valve, Block valve, Pressure gauge")
+        hint = QComboBox()
+        hint.addItems(["VALVE", "INSTRUMENT", "EQUIPMENT", "FITTING", "ANNOTATION", "OTHER"])
+        thr = QSpinBox()
+        thr.setRange(40, 98)
+        thr.setValue(72)
+        thr.setSuffix(" % similarity")
+        form.addRow("What is this symbol?", label)
+        form.addRow("Kind", hint)
+        form.addRow("Find matches at least", thr)
+        form.addRow(QLabel("The search covers this page at about \u00b115 % size and all four rotations."))
+        bb = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        bb.accepted.connect(dlg.accept)
+        bb.rejected.connect(dlg.reject)
+        form.addRow(bb)
+        if dlg.exec() != QDialog.DialogCode.Accepted or not label.text().strip():
+            return
+        db_path, eid, page = self.db_path, self.current_extraction_id, self.page
+        name, kind, threshold = label.text().strip(), hint.currentText(), thr.value() / 100.0
+
+        def job(report, cancelled):
+            from ..engineering.examples import teach_symbol
+            with ProjectStore(db_path) as db:
+                report(0.1, "Searching the page for look-alikes")
+                aid, result = teach_symbol(db, eid, page=page, bbox=bbox, label=name, class_hint=kind, actor=actor,
+                                           threshold=threshold, cancel=CallbackCancelToken(cancelled))
+                return len(result["matches"])
+
+        def done(n):
+            self.findings["examples"] = F.list_findings(self.db, eid, "examples", limit=2000)
+            self.layer_boxes["examples"].setChecked(True)
+            self.layer_combo.setCurrentIndex(self.layer_combo.findData("examples"))
+            self._apply_overlays()
+            self.show_findings()
+            self.info(f"Taught \u201c{name}\u201d: {n} look-alike(s) proposed on page {page}. Review them in the Findings panel "
+                      "(accept the right ones, reject the rest).")
+
+        self.run_task("Searching for look-alikes", job, done)
 
     def run_search(self) -> None:
         q = self.search_box.text().strip()

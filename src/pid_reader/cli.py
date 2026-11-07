@@ -187,6 +187,18 @@ def main(argv: list[str] | None = None) -> int:
     aa.add_argument("database");aa.add_argument("extraction_id")
     aa.add_argument("--ocr",choices=("auto","tesseract","rapidocr","off"),default="auto")
     aa.add_argument("--catalogue-id",default=None)
+    xp=sub.add_parser("export-xlsx",help="Excel workbook of registers, loops, lines, findings and checks (unverified readings)")
+    xp.add_argument("database");xp.add_argument("destination");xp.add_argument("--extraction-id",action="append",default=None)
+    gx=sub.add_parser("graph-export",help="Canonical proposed-connectivity graph of one drawing (JSON or GraphML)")
+    gx.add_argument("database");gx.add_argument("extraction_id");gx.add_argument("destination")
+    gx.add_argument("--format",choices=("json","graphml"),default="json")
+    ts=sub.add_parser("teach-symbol",help="Box one symbol and find look-alikes on the page (no training)")
+    ts.add_argument("database");ts.add_argument("extraction_id");ts.add_argument("--page",type=int,required=True)
+    ts.add_argument("--box",type=float,nargs=4,metavar=("X0","Y0","X1","Y1"),required=True,help="normalised, top-left origin")
+    ts.add_argument("--label",required=True);ts.add_argument("--kind",default="OTHER")
+    ts.add_argument("--threshold",type=float,default=0.72);ts.add_argument("--actor",required=True)
+    si=sub.add_parser("sheet-info",help="Title block, line sizes/numbers, set-points, loops and reading checks of one drawing")
+    si.add_argument("database");si.add_argument("extraction_id")
     gp=sub.add_parser("gui",help="Open the desktop application");gp.add_argument("database",nargs="?",default=None)
     sub.add_parser("gui-legacy",help="Original Rev Q development viewer (kept for audit)").add_argument("database")
     args=p.parse_args(argv)
@@ -287,6 +299,33 @@ def main(argv: list[str] | None = None) -> int:
             elif args.cmd=='review-raster-contact':
                 print(db.review_raster_network_contact(args.candidate_id,actor=args.actor,
                         decision=args.decision,reason=args.reason))
+            elif args.cmd=="export-xlsx":
+                from .engineering.xlsx_export import export_xlsx
+                out=export_xlsx(db,args.destination,extraction_ids=args.extraction_id)
+                print(canonical_json({"workbook":str(out)}))
+            elif args.cmd=="graph-export":
+                from .engineering.graph_export import canonical_graph,to_graphml
+                graph=canonical_graph(db,args.extraction_id)
+                text=to_graphml(graph) if args.format=="graphml" else canonical_json(graph)
+                Path(args.destination).write_text(text,encoding="utf-8")
+                print(canonical_json({"destination":str(args.destination),"format":args.format,"nodes":len(graph["nodes"]),
+                                      "edges":len(graph["edges"]),"review_policy":graph["review_policy"]}))
+            elif args.cmd=="teach-symbol":
+                from .engineering.examples import teach_symbol
+                x0,y0,x1,y1=args.box
+                aid,result=teach_symbol(db,args.extraction_id,page=args.page,bbox={"x0":x0,"y0":y0,"x1":x1,"y1":y1},
+                                        label=args.label,class_hint=args.kind,actor=args.actor,threshold=args.threshold)
+                print(canonical_json({"analysis_id":aid,"matches":len(result["matches"]),
+                                      "top_scores":[m["score"] for m in result["matches"][:10]]}))
+            elif args.cmd=="sheet-info":
+                from .engineering.checks import consistency_checks,instrument_loops
+                from .engineering.findings import latest_analysis_ids,list_findings
+                from .engineering.sheet_fields import sheet_fields
+                ex=db.export_extraction(args.extraction_id);ids=latest_analysis_ids(db,args.extraction_id)
+                words=db.list_ocr_words(ids["ocr"],limit=2000) if "ocr" in ids else []
+                fields=sheet_fields(ex,words)
+                symbols=[f["detail"] for f in list_findings(db,args.extraction_id,"symbols",limit=2000)]
+                print(canonical_json({"sheet_fields":fields,"loops":instrument_loops(ex),"checks":consistency_checks(ex,symbols,fields)}))
             elif args.cmd=="analyze-all":
                 from .engineering.pipeline import analyze_drawing
                 out=analyze_drawing(db,args.extraction_id,ocr_engine=None if args.ocr=="off" else args.ocr,

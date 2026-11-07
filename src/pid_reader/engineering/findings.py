@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-LAYERS = ("symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster", "raster_network", "raster_centrelines")
+LAYERS = ("symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster", "raster_network", "raster_centrelines", "examples")
 
 LAYER_TITLES = {
     "symbols": "Outline symbols", "linework": "Valves / line styles",
@@ -20,6 +20,7 @@ LAYER_TITLES = {
     "raster": "Filled and outlined raster valve proposals",
     "raster_network": "Raster contacts (unresolved until drawing review)",
     "raster_centrelines": "Raster centreline gap proposals",
+    "examples": "Taught-symbol matches (look-alikes)",
 }
 
 # Decisions each store method accepts.
@@ -33,6 +34,7 @@ DECISIONS = {
     "raster": ("ACCEPTED_AS_READING", "REJECTED", "UNRESOLVED"),
     "raster_network": ("CONTACT_AS_DRAWN", "NOT_CONTACT_AS_DRAWN", "UNRESOLVED", "REJECTED"),
     "raster_centrelines": ("CONTINUOUS_AS_DRAWN", "SEPARATE_AS_DRAWN", "UNRESOLVED", "REJECTED"),
+    "examples": ("ACCEPTED_AS_READING", "REJECTED", "UNRESOLVED"),
 }
 
 
@@ -72,6 +74,12 @@ def list_findings(db, extraction_id: str, layer: str, *, limit: int = 500) -> li
     """Findings of one layer: ``{layer, id, page, bbox, kind, label, state, detail}``."""
     if layer not in LAYERS:
         raise ValueError("Unknown analysis layer")
+    if layer == "examples":
+        from .examples import latest_example_review, list_example_candidates
+        return [{"layer": layer, "id": c["candidate_id"], "page": c["page"], "bbox": c["bbox"], "kind": c["class_hint"],
+                 "label": f"{c['label']} (similarity {c['score']:.2f})",
+                 "state": _decision(latest_example_review(db, c["candidate_id"])), "detail": c}
+                for c in list_example_candidates(db, extraction_id, limit=limit)]
     ids = latest_analysis_ids(db, extraction_id)
     if layer not in ids:
         return []
@@ -162,6 +170,9 @@ def review_finding(db, layer: str, finding_id: str, *, actor: str, decision: str
     if layer == "text_links":
         return db.review_text_link(finding_id, actor=actor, decision=decision, reason=reason,
                                    selected_text=selected_text)
+    if layer == "examples":
+        from .examples import review_example_match
+        return review_example_match(db, finding_id, actor=actor, decision=decision, reason=reason)
     if layer == "raster":
         return db.review_raster_valve(finding_id, actor=actor, decision=decision, reason=reason)
     if layer == 'raster_centrelines':

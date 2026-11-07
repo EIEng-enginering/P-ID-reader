@@ -301,6 +301,51 @@ class LibraryTab(QWidget):
         self.ctx.settings_set("catalogue_id" if kind == "cat" else "tag_profile_id", ident)
 
 
+class SheetInfoTab(QWidget):
+    """Read-only view of the open drawing: title block and text items, instrument loops, reading checks."""
+
+    def __init__(self, ctx):
+        super().__init__()
+        self.ctx = ctx
+        lay = QVBoxLayout(self)
+        self.heading = QLabel("Open a drawing to see its sheet information.")
+        self.heading.setWordWrap(True)
+        lay.addWidget(self.heading)
+        self.fields = _table(["Item", "Value", "Page", "x", "y"])
+        lay.addWidget(QLabel("Title block, line sizes and numbers, set-points (candidates read from the drawing text)"))
+        lay.addWidget(self.fields, 3)
+        self.loops = _table(["Loop no.", "Tags on this drawing", "Count"])
+        lay.addWidget(QLabel("Instrument tags grouped by printed loop number (a reading aid, not a safety loop)"))
+        lay.addWidget(self.loops, 1)
+        self.checks = _table(["Level", "Check", "Message", "Page"])
+        lay.addWidget(QLabel("Reading checks: prompts to look at the drawing, not plant facts"))
+        lay.addWidget(self.checks, 2)
+        for t in (self.fields, self.checks):
+            t.itemSelectionChanged.connect(lambda t=t: self._pick(t))
+        self._positions = {}
+
+    def show(self, name: str, fields: dict, loops: list, checks: list) -> None:
+        from ..engineering.sheet_fields import flatten
+        rows = flatten(fields)
+        self.heading.setText(f"{name}: {len(rows)} sheet items, {len(loops)} loop groups, {len(checks)} checks. "
+                             "Everything is an unverified proposal.")
+        _fill(self.fields, [[f"{r['group']}: {r['field']}" if r["group"] == "Title block" else r["group"], r["value"][:200],
+                             r["page"], r["x"], r["y"]] for r in rows])
+        _fill(self.loops, [[lp["loop"], ", ".join(m["tag"] for m in lp["members"]), lp["member_count"]] for lp in loops])
+        _fill(self.checks, [[c["severity"], c["check"].replace("_", " ").lower(), c["message"], c["page"] or ""] for c in checks])
+        self._positions = {id(self.fields): [(r["page"], r["x"], r["y"]) for r in rows],
+                           id(self.checks): [(c["page"], (c["bbox"] or {}).get("x0"), (c["bbox"] or {}).get("y0")) for c in checks]}
+        self._boxes = {"checks": [c["bbox"] for c in checks]}
+
+    def _pick(self, table) -> None:
+        sel = table.selectionModel().selectedRows() if table.selectionModel() else []
+        if not sel:
+            return
+        page, x, y = self._positions.get(id(table), [])[sel[0].row()]
+        if page and x is not None:
+            self.ctx.show_position(page, x, y)
+
+
 class ReportTab(QWidget):
     def __init__(self, ctx):
         super().__init__()
@@ -315,11 +360,49 @@ class ReportTab(QWidget):
             b = QPushButton(text)
             b.clicked.connect(lambda _=False, f=fmt: self.export(f))
             lay.addWidget(b)
+        for text, key in (("Export Excel workbook (.xlsx): registers, loops, lines, findings, checks", "xlsx"),
+                          ("Export proposed connectivity graph (canonical JSON)", "graph-json"),
+                          ("Export proposed connectivity graph (GraphML)", "graphml")):
+            b = QPushButton(text)
+            b.clicked.connect(lambda _=False, k=key: self.export_other(k))
+            lay.addWidget(b)
         note = QLabel("Reports list what was read from the drawings, with source file hash, page, box and review state. "
                       "They are not engineering approvals and do not verify the plant.")
         note.setWordWrap(True)
         lay.addWidget(note)
         lay.addStretch(1)
+
+    def export_other(self, kind: str) -> None:
+        if kind == "xlsx":
+            ids = None if self.scope.currentIndex() == 0 else ([self.ctx.current_extraction_id] if self.ctx.current_extraction_id else [])
+            if ids == []:
+                QMessageBox.information(self, "No drawing open", "Open a drawing first, or choose 'Entire project'.")
+                return
+            dest, _ = QFileDialog.getSaveFileName(self, "Save workbook", "pid_readings.xlsx", "Excel workbook (*.xlsx)")
+            if not dest:
+                return
+            try:
+                from ..engineering.xlsx_export import export_xlsx
+                export_xlsx(self.ctx.db, dest, extraction_ids=ids)
+                self.ctx.info(f"Workbook saved: {dest}")
+            except Exception as exc:
+                QMessageBox.warning(self, "Workbook not saved", f"{type(exc).__name__}: {exc}")
+            return
+        if not self.ctx.current_extraction_id:
+            QMessageBox.information(self, "No drawing open", "Open a drawing first.")
+            return
+        graphml = kind == "graphml"
+        dest, _ = QFileDialog.getSaveFileName(self, "Save graph", "connectivity." + ("graphml" if graphml else "json"),
+                                              "GraphML (*.graphml)" if graphml else "JSON (*.json)")
+        if not dest:
+            return
+        try:
+            from ..engineering.graph_export import canonical_graph, to_graphml
+            graph = canonical_graph(self.ctx.db, self.ctx.current_extraction_id)
+            Path(dest).write_text(to_graphml(graph) if graphml else canonical_json(graph), encoding="utf-8")
+            self.ctx.info(f"Graph saved: {dest} ({len(graph['nodes'])} nodes, {len(graph['edges'])} proposed connections)")
+        except Exception as exc:
+            QMessageBox.warning(self, "Graph not saved", f"{type(exc).__name__}: {exc}")
 
     def export(self, fmt: str) -> None:
         from ..engineering.reports import make_report, save_report
