@@ -111,8 +111,13 @@ def test_atomic_publish_no_clobber(tmp_path):
 
 
 def test_core_import_no_ui_dependency():
-    import pid_reader.release_assurance
-    assert 'PySide6' not in sys.modules
+    # Fresh interpreter: other tests (GUI) legitimately import PySide6 into this process.
+    import subprocess, os
+    from pathlib import Path
+    src=str(Path(__file__).resolve().parents[1]/'src')
+    code="import sys, pid_reader.release_assurance, pid_reader.engineering.pipeline, pid_reader.engineering.connectivity, pid_reader.engineering.findings; sys.exit(1 if 'PySide6' in sys.modules else 0)"
+    done=subprocess.run([sys.executable,'-c',code],env={**os.environ,'PYTHONPATH':src})
+    assert done.returncode==0
 
 
 def test_distribution_manifest_enumerates_noncache_files(tmp_path):

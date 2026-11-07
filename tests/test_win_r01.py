@@ -292,3 +292,42 @@ def test_isolated_standalone_reader_matches_in_process_for_scanned_page():
     direct = read_pid_standalone(scanned, ReadParams(), filename='scan.pdf', ocr_engine='rapidocr')
     key = lambda r: sorted((o['text'], o['class'], o['page']) for o in r['objects'])
     assert key(child) == key(direct)
+
+
+# ---- reader robustness: upside-down pages and touching labels ---------------
+
+def _pdf_with(draw):
+    import io
+    from reportlab.pdfgen import canvas
+    out = io.BytesIO()
+    c = canvas.Canvas(out, pagesize=(600, 400), pageCompression=0, invariant=1)
+    c.setFont('Helvetica', 10)
+    draw(c)
+    c.save()
+    return out.getvalue()
+
+
+def test_upside_down_page_text_is_read_in_correct_order():
+    import io
+    from pypdf import PdfReader, PdfWriter
+    src = _pdf_with(lambda c: (c.drawString(100, 200, 'E-219'), c.drawString(300, 200, 'XV-101'), c.drawString(300, 300, 'PT-101')))
+    r = PdfReader(io.BytesIO(src)); w = PdfWriter(); pg = r.pages[0]; pg.rotate(180); w.add_page(pg)
+    buf = io.BytesIO(); w.write(buf)
+    result = read_pid(buf.getvalue(), ReadParams(), filename='r180.pdf')
+    assert {'E-219', 'XV-101', 'PT-101'} <= {o['text'] for o in result['objects']}
+
+
+def test_touching_labels_are_split_into_two_readings():
+    pdf = _pdf_with(lambda c: c.drawString(100, 200, 'HV-383HV-303'))
+    result = read_pid(pdf, ReadParams(), filename='m.pdf')
+    objs = [o for o in result['objects'] if o['class'] not in ('LINE', 'NOTE')]
+    assert {o['text'] for o in objs} == {'HV-383', 'HV-303'}
+    assert all(o['attributes'].get('split_from_touching_labels') == 'true' for o in objs)
+    a, b = sorted(objs, key=lambda o: o['bbox']['x0'])
+    assert a['bbox']['x1'] <= b['bbox']['x0'] + 1e-6
+
+
+def test_normal_text_not_reversed_or_split():
+    pdf = _pdf_with(lambda c: (c.drawString(100, 200, 'P-102A'), c.drawString(200, 200, 'LT-301')))
+    result = read_pid(pdf, ReadParams(), filename='n.pdf')
+    assert {o['text'] for o in result['objects'] if o['class'] not in ('LINE', 'NOTE')} == {'P-102A', 'LT-301'}

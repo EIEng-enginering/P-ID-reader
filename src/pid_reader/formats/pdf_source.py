@@ -60,6 +60,34 @@ def _parse_tag(text: str) -> tuple[str, dict, float]:
     return "NOTE", {"parse_status": "UNPARSED"}, .35
 
 
+_MERGE_SPLIT_RE = re.compile(r"(?<=\d)(?=[A-Za-z]{1,6}-?\d{2,6})")
+
+
+def _is_tag_like(text: str) -> bool:
+    return _parse_tag(text)[0] != "NOTE"
+
+
+def _split_merged(text: str) -> list[str]:
+    """Split touching labels such as ``HV-383HV-303`` when every part is a valid tag."""
+    if _is_tag_like(text):
+        return [text]
+    parts = [p for p in _MERGE_SPLIT_RE.split(text) if p]
+    if len(parts) > 1 and all(_is_tag_like(p) for p in parts):
+        return parts
+    return [text]
+
+
+def _page_text_reversed(words: list[dict]) -> bool:
+    """True when text on a page reads backwards (page drawn upside down, /Rotate 180).
+
+    Decided per page by comparing how many words are valid tags forwards versus
+    backwards, so ordinary pages are never altered.
+    """
+    forward = sum(1 for w in words if _is_tag_like(str(w.get("text", ""))))
+    backward = sum(1 for w in words if _is_tag_like(str(w.get("text", ""))[::-1]))
+    return backward >= 2 and backward > forward
+
+
 def _make_obj(cls: str, page_num: int, b: dict, text: str, parsed: dict, confidence: float, attributes: dict | None = None) -> dict:
     return {
         "id": object_id(cls, page_num, b, text), "class": cls, "page": page_num,
@@ -124,6 +152,11 @@ def extract_pdf(pdf_bytes: bytes, *, pages: tuple[int, ...] | None, max_pages: i
                 if page.width * page.height > 10**9:
                     raise LimitExceeded("PID_LIMIT_GEOMETRY", "Page geometry exceeds parser budget.")
                 words = page.extract_words(x_tolerance=2, y_tolerance=3, keep_blank_chars=False)
+                reversed_page = _page_text_reversed(words)
+                if reversed_page:
+                    words = [{**w, "text": str(w["text"])[::-1]} for w in words]
+                    result["warnings"].append({"code": "OTHER", "page": number,
+                        "message": "Text on this page is upside down; characters were re-ordered to read it. Positions are unchanged."})
                 has_text = bool(words)
                 graphics = list(page.lines)
                 image_count = len(page.images)
@@ -154,26 +187,40 @@ def extract_pdf(pdf_bytes: bytes, *, pages: tuple[int, ...] | None, max_pages: i
                     continue
                 # Tag recognition from native words. Other significant lines become NOTE observations.
                 token_rectangles: list[tuple[float, float, float, float]] = []
+                expanded: list[tuple[str, float, float, dict, bool]] = []
                 for word in words:
+                    whole = str(word.get("text", ""))
+                    pieces = _split_merged(whole)
+                    total = max(1, sum(len(x) for x in pieces))
+                    cursor = 0
+                    for piece in pieces:
+                        wx0, wx1 = float(word["x0"]), float(word["x1"])
+                        a0 = wx0 + (wx1 - wx0) * cursor / total
+                        a1 = wx0 + (wx1 - wx0) * (cursor + len(piece)) / total
+                        cursor += len(piece)
+                        expanded.append((piece, a0, a1, word, len(pieces) > 1))
+                for text, wx0, wx1, word, was_split in expanded:
                     if cancel:
                         cancel.check()
-                    text = str(word.get("text", ""))
                     cls, parsed, conf = _parse_tag(text)
                     if cls == "NOTE":
                         continue
-                    b = _bbox(page.width, page.height, word["x0"], word["top"], word["x1"], word["bottom"])
-                    obj = _make_obj(cls, number, b, text, parsed, conf)
+                    b = _bbox(page.width, page.height, wx0, word["top"], wx1, word["bottom"])
+                    attrs = {"split_from_touching_labels": "true"} if was_split else None
+                    obj = _make_obj(cls, number, b, text, parsed, conf * (0.85 if was_split else 1.0), attrs)
                     if obj["id"] in seen:
                         result["warnings"].append({"code": "OTHER", "page": number,
                                                     "message": "Two extraction candidates share the same stable identifier; duplicate omitted."})
                         continue
                     seen.add(obj["id"])
                     result["objects"].append(obj)
-                    token_rectangles.append((float(word["x0"]), float(word["top"]), float(word["x1"]), float(word["bottom"])))
+                    token_rectangles.append((wx0, float(word["top"]), wx1, float(word["bottom"])))
                 for textline in page.extract_text_lines(layout=False, strip=True):
                     if cancel:
                         cancel.check()
                     text = str(textline.get("text", "")).strip()
+                    if reversed_page:
+                        text = text[::-1]
                     if len(text) < 3:
                         continue
                     # Exact tag-only lines already have a tag object.
