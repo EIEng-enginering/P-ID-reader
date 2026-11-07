@@ -21,6 +21,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from pathlib import Path
 from typing import Callable
@@ -137,6 +138,22 @@ def run_limited(cmd: list[str], *, env: dict, cwd: str, timeout_s: int, memory_m
     proc = subprocess.Popen(cmd, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                             stderr=subprocess.PIPE, creationflags=creationflags,
                             preexec_fn=preexec, cwd=cwd)
+    # Drain stderr concurrently so a noisy OCR/PDF library cannot fill the
+    # subprocess pipe and deadlock before returning its result. Keep only a
+    # bounded diagnostic tail; no document text is logged by this module.
+    diagnostic_tail = bytearray()
+    def _drain_stderr() -> None:
+        if proc.stderr is None:
+            return
+        while True:
+            chunk = proc.stderr.read(16 * 1024)
+            if not chunk:
+                break
+            diagnostic_tail.extend(chunk)
+            if len(diagnostic_tail) > 64 * 1024:
+                del diagnostic_tail[:len(diagnostic_tail) - 64 * 1024]
+    stderr_reader = threading.Thread(target=_drain_stderr, name="pid-reader-stderr", daemon=True)
+    stderr_reader.start()
     job = None
     if os.name == "nt":
         try:
@@ -168,13 +185,15 @@ def run_limited(cmd: list[str], *, env: dict, cwd: str, timeout_s: int, memory_m
                 proc.kill()
                 proc.wait()
                 break
-        stderr = (proc.stderr.read() or b"").decode("utf-8", "replace") if proc.stderr else ""
+        stderr_reader.join(timeout=5)
+        stderr = bytes(diagnostic_tail).decode("utf-8", "replace")
     finally:
         if proc.poll() is None:
             proc.kill()
             proc.wait()
         if proc.stderr:
             proc.stderr.close()
+        stderr_reader.join(timeout=1)
         if job is not None:
             job.close()
     return proc.returncode, stderr, reason
@@ -195,6 +214,14 @@ def read_pid_isolated(pdf_bytes: bytes, params: ReadParams, *, filename: str = "
     and :class:`WorkerTimeout` (a LimitExceeded, code ``PID_TIMEOUT``).
     """
     params.validate()
+    if not isinstance(pdf_bytes, bytes) or not pdf_bytes.startswith(b"%PDF-"):
+        raise RefusedInput("PID_MALFORMED", "The isolated input must be PDF bytes.")
+    if len(pdf_bytes) > params.max_pdf_bytes:
+        raise LimitExceeded("PID_LIMIT_BYTES", "PDF exceeds the configured byte limit.")
+    if expected_sha256 and sha256_hex(pdf_bytes) != expected_sha256:
+        raise RefusedInput("PID_SHA_MISMATCH", "Isolated PDF bytes differ from the nominated source.")
+    if should_cancel is not None and should_cancel():
+        raise Cancelled()
     if not isinstance(timeout_s, int) or not 1 <= timeout_s <= 3600:
         raise ValueError("timeout_s must be 1..3600")
     if not isinstance(memory_mb, int) or not 256 <= memory_mb <= 65536:
@@ -226,10 +253,39 @@ def read_pid_isolated(pdf_bytes: bytes, params: ReadParams, *, filename: str = "
             except ValueError:
                 continue
         if code == EXIT_OK:
-            data = output_path.read_bytes()
-            result = json.loads(data.decode("utf-8"))
-            if canonical_json(result).encode("utf-8") != data:
-                raise RefusedInput("PID_MALFORMED", "Worker output is not canonical JSON.")
+            # A successful exit status alone is not proof of a valid extraction.
+            # Limit the result read even if the child ignored its own limits,
+            # then independently cross-check its identity with the submitted PDF.
+            with output_path.open("rb") as handle:
+                data = handle.read(8 * 1024 * 1024 + 1)
+            if len(data) > 8 * 1024 * 1024:
+                raise LimitExceeded("PID_LIMIT_RESULT", "Worker output exceeds 8 MiB.")
+            try:
+                result = json.loads(data.decode("utf-8"))
+                if not isinstance(result, dict) or canonical_json(result).encode("utf-8") != data:
+                    raise ValueError("noncanonical output")
+                document = result["document"]
+                provenance = result["provenance"]
+                source_sha256 = sha256_hex(pdf_bytes)
+                if (result["schema_version"] != 1 or
+                    document["sha256"] != source_sha256 or
+                    provenance["input_sha256"] != source_sha256 or
+                    (expected_sha256 and source_sha256 != expected_sha256)):
+                    raise RefusedInput("PID_SHA_MISMATCH", "Worker source identity does not match the supplied PDF.")
+                if (provenance["result_sha256"] != result_sha256(result) or
+                    provenance["params_sha256"] != sha256_hex(canonical_json(params.as_dict()).encode("utf-8"))):
+                    raise ValueError("invalid provenance hashes")
+                for field in ("pages", "objects", "connections", "loop_proposals",
+                              "shared_component_evidence", "warnings", "unreadable_regions"):
+                    if not isinstance(result[field], list):
+                        raise ValueError("missing or malformed result collection")
+                if (result["summary"]["object_count"] != len(result["objects"]) or
+                    result["summary"]["connection_count"] != len(result["connections"])):
+                    raise ValueError("summary counts mismatch")
+            except RefusedInput:
+                raise
+            except (ValueError, TypeError, KeyError, IndexError, AttributeError) as exc:
+                raise RefusedInput("PID_MALFORMED", "Worker output failed independent structural and hash checks.") from exc
             return result
         if code == EXIT_LIMIT:
             raise LimitExceeded(event.get("code", "PID_LIMIT"), "Reader limit exceeded.")

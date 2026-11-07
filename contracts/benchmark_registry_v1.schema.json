@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/pid-reader/benchmark_registry_v1.schema.json",
+  "title": "P&ID Reader independent benchmark candidate register",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "candidates", "independent_accuracy_status", "rules", "registry_sha256"],
+  "properties": {
+    "schema": {"const": "pid-reader-benchmark-registry-v1"},
+    "independent_accuracy_status": {"enum": ["NOT_RUN", "BLOCKED", "IN_PROGRESS", "COMPLETE_WITH_EVIDENCE"]},
+    "rules": {"type": "string", "minLength": 1},
+    "registry_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidates": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+      "required": ["source_sha256", "reference", "kind", "rights", "rights_evidence", "labels", "reviewers", "split"],
+      "properties": {
+        "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "reference": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["SYNTHETIC", "PUBLIC_THIRD_PARTY", "CLIENT_AUTHORISED", "OWNED"]},
+        "rights": {"enum": ["UNVERIFIED", "CLEARED", "RESTRICTED", "EXPIRED"]},
+        "rights_evidence": {"type": "string"},
+        "labels": {"enum": ["UNLABELLED", "IN_PROGRESS", "INDEPENDENTLY_VERIFIED"]},
+        "reviewers": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "split": {"enum": ["CANDIDATE", "DEVELOPMENT", "RESERVED_FINAL"]}
+      }
+    }}
+  }
+}

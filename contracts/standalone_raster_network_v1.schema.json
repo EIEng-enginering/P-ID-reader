@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/pid-reader/raster-network-v1",
+  "title": "Standalone, unverified raster stroke context and possible drawing contacts",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "algorithm", "source_sha256", "raster_result_sha256", "ocr_result_sha256", "coordinate_frame", "stroke_evidence", "duplicate_observation_groups", "contact_candidates", "warnings", "disclaimer", "statistics", "result_sha256"],
+  "properties": {
+    "schema": {"const": "pid-reader-standalone-raster-network-v1"},
+    "algorithm": {"const": "raster-context-spatial-contacts-0.1"},
+    "source_sha256": {"$ref": "#/$defs/hash"},
+    "raster_result_sha256": {"$ref": "#/$defs/hash"},
+    "ocr_result_sha256": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/hash"}]},
+    "coordinate_frame": {"const": "PDFPLUMBER_MEDIA_NORMALIZED_V1"},
+    "stroke_evidence": {"type": "array", "maxItems": 7000, "items": {"type": "object", "additionalProperties": false,
+      "required": ["stroke_id", "page", "role", "text_sample_fraction", "glyph_sample_fraction", "status"],
+      "properties": {
+        "stroke_id": {"type": "string", "minLength": 10}, "page": {"type": "integer", "minimum": 1},
+        "role": {"enum": ["UNCLASSIFIED_LINEWORK", "OCR_TEXT_OVERLAP_UNRESOLVED", "SYMBOL_REGION_STROKE_CANDIDATE", "PAGE_FRAME_STROKE_CANDIDATE", "TEXT_INTERSECTING_STROKE_UNRESOLVED"]},
+        "text_sample_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "glyph_sample_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "status": {"const": "PROPOSED_UNVERIFIED"}
+      }
+    }},
+    "duplicate_observation_groups": {"type": "array", "maxItems": 7000, "items": {"type": "object", "additionalProperties": false,
+      "required": ["representative_stroke_id", "stroke_ids", "explanation"],
+      "properties": {"representative_stroke_id": {"type": "string"}, "stroke_ids": {"type": "array", "minItems": 2, "items": {"type": "string"}}, "explanation": {"type": "string"}}
+    }},
+    "contact_candidates": {"type": "array", "maxItems": 6000, "items": {"type": "object", "additionalProperties": false,
+      "required": ["id", "page", "stroke_ids", "kind", "point", "supporting_observation_pairs", "status", "limitations"],
+      "properties": {
+        "id": {"type": "string", "minLength": 10}, "page": {"type": "integer", "minimum": 1},
+        "stroke_ids": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "string"}},
+        "kind": {"enum": ["ENDPOINT_TOUCH_UNRESOLVED", "T_JUNCTION_UNRESOLVED", "CROSSING_UNRESOLVED"]},
+        "point": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number", "minimum": 0, "maximum": 1}},
+        "supporting_observation_pairs": {"type": "integer", "minimum": 1},
+        "status": {"const": "UNRESOLVED"}, "limitations": {"type": "string", "minLength": 20}
+      }
+    }},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "disclaimer": {"type": "string", "minLength": 20},
+    "statistics": {"type": "object", "additionalProperties": false,
+      "required": ["strokes", "contact_proposals", "pair_checks", "context_excluded_strokes", "duplicate_observation_groups"],
+      "properties": {"strokes": {"type": "integer", "minimum": 0}, "contact_proposals": {"type": "integer", "minimum": 0}, "pair_checks": {"type": "integer", "minimum": 0}, "context_excluded_strokes": {"type": "integer", "minimum": 0}, "duplicate_observation_groups": {"type": "integer", "minimum": 0}}
+    },
+    "result_sha256": {"$ref": "#/$defs/hash"}
+  },
+  "$defs": {"hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

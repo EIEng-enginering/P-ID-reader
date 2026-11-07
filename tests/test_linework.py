@@ -112,7 +112,7 @@ def test_wrong_symbol_source_rejected():
 def test_linework_persistence_and_audited_review(tmp_path):
     pdf,e,g,s,r=run_layers()
     with ProjectStore(tmp_path/"project.sqlite") as store:
-        assert store.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=="9"
+        assert store.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=="12"
         eid=store.add_extraction(e,source_pdf_bytes=pdf)
         gid=store.add_geometry_analysis(eid,g)
         sid=store.add_symbol_analysis(eid,gid,s)
@@ -151,9 +151,9 @@ def test_migrate_v3_with_unmodified_original_records(tmp_path):
         assert db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=="3"
     with ProjectStore(p) as upgraded:
         assert upgraded.migration_backup and upgraded.migration_backup.exists()
-        assert upgraded.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=="9"
+        assert upgraded.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=="12"
         assert upgraded.db.execute("SELECT name FROM sqlite_master WHERE name='linework_candidate'").fetchone()
-    with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v9-*.sqlite'))) as old:
+    with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))) as old:
         assert old.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=="3"
 
 

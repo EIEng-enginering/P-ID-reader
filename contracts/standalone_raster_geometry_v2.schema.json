@@ -1,0 +1,406 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/pid-reader/standalone-raster-geometry-v2",
+  "title": "P&ID Reader offline raster lines, filled and outlined glyph proposals, standalone v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "algorithm",
+    "source_sha256",
+    "page_count",
+    "selected_pages",
+    "dpi",
+    "engine_versions",
+    "coordinate_frame",
+    "page_frames",
+    "stroke_candidates",
+    "filled_valve_candidates",
+    "outline_valve_candidates",
+    "warnings",
+    "disclaimer",
+    "result_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pid-reader-standalone-raster-geometry-v2"
+    },
+    "algorithm": {
+      "const": "offline-raster-lines-filled-and-outlined-bowtie-0.2"
+    },
+    "source_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "page_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+    },
+    "selected_pages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    },
+    "dpi": {
+      "type": "integer",
+      "minimum": 72,
+      "maximum": 240
+    },
+    "engine_versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opencv",
+        "numpy",
+        "pypdfium2"
+      ],
+      "properties": {
+        "opencv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "numpy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pypdfium2": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "coordinate_frame": {
+      "const": "PDFPLUMBER_MEDIA_NORMALIZED_V1"
+    },
+    "page_frames": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "page",
+          "transform",
+          "width_px",
+          "height_px",
+          "dark_fraction",
+          "render_dpi"
+        ],
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "transform": {
+            "type": "object",
+            "required": [
+              "media_size",
+              "render_size",
+              "crop_origin",
+              "rotation",
+              "coordinate_frame"
+            ],
+            "properties": {
+              "media_size": {
+                "$ref": "#/$defs/positivePair"
+              },
+              "render_size": {
+                "$ref": "#/$defs/positivePair"
+              },
+              "crop_origin": {
+                "$ref": "#/$defs/point"
+              },
+              "rotation": {
+                "enum": [
+                  0,
+                  90,
+                  180,
+                  270
+                ]
+              },
+              "coordinate_frame": {
+                "const": "PDFPLUMBER_MEDIA_NORMALIZED_V1"
+              }
+            },
+            "additionalProperties": false
+          },
+          "width_px": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height_px": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "dark_fraction": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "render_dpi": {
+            "type": "number",
+            "minimum": 72,
+            "maximum": 240
+          }
+        }
+      }
+    },
+    "stroke_candidates": {
+      "type": "array",
+      "maxItems": 7000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "page",
+          "endpoints",
+          "status",
+          "role",
+          "limitations"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 8
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/point"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "status": {
+            "const": "PROPOSED_UNVERIFIED"
+          },
+          "role": {
+            "const": "RASTER_LINEWORK_UNKNOWN"
+          },
+          "limitations": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "filled_valve_candidates": {
+      "type": "array",
+      "maxItems": 750,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "page",
+          "bbox",
+          "centre",
+          "orientation",
+          "kind",
+          "evidence",
+          "status",
+          "limitations"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 8
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "bbox": {
+            "$ref": "#/$defs/bbox"
+          },
+          "centre": {
+            "$ref": "#/$defs/point"
+          },
+          "orientation": {
+            "enum": [
+              "HORIZONTAL_AXIS",
+              "VERTICAL_AXIS"
+            ]
+          },
+          "kind": {
+            "const": "FILLED_BOWTIE_VALVE_GLYPH_CANDIDATE"
+          },
+          "evidence": {
+            "const": "TWO_FILLED_TRIANGLES_WITH_OPPOSING_APICES"
+          },
+          "status": {
+            "const": "PROPOSED_UNVERIFIED"
+          },
+          "limitations": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "page",
+          "code"
+        ],
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "code": {
+            "enum": [
+              "NO_RASTER_INK",
+              "DOWNSCALED_RENDER",
+              "OUTLINE_DETECTION_SKIPPED_BASE_BUDGET",
+              "OUTLINE_DETECTION_SKIPPED_OUTPUT_BUDGET"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 10
+    },
+    "result_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "outline_valve_candidates": {
+      "type": "array",
+      "maxItems": 750,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "page",
+          "bbox",
+          "centre",
+          "orientation",
+          "kind",
+          "style",
+          "evidence",
+          "status",
+          "limitations"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 8
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "bbox": {
+            "$ref": "#/$defs/bbox"
+          },
+          "centre": {
+            "$ref": "#/$defs/point"
+          },
+          "orientation": {
+            "enum": [
+              "HORIZONTAL_AXIS",
+              "VERTICAL_AXIS"
+            ]
+          },
+          "kind": {
+            "const": "OUTLINED_BOWTIE_VALVE_GLYPH_CANDIDATE"
+          },
+          "style": {
+            "enum": [
+              "PLAIN_OUTLINE",
+              "CENTRAL_RING_OBSERVED"
+            ]
+          },
+          "evidence": {
+            "const": "FOUR_DIAGONALS_TWO_END_BASES_NO_TOP_BOTTOM_EDGE"
+          },
+          "status": {
+            "const": "PROPOSED_UNVERIFIED"
+          },
+          "limitations": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "point": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "positivePair": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "bbox": {
+      "type": "object",
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "x0": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y0": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "x1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}

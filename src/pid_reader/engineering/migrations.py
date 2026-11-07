@@ -5,7 +5,7 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime, timezone
 
-LATEST_SCHEMA = 9
+LATEST_SCHEMA = 12
 
 MIGRATION_2 = """
 BEGIN IMMEDIATE;
@@ -176,6 +176,33 @@ def upgrade(db: sqlite3.Connection, path: Path, *, existed_before_open: bool) ->
         check=db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()
         if check is None or check[0]!='9':
             raise ValueError('Standalone batch/comparison migration did not complete')
+    if version<=9:
+        try:
+            db.executescript(MIGRATION_10)
+        except Exception:
+            if db.in_transaction: db.rollback()
+            raise
+        check=db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()
+        if check is None or check[0]!='10':
+            raise ValueError('Standalone raster evidence migration did not complete')
+    if version<=10:
+        try:
+            db.executescript(MIGRATION_11)
+        except Exception:
+            if db.in_transaction: db.rollback()
+            raise
+        check=db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()
+        if check is None or check[0]!='11':
+            raise ValueError('Standalone raster network migration did not complete')
+    if version<=11:
+        try:
+            db.executescript(MIGRATION_12)
+        except Exception:
+            if db.in_transaction: db.rollback()
+            raise
+        check=db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()
+        if check is None or check[0]!='12':
+            raise ValueError('Standalone centreline migration did not complete')
     return backup_path
 
 MIGRATION_4 = """
@@ -480,5 +507,124 @@ CREATE TRIGGER IF NOT EXISTS block_delete_batch_import_outcome BEFORE DELETE ON 
 CREATE TRIGGER IF NOT EXISTS block_update_revision_comparison BEFORE UPDATE ON revision_comparison BEGIN SELECT RAISE(ABORT,'append-only record'); END;
 CREATE TRIGGER IF NOT EXISTS block_delete_revision_comparison BEFORE DELETE ON revision_comparison BEGIN SELECT RAISE(ABORT,'append-only record'); END;
 UPDATE project_meta SET value='9' WHERE key='standalone_schema' AND value='8';
+COMMIT;
+"""
+
+
+MIGRATION_10 = """
+BEGIN IMMEDIATE;
+CREATE TABLE IF NOT EXISTS raster_analysis (
+ analysis_id TEXT PRIMARY KEY,
+ extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+ algorithm TEXT NOT NULL, result_hash TEXT NOT NULL,
+ result_json TEXT NOT NULL, created_utc TEXT NOT NULL,
+ UNIQUE(extraction_id, algorithm, result_hash)
+);
+CREATE TABLE IF NOT EXISTS raster_valve_candidate (
+ candidate_id TEXT PRIMARY KEY,
+ analysis_id TEXT NOT NULL REFERENCES raster_analysis(analysis_id),
+ native_candidate_id TEXT NOT NULL, page INTEGER NOT NULL,
+ candidate_json TEXT NOT NULL, UNIQUE(analysis_id, native_candidate_id)
+);
+CREATE TABLE IF NOT EXISTS raster_valve_decision (
+ decision_id TEXT PRIMARY KEY,
+ candidate_id TEXT NOT NULL REFERENCES raster_valve_candidate(candidate_id),
+ actor TEXT NOT NULL, decision TEXT NOT NULL,
+ reason TEXT NOT NULL, created_utc TEXT NOT NULL,
+ CHECK(decision IN ('ACCEPTED_AS_READING','REJECTED','UNRESOLVED'))
+);
+CREATE INDEX IF NOT EXISTS ix_raster_analysis_extraction ON raster_analysis(extraction_id);
+CREATE INDEX IF NOT EXISTS ix_raster_candidate_analysis ON raster_valve_candidate(analysis_id);
+CREATE INDEX IF NOT EXISTS ix_raster_review_candidate ON raster_valve_decision(candidate_id);
+CREATE TRIGGER IF NOT EXISTS block_update_raster_analysis BEFORE UPDATE ON raster_analysis BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_raster_analysis BEFORE DELETE ON raster_analysis BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_raster_valve_candidate BEFORE UPDATE ON raster_valve_candidate BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_raster_valve_candidate BEFORE DELETE ON raster_valve_candidate BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_raster_valve_decision BEFORE UPDATE ON raster_valve_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_raster_valve_decision BEFORE DELETE ON raster_valve_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+UPDATE project_meta SET value='10' WHERE key='standalone_schema' AND value='9';
+COMMIT;
+"""
+
+
+MIGRATION_11 = """
+BEGIN IMMEDIATE;
+CREATE TABLE IF NOT EXISTS raster_network_analysis (
+  analysis_id TEXT PRIMARY KEY,
+  extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+  raster_analysis_id TEXT NOT NULL REFERENCES raster_analysis(analysis_id),
+  ocr_analysis_id TEXT REFERENCES ocr_analysis(analysis_id),
+  result_hash TEXT NOT NULL,
+  result_json TEXT NOT NULL,
+  created_utc TEXT NOT NULL,
+  UNIQUE(extraction_id,raster_analysis_id,ocr_analysis_id,result_hash)
+);
+CREATE TABLE IF NOT EXISTS raster_network_candidate (
+  candidate_id TEXT PRIMARY KEY,
+  analysis_id TEXT NOT NULL REFERENCES raster_network_analysis(analysis_id),
+  native_candidate_id TEXT NOT NULL,
+  page INTEGER NOT NULL,
+  kind TEXT NOT NULL,
+  candidate_json TEXT NOT NULL,
+  UNIQUE(analysis_id,native_candidate_id)
+);
+CREATE TABLE IF NOT EXISTS raster_network_decision (
+  decision_id TEXT PRIMARY KEY,
+  candidate_id TEXT NOT NULL REFERENCES raster_network_candidate(candidate_id),
+  actor TEXT NOT NULL,
+  decision TEXT NOT NULL CHECK(decision IN ('CONTACT_AS_DRAWN','NOT_CONTACT_AS_DRAWN','UNRESOLVED','REJECTED')),
+  reason TEXT NOT NULL,
+  created_utc TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_rnet_analysis_extraction ON raster_network_analysis(extraction_id);
+CREATE INDEX IF NOT EXISTS ix_rnet_candidate_analysis ON raster_network_candidate(analysis_id);
+CREATE INDEX IF NOT EXISTS ix_rnet_decision_candidate ON raster_network_decision(candidate_id);
+CREATE TRIGGER IF NOT EXISTS block_update_rnet_analysis BEFORE UPDATE ON raster_network_analysis BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_rnet_analysis BEFORE DELETE ON raster_network_analysis BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_rnet_candidate BEFORE UPDATE ON raster_network_candidate BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_rnet_candidate BEFORE DELETE ON raster_network_candidate BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_rnet_decision BEFORE UPDATE ON raster_network_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_rnet_decision BEFORE DELETE ON raster_network_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+UPDATE project_meta SET value='11' WHERE key='standalone_schema' AND value='10';
+COMMIT;
+"""
+
+
+MIGRATION_12 = """
+BEGIN IMMEDIATE;
+CREATE TABLE IF NOT EXISTS raster_centreline_analysis (
+  analysis_id TEXT PRIMARY KEY,
+  extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+  raster_analysis_id TEXT NOT NULL REFERENCES raster_analysis(analysis_id),
+  raster_network_analysis_id TEXT NOT NULL REFERENCES raster_network_analysis(analysis_id),
+  result_hash TEXT NOT NULL,
+  result_json TEXT NOT NULL,
+  created_utc TEXT NOT NULL,
+  UNIQUE(extraction_id,raster_analysis_id,raster_network_analysis_id,result_hash)
+);
+CREATE TABLE IF NOT EXISTS raster_centreline_gap (
+  candidate_id TEXT PRIMARY KEY,
+  analysis_id TEXT NOT NULL REFERENCES raster_centreline_analysis(analysis_id),
+  native_candidate_id TEXT NOT NULL, page INTEGER NOT NULL,
+  candidate_json TEXT NOT NULL,
+  UNIQUE(analysis_id,native_candidate_id)
+);
+CREATE TABLE IF NOT EXISTS raster_centreline_decision (
+  decision_id TEXT PRIMARY KEY,
+  candidate_id TEXT NOT NULL REFERENCES raster_centreline_gap(candidate_id),
+  actor TEXT NOT NULL, decision TEXT NOT NULL,
+  reason TEXT NOT NULL, created_utc TEXT NOT NULL,
+  CHECK(decision IN ('CONTINUOUS_AS_DRAWN','SEPARATE_AS_DRAWN','UNRESOLVED','REJECTED'))
+);
+CREATE INDEX IF NOT EXISTS ix_rc_analysis_extraction ON raster_centreline_analysis(extraction_id);
+CREATE INDEX IF NOT EXISTS ix_rc_gap_analysis ON raster_centreline_gap(analysis_id);
+CREATE INDEX IF NOT EXISTS ix_rc_decision_gap ON raster_centreline_decision(candidate_id);
+CREATE TRIGGER IF NOT EXISTS block_update_rc_analysis BEFORE UPDATE ON raster_centreline_analysis BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_rc_analysis BEFORE DELETE ON raster_centreline_analysis BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_rc_gap BEFORE UPDATE ON raster_centreline_gap BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_rc_gap BEFORE DELETE ON raster_centreline_gap BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_rc_decision BEFORE UPDATE ON raster_centreline_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_rc_decision BEFORE DELETE ON raster_centreline_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+UPDATE project_meta SET value='12' WHERE key='standalone_schema' AND value='11';
 COMMIT;
 """

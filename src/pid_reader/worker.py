@@ -1,13 +1,15 @@
 """R1-shaped worker with atomic result handoff and no document-text diagnostics.
 
 The only published output is the host-nominated JSON path. A candidate is staged
-inside the private --workdir, fsynced, then atomically replaced on the same volume.
+inside the private --workdir, fsynced, then atomically hard-linked into its final
+name without permitting replacement of another writer's result.
 The host is responsible for supplying an isolated scratch directory and stopping
 this process for cancellation. We never recursively delete a caller-owned folder.
 """
 from __future__ import annotations
 
 import argparse
+import errno
 import json
 import os
 from pathlib import Path
@@ -28,7 +30,9 @@ def progress(**fields):
 def atomic_publish(result: dict, destination: Path, scratch: Path) -> None:
     """Publish a complete JSON file or leave no new destination.
 
-    Scratch and destination must be on one volume for os.replace to be atomic.
+    Scratch and destination must support same-volume hard links. Publication is
+    atomic and cannot replace an existing result, even if a result appears during
+    staging.
     Does not permit overwriting an existing result or storing it in scratch.
     """
     if not scratch.is_dir() or scratch.is_symlink():
@@ -42,6 +46,8 @@ def atomic_publish(result: dict, destination: Path, scratch: Path) -> None:
     if not destination.parent.is_dir():
         raise RefusedInput("PID_BAD_PARAMETER", "Result directory does not exist.")
     data = canonical_json(result).encode("utf-8")
+    if len(data) > 8 * 1024 * 1024:
+        raise LimitExceeded("PID_LIMIT_RESULT", "Worker output exceeds the 8 MiB R1 result limit.")
     staged: Path | None = None
     try:
         with tempfile.NamedTemporaryFile(mode="wb", prefix="pid-stage-", suffix=".json", dir=wrk, delete=False) as f:
@@ -49,11 +55,22 @@ def atomic_publish(result: dict, destination: Path, scratch: Path) -> None:
             f.write(data)
             f.flush()
             os.fsync(f.fileno())
-        # A single atomic operation when both paths share a filesystem/volume.
-        # An EXDEV failure is not worked around with a partial copy.
-        if destination.exists() or destination.is_symlink():
-            raise RefusedInput("PID_BAD_PARAMETER", "Result path appeared during staging.")
-        os.replace(staged, destination)
+        # Atomic no-clobber creation, including if another process creates the
+        # result AFTER the earlier existence check. os.replace would overwrite
+        # that concurrent result; os.link fails with EEXIST instead. The staged
+        # file is complete and fsynced before the destination becomes visible.
+        # NTFS and POSIX filesystems support hard links to ordinary files.
+        try:
+            os.link(staged, destination)
+        except FileExistsError as exc:
+            raise RefusedInput("PID_BAD_PARAMETER", "Result path appeared during staging; refusing to overwrite it.") from exc
+        except OSError as exc:
+            if exc.errno in (errno.EXDEV, errno.EPERM, errno.ENOTSUP, errno.EOPNOTSUPP):
+                raise RefusedInput("PID_BAD_PARAMETER", "Destination must support atomic no-clobber hard links on the scratch volume.") from exc
+            raise
+        # The complete output is now visible. Delete the private stage, never
+        # the destination. If cancellation occurs here, output stays complete.
+        staged.unlink()
         staged = None
     finally:
         if staged is not None:
@@ -89,11 +106,15 @@ def main(argv: list[str] | None = None, _reader=None) -> int:
             raise RefusedInput("PID_BAD_PARAMETER", "pages must be an array of integers or null.")
         known = {k: raw.pop(k) for k in list(raw) if k in ReadParams.__dataclass_fields__ and k != "extras"}
         params = ReadParams(pages=tuple(pages) if pages is not None else None, extras=raw, **known)
-        # Refuse large input before read_bytes; no unbounded host file allocation.
+        # Read a bounded number of bytes, even if another process grows the
+        # source after the size preflight. Never read an unbounded hostile file.
         src = Path(args.input)
         if src.stat().st_size > params.max_pdf_bytes:
             raise LimitExceeded("PID_LIMIT_BYTES", "Input exceeds the configured byte limit.")
-        input_data = src.read_bytes()
+        with src.open("rb") as handle:
+            input_data = handle.read(params.max_pdf_bytes + 1)
+        if len(input_data) > params.max_pdf_bytes:
+            raise LimitExceeded("PID_LIMIT_BYTES", "Input grew beyond the configured byte limit while reading.")
         progress(event="start", bytes=len(input_data), sha256=sha256_hex(input_data))
         result = (_reader or read_pid)(input_data, params, CancelToken(),
                           document_revision_id=args.document_revision_id,

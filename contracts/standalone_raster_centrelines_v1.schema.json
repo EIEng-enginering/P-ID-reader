@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/pid-reader/raster-centrelines-v1",
+  "title": "Source-linked unverified ink centreline families and short-gap proposals",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "algorithm",
+    "source_sha256",
+    "raster_result_sha256",
+    "network_result_sha256",
+    "coordinate_frame",
+    "centrelines",
+    "gap_candidates",
+    "statistics",
+    "disclaimer",
+    "result_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pid-reader-standalone-raster-centrelines-v1"
+    },
+    "algorithm": {
+      "const": "duplicate-supported-centrelines-gaps-0.1"
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "raster_result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "network_result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "coordinate_frame": {
+      "const": "PDFPLUMBER_MEDIA_NORMALIZED_V1"
+    },
+    "centrelines": {
+      "type": "array",
+      "maxItems": 7000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "page",
+          "source_stroke_ids",
+          "endpoints",
+          "length_px",
+          "context",
+          "source_roles",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 10
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source_stroke_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "endpoints": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "length_px": {
+            "type": "number",
+            "minimum": 0
+          },
+          "context": {
+            "enum": [
+              "LINEWORK_UNCLASSIFIED",
+              "CONTEXT_REVIEW_REQUIRED",
+              "PAGE_FRAME_STROKE_CANDIDATE"
+            ]
+          },
+          "source_roles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "const": "PROPOSED_UNVERIFIED"
+          }
+        }
+      }
+    },
+    "gap_candidates": {
+      "type": "array",
+      "maxItems": 3500,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "page",
+          "centreline_ids",
+          "point",
+          "gap_px",
+          "lateral_offset_px",
+          "context_warning",
+          "status",
+          "limitations"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 10
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "centreline_ids": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "string"
+            }
+          },
+          "point": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "gap_px": {
+            "type": "number",
+            "minimum": 2,
+            "maximum": 16
+          },
+          "lateral_offset_px": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2.8
+          },
+          "context_warning": {
+            "enum": [
+              "TEXT_OR_SYMBOL_CONTEXT_REVIEW",
+              "UNKNOWN_PROCESS_OR_INSTRUMENT_STROKE"
+            ]
+          },
+          "status": {
+            "const": "UNRESOLVED"
+          },
+          "limitations": {
+            "type": "string",
+            "minLength": 20
+          }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_strokes",
+        "centrelines",
+        "duplicate_strokes",
+        "gap_proposals",
+        "gap_pair_checks"
+      ],
+      "properties": {
+        "source_strokes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "centrelines": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_strokes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap_proposals": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap_pair_checks": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 30
+    },
+    "result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

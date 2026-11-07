@@ -251,7 +251,7 @@ class MainWindow(QMainWindow):
         bar.addWidget(self.zoom_label)
         bar.addSpacing(12)
         self.layer_boxes: dict[str, QCheckBox] = {}
-        for layer in ("readings", "symbols", "linework", "catalogue", "text_links", "geometry", "signals"):
+        for layer in ("readings", "symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster"):
             cb = QCheckBox(LAYER_LABELS[layer])
             cb.setChecked(self.viewer.layer_visible(layer))
             swatch = QPixmap(12, 12)

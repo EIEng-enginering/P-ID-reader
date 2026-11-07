@@ -1,0 +1,1 @@
+{"candidates":[],"independent_accuracy_status":"NOT_RUN","registry_sha256":"715df6454a73be7ae47c37594bc192f09bd7a855c811cc0a7188e1baa8c27078","rules":"Never use reserved-final sheets for tuning or training; no drawing bytes in this registry.","schema":"pid-reader-benchmark-registry-v1"}

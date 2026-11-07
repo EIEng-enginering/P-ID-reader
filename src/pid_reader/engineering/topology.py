@@ -13,10 +13,16 @@ from typing import Any
 
 from ..api import CancelToken, LimitExceeded, RefusedInput, canonical_json, sha256_hex, stable_id
 
-ALGORITHM_VERSION = "vector-topology-0.2"
+ALGORITHM_VERSION = "vector-topology-0.3-bounded-index"
 TOUCH_TOLERANCE_PT = 1.5
-MAX_SEGMENTS = 4000
+# Standalone limits. Keep the Worksheet R1 contract entirely unchanged.
+# 20k observed strokes are allowed, but all contacts must still be covered;
+# analyses that cannot be completed within bounded budgets fail explicitly.
+MAX_SEGMENTS = 20000
 MAX_CANDIDATES = 12000
+MAX_GRID_MEMBERSHIPS = 500000
+MAX_PAIRS_EVALUATED = 600000
+MAX_TOPOLOGY_BYTES = 8 * 1024 * 1024
 GRID_PT = 64.0
 
 
@@ -202,45 +208,59 @@ def analyze_pdf_topology(pdf_bytes: bytes, *, pages: tuple[int, ...] | None = No
                 if not per_page[page_number]:
                     result["warnings"].append({"page":page_number,"code":"NO_STRAIGHT_VECTOR_STROKES",
                                                "message":"No supported straight line segments extracted; raster or curves may remain unread."})
-                # Spatial index to avoid all-pairs on large drawings. No candidate
-                # is dropped silently; exceptional input is refused.
-                segment_list=per_page[page_number]
-                grid: dict[tuple[int,int],list[int]] = defaultdict(list)
+                # Memory-bounded streaming spatial index, in original stroke order.
+                # Each pair is tested once against strokes seen earlier; unlike
+                # the original code this does not allocate a giant global pair set.
+                # If any work budget is hit we REFUSE the whole analysis rather
+                # than discard contacts or claim complete coverage.
+                segment_list = per_page[page_number]
+                grid: dict[tuple[int, int], list[int]] = defaultdict(list)
+                grid_memberships = 0
+                pair_count = 0
                 for i, seg in enumerate(segment_list):
-                    p,q=seg["raw_pts"]
-                    xlo,xhi=sorted((p[0],q[0]));ylo,yhi=sorted((p[1],q[1]))
-                    ixlo=floor((xlo-TOUCH_TOLERANCE_PT)/GRID_PT)
-                    ixhi=floor((xhi+TOUCH_TOLERANCE_PT)/GRID_PT)
-                    iylo=floor((ylo-TOUCH_TOLERANCE_PT)/GRID_PT)
-                    iyhi=floor((yhi+TOUCH_TOLERANCE_PT)/GRID_PT)
-                    if (ixhi-ixlo+1)*(iyhi-iylo+1)>2000:
-                        raise LimitExceeded("PID_LIMIT_GEOMETRY", "Excessive segment spatial extent")
-                    for x in range(ixlo,ixhi+1):
-                        for y in range(iylo,iyhi+1):
-                            grid[x,y].append(i)
-                pairs:set[tuple[int,int]]=set()
-                for ids in grid.values():
-                    for ai in range(len(ids)):
-                        for bi in range(ai+1,len(ids)):
-                            i,j=ids[ai],ids[bi]
-                            pairs.add((i,j) if i<j else (j,i))
-                            if len(pairs)>300000:
-                                raise LimitExceeded("PID_LIMIT_GEOMETRY", "Too many possible stroke intersections")
-                for n,(i,j) in enumerate(sorted(pairs)):
-                    if cancel and n%64==0:cancel.check()
-                    left,right=segment_list[i],segment_list[j]
-                    contact=_segment_contact(left,right)
-                    if contact is None:continue
-                    kind,raw_pt=contact
-                    point=_point(raw_pt,width,height)
-                    members=sorted([left["id"],right["id"]])
-                    cid=stable_id("contact",result["source_sha256"],page_number,members,kind,point)
-                    result["contact_candidates"].append({"id":cid,"page":page_number,
-                        "kind":kind,"point":point,"bbox":_bbox_at(point,width,height),
-                        "segment_ids":members,"status":"UNRESOLVED",
-                        "limitation":"Graphical contact is not confirmed process or signal connectivity."})
-                    if len(result["contact_candidates"])>MAX_CANDIDATES:
-                        raise LimitExceeded("PID_LIMIT_GEOMETRY", "Too many contact candidates")
+                    if cancel and i % 32 == 0:
+                        cancel.check()
+                    p, q = seg["raw_pts"]
+                    xlo, xhi = sorted((p[0], q[0]))
+                    ylo, yhi = sorted((p[1], q[1]))
+                    ixlo = floor((xlo - TOUCH_TOLERANCE_PT) / GRID_PT)
+                    ixhi = floor((xhi + TOUCH_TOLERANCE_PT) / GRID_PT)
+                    iylo = floor((ylo - TOUCH_TOLERANCE_PT) / GRID_PT)
+                    iyhi = floor((yhi + TOUCH_TOLERANCE_PT) / GRID_PT)
+                    tile_count = (ixhi - ixlo + 1) * (iyhi - iylo + 1)
+                    if tile_count > 2000 or grid_memberships + tile_count > MAX_GRID_MEMBERSHIPS:
+                        raise LimitExceeded("PID_LIMIT_GEOMETRY", "Geometry spatial index work budget exceeded; contact coverage is unavailable")
+                    cells = [(x, y) for x in range(ixlo, ixhi + 1)
+                            for y in range(iylo, iyhi + 1)]
+                    prior: set[int] = set()
+                    for cell in cells:
+                        prior.update(grid[cell])
+                    for j in sorted(prior):
+                        pair_count += 1
+                        if pair_count > MAX_PAIRS_EVALUATED:
+                            raise LimitExceeded("PID_LIMIT_GEOMETRY", "Geometry candidate-pair work budget exceeded; contact coverage is unavailable")
+                        if cancel and pair_count % 128 == 0:
+                            cancel.check()
+                        left, right = segment_list[j], seg
+                        contact = _segment_contact(left, right)
+                        if contact is None:
+                            continue
+                        kind, raw_pt = contact
+                        point = _point(raw_pt, width, height)
+                        members = sorted([left["id"], right["id"]])
+                        cid = stable_id("contact", result["source_sha256"], page_number,
+                                        members, kind, point)
+                        result["contact_candidates"].append({
+                            "id": cid, "page": page_number, "kind": kind,
+                            "point": point, "bbox": _bbox_at(point, width, height),
+                            "segment_ids": members, "status": "UNRESOLVED",
+                            "limitation": "Graphical contact is not confirmed process or signal connectivity."
+                        })
+                        if len(result["contact_candidates"]) > MAX_CANDIDATES:
+                            raise LimitExceeded("PID_LIMIT_GEOMETRY", "Too many geometric contact candidates; no partial result was returned")
+                    for cell in cells:
+                        grid[cell].append(i)
+                    grid_memberships += tile_count
     except (RefusedInput, LimitExceeded):
         raise
     except Exception as exc:
@@ -249,6 +269,8 @@ def analyze_pdf_topology(pdf_bytes: bytes, *, pages: tuple[int, ...] | None = No
         result[key].sort(key=lambda x:(x["page"],x["id"]))
     result["warnings"].sort(key=lambda x:(x["page"],x["code"]))
     result["result_sha256"] = sha256_hex(canonical_json(result).encode("utf-8"))
+    if len(canonical_json(result).encode("utf-8")) > MAX_TOPOLOGY_BYTES:
+        raise LimitExceeded("PID_LIMIT_GEOMETRY", "Geometry result exceeds 8 MiB; no incomplete result was returned")
     return result
 
 
@@ -274,7 +296,7 @@ def validate_topology_result(result: dict) -> list[str]:
         return ["Invalid or missing topology content hash"]
     if result.get("schema")!="pid-reader-standalone-topology-v1":
         errors.append("Unexpected standalone topology schema")
-    if result.get("algorithm")!=ALGORITHM_VERSION:
+    if result.get("algorithm") not in ("vector-topology-0.2", ALGORITHM_VERSION):
         errors.append("Unsupported topology algorithm version")
     digest=result.get("source_sha256")
     if not isinstance(digest,str) or len(digest)!=64 or any(c not in "0123456789abcdef" for c in digest):
@@ -328,4 +350,6 @@ def validate_topology_result(result: dict) -> list[str]:
     for s in shapes:
         if not isinstance(s,dict) or s.get("page") not in selected_set or s.get("status")!="PROPOSED_GEOMETRY":
             errors.append("Shape source or status invalid")
+    if len(canonical_json(result).encode("utf-8")) > MAX_TOPOLOGY_BYTES:
+        errors.append("Geometry output exceeds 8 MiB")
     return errors

@@ -25,6 +25,38 @@ def main(argv: list[str] | None = None) -> int:
     dxf=sub.add_parser("inspect-dxf"); dxf.add_argument("dxf"); dxf.add_argument("--output-json")
     ocr=sub.add_parser("ocr-preview"); ocr.add_argument("pdf"); ocr.add_argument("--output-json")
     ocr.add_argument("--engine",choices=("auto","tesseract","rapidocr"),default="auto",help="Offline OCR engine (auto: Tesseract if installed else RapidOCR)")
+    # Rev S: offline raster geometry is standalone; native/R1 evidence remains separate.
+    rp=sub.add_parser("raster-preview",help="Observe raster lines, filled and outlined bowtie glyphs without a database")
+    rp.add_argument("pdf");rp.add_argument("--pages",nargs="*",type=int)
+    rp.add_argument("--dpi",type=int,default=144);rp.add_argument("--output-json")
+    ra=sub.add_parser("analyze-raster");ra.add_argument("database");ra.add_argument("extraction_id")
+    ra.add_argument("--dpi",type=int,default=144);ra.add_argument("--pages",nargs="*",type=int);ra.add_argument("--output-json")
+    rl=sub.add_parser("raster-valves");rl.add_argument("database");rl.add_argument("analysis_id")
+    rl.add_argument("--limit",type=int,default=200)
+    rr=sub.add_parser("review-raster-valve");rr.add_argument("database");rr.add_argument("candidate_id")
+    rr.add_argument("--actor",required=True);rr.add_argument("--reason",required=True)
+    rr.add_argument("--decision",required=True,choices=["ACCEPTED_AS_READING","REJECTED","UNRESOLVED"])
+    rn=sub.add_parser('analyze-raster-network',help='Build review-only raster contacts, optionally with source-matched OCR')
+    rn.add_argument('database');rn.add_argument('extraction_id');rn.add_argument('raster_analysis_id')
+    rn.add_argument('--ocr-analysis-id',default=None);rn.add_argument('--output-json')
+    cna=sub.add_parser('analyze-raster-centrelines',help='Derive source-bound raster centrelines and unresolved gaps')
+    cna.add_argument('database');cna.add_argument('extraction_id')
+    cna.add_argument('raster_analysis_id');cna.add_argument('raster_network_analysis_id')
+    cna.add_argument('--output-json')
+    cng=sub.add_parser('raster-gaps',help='List proposed short collinear gaps (not pipe connections)')
+    cng.add_argument('database');cng.add_argument('analysis_id');cng.add_argument('--limit',type=int,default=200)
+    cnr=sub.add_parser('review-raster-gap')
+    cnr.add_argument('database');cnr.add_argument('candidate_id');cnr.add_argument('--actor',required=True)
+    cnr.add_argument('--reason',required=True)
+    cnr.add_argument('--decision',required=True,choices=['CONTINUOUS_AS_DRAWN','SEPARATE_AS_DRAWN','UNRESOLVED','REJECTED'])
+    cnt=sub.add_parser('trace-raster-centrelines',help='Trace reviewed drawing-only continuity')
+    cnt.add_argument('database');cnt.add_argument('analysis_id');cnt.add_argument('start_centreline_id')
+    cnt.add_argument('--include-unreviewed',action='store_true');cnt.add_argument('--max-hops',type=int,default=20)
+    nc=sub.add_parser('raster-contacts');nc.add_argument('database');nc.add_argument('analysis_id')
+    nc.add_argument('--limit',type=int,default=200)
+    nr=sub.add_parser('review-raster-contact');nr.add_argument('database');nr.add_argument('candidate_id')
+    nr.add_argument('--actor',required=True);nr.add_argument('--reason',required=True)
+    nr.add_argument('--decision',required=True,choices=['CONTACT_AS_DRAWN','NOT_CONTACT_AS_DRAWN','UNRESOLVED','REJECTED'])
     topo=sub.add_parser("analyze-topology");topo.add_argument("database");topo.add_argument("extraction_id");topo.add_argument("--output-json")
     cand=sub.add_parser("topology-candidates");cand.add_argument("database");cand.add_argument("analysis_id");cand.add_argument("--kind",default="");cand.add_argument("--limit",type=int,default=100)
     trev=sub.add_parser("review-topology");trev.add_argument("database");trev.add_argument("candidate_id")
@@ -159,6 +191,14 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("gui-legacy",help="Original Rev Q development viewer (kept for audit)").add_argument("database")
     args=p.parse_args(argv)
     try:
+        if args.cmd=="raster-preview":
+            from .engineering.raster_geometry import analyze_raster_geometry
+            result=analyze_raster_geometry(Path(args.pdf).read_bytes(),
+                pages=tuple(args.pages) if args.pages else None,dpi=args.dpi)
+            data=canonical_json(result)
+            if args.output_json:Path(args.output_json).write_text(data,encoding="utf-8")
+            else:print(data)
+            return 0
         if args.cmd=="ocr-preview":
             from .formats.ocr_source import ocr_pdf_preview
             result=ocr_pdf_preview(Path(args.pdf).read_bytes(),engine=args.engine)
@@ -198,6 +238,55 @@ def main(argv: list[str] | None = None) -> int:
                 if args.output_json:
                     Path(args.output_json).write_text(canonical_json(doc),encoding="utf-8")
                 print(canonical_json({"extraction_id":extraction,"objects":len(doc["objects"]),"connections":len(doc["connections"]),"pages":len(doc["pages"]),"warnings":len(doc["warnings"])}))
+            elif args.cmd=="analyze-raster":
+                from .engineering.raster_geometry import analyze_raster_geometry
+                extraction=db.export_extraction(args.extraction_id)
+                source=db.get_source_pdf(extraction["document"]["sha256"])
+                if source is None: raise ValueError("Embedded PDF source required")
+                result=analyze_raster_geometry(source,pages=tuple(args.pages) if args.pages else tuple(x["page"] for x in extraction["pages"]),dpi=args.dpi)
+                aid=db.add_raster_analysis(args.extraction_id,result)
+                if args.output_json:Path(args.output_json).write_text(canonical_json(result),encoding="utf-8")
+                print(canonical_json({"analysis_id":aid,"raster_strokes":len(result["stroke_candidates"]),
+                        "filled_valves":len(result["filled_valve_candidates"]),
+                        "outlined_valves":len(result.get("outline_valve_candidates",[]))}))
+            elif args.cmd=="raster-valves":
+                print(canonical_json(db.list_raster_valves(args.analysis_id,limit=args.limit)))
+            elif args.cmd=="review-raster-valve":
+                print(db.review_raster_valve(args.candidate_id,actor=args.actor,decision=args.decision,reason=args.reason))
+            elif args.cmd=='analyze-raster-network':
+                from .engineering.raster_network import build_raster_network
+                raster=db.get_raster_analysis(args.raster_analysis_id)
+                ocr=db.get_ocr_analysis(args.ocr_analysis_id) if args.ocr_analysis_id else None
+                derived=build_raster_network(raster,ocr)
+                aid=db.add_raster_network_analysis(args.extraction_id,args.raster_analysis_id,
+                                                  derived,ocr_analysis_id=args.ocr_analysis_id)
+                if args.output_json:Path(args.output_json).write_text(canonical_json(derived),encoding='utf-8')
+                print(canonical_json({'analysis_id':aid,'contacts':len(derived['contact_candidates']),
+                                      'strokes':len(derived['stroke_evidence'])}))
+            elif args.cmd=='analyze-raster-centrelines':
+                from .engineering.raster_centrelines import build_raster_centrelines
+                raster=db.get_raster_analysis(args.raster_analysis_id)
+                network=db.get_raster_network_analysis(args.raster_network_analysis_id)
+                derived=build_raster_centrelines(raster,network)
+                aid=db.add_raster_centreline_analysis(args.extraction_id,args.raster_analysis_id,
+                                                       args.raster_network_analysis_id,derived)
+                if args.output_json:Path(args.output_json).write_text(canonical_json(derived),encoding='utf-8')
+                print(canonical_json({'analysis_id':aid,'centrelines':len(derived['centrelines']),
+                                      'gaps':len(derived['gap_candidates'])}))
+            elif args.cmd=='raster-gaps':
+                print(canonical_json(db.list_raster_centreline_gaps(args.analysis_id,limit=args.limit)))
+            elif args.cmd=='review-raster-gap':
+                print(db.review_raster_centreline_gap(args.candidate_id,actor=args.actor,
+                                                       decision=args.decision,reason=args.reason))
+            elif args.cmd=='trace-raster-centrelines':
+                from .engineering.raster_centrelines import trace_reviewed_centrelines
+                print(canonical_json(trace_reviewed_centrelines(db,args.analysis_id,args.start_centreline_id,
+                                  include_unreviewed=args.include_unreviewed,max_hops=args.max_hops)))
+            elif args.cmd=='raster-contacts':
+                print(canonical_json(db.list_raster_network_contacts(args.analysis_id,limit=args.limit)))
+            elif args.cmd=='review-raster-contact':
+                print(db.review_raster_network_contact(args.candidate_id,actor=args.actor,
+                        decision=args.decision,reason=args.reason))
             elif args.cmd=="analyze-all":
                 from .engineering.pipeline import analyze_drawing
                 out=analyze_drawing(db,args.extraction_id,ocr_engine=None if args.ocr=="off" else args.ocr,

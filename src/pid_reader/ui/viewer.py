@@ -7,12 +7,13 @@ from PySide6.QtWidgets import QGraphicsRectItem, QGraphicsScene, QGraphicsView
 
 LAYER_COLOURS = {
     "readings": "#1f77d4", "symbols": "#9c27b0", "linework": "#e67e22", "catalogue": "#009688",
-    "text_links": "#2e9e5b", "geometry": "#d32f2f", "signals": "#e91e8c", "search": "#f2c200",
+    "text_links": "#2e9e5b", "geometry": "#d32f2f", "signals": "#e91e8c",
+    "raster": "#7a3dc0", "search": "#f2c200",
 }
 LAYER_LABELS = {
     "readings": "Text readings", "symbols": "Outline symbols", "linework": "Valves / lines",
     "catalogue": "Template matches", "text_links": "Tag links", "geometry": "Line contacts",
-    "signals": "Signal strokes", "search": "Search hits",
+    "signals": "Signal strokes", "raster": "Raster valve glyphs", "search": "Search hits",
 }
 MAX_RENDER_SIDE = 4200
 
@@ -41,6 +42,7 @@ class DrawingView(QGraphicsView):
         self._press = QPointF()
         self._fit_on_resize = True
         self.page_size = (0, 0)
+        self._page_frame = None
 
     # ------------------------------------------------------------ page
     def clear_page(self) -> None:
@@ -48,6 +50,7 @@ class DrawingView(QGraphicsView):
         self._layers = {}
         self._highlight = None
         self.page_size = (0, 0)
+        self._page_frame = None
 
     def load_page(self, pdf_bytes: bytes | None, page: int) -> bool:
         """Render page ``page`` (1-based). Returns False if it cannot be shown."""
@@ -65,6 +68,13 @@ class DrawingView(QGraphicsView):
             w, h = pg.get_size()
             scale = max(1.0, min(4.0, MAX_RENDER_SIDE / max(w, h)))
             img = pg.render(scale=scale).to_pil().convert("RGBA")
+            # The viewer uses the CropBox while source proposals use the
+            # pdfplumber MediaBox: map overlays back to the visible frame.
+            from io import BytesIO
+            import pdfplumber
+            from ..formats.page_coordinates import frame_from_pdfplumber
+            with pdfplumber.open(BytesIO(pdf_bytes)) as inspected:
+                self._page_frame = frame_from_pdfplumber(inspected.pages[page - 1])
         except ImportError:
             self.scene().addText("PDF rendering needs the pypdfium2 package.")
             return False
@@ -78,6 +88,11 @@ class DrawingView(QGraphicsView):
         self.fit()
         return True
 
+    def _render_bbox(self, bbox: dict) -> dict | None:
+        if self._page_frame is None:
+            return bbox
+        return self._page_frame.media_bbox_to_render_clipped(bbox)
+
     # ------------------------------------------------------------ overlays
     def set_overlay(self, layer: str, items: list[dict]) -> None:
         """items: [{id, bbox, tip}]. Replaces the layer's overlay."""
@@ -89,7 +104,7 @@ class DrawingView(QGraphicsView):
         colour = QColor(LAYER_COLOURS.get(layer, "#888888"))
         made = []
         for it in items:
-            b = it.get("bbox")
+            b = self._render_bbox(it.get("bbox")) if it.get("bbox") else None
             if not b:
                 continue
             r = QGraphicsRectItem(QRectF(b["x0"] * w, b["y0"] * h, max(2.0, (b["x1"] - b["x0"]) * w),
@@ -123,6 +138,9 @@ class DrawingView(QGraphicsView):
             self._highlight = None
         w, h = self.page_size
         if not bbox or not w:
+            return
+        bbox = self._render_bbox(bbox)
+        if not bbox:
             return
         rect = QRectF(bbox["x0"] * w, bbox["y0"] * h, max(3.0, (bbox["x1"] - bbox["x0"]) * w),
                       max(3.0, (bbox["y1"] - bbox["y0"]) * h))

@@ -11,12 +11,15 @@ from __future__ import annotations
 import json
 from typing import Any
 
-LAYERS = ("symbols", "linework", "catalogue", "text_links", "geometry", "signals")
+LAYERS = ("symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster", "raster_network", "raster_centrelines")
 
 LAYER_TITLES = {
     "symbols": "Outline symbols", "linework": "Valves / line styles",
     "catalogue": "Template matches", "text_links": "Tag ↔ symbol links",
     "geometry": "Line contacts", "signals": "Signal-style strokes",
+    "raster": "Filled and outlined raster valve proposals",
+    "raster_network": "Raster contacts (unresolved until drawing review)",
+    "raster_centrelines": "Raster centreline gap proposals",
 }
 
 # Decisions each store method accepts.
@@ -27,6 +30,9 @@ DECISIONS = {
     "text_links": ("ACCEPTED_AS_READING", "EDITED_AND_ACCEPTED", "REJECTED", "UNRESOLVED"),
     "geometry": ("CONNECTED_AS_DRAWN", "NOT_CONNECTED_AS_DRAWN", "UNRESOLVED", "REJECTED"),
     "signals": ("SUPPORTED_AS_DRAWN", "NOT_CONNECTED_AS_DRAWN", "UNRESOLVED", "REJECTED"),
+    "raster": ("ACCEPTED_AS_READING", "REJECTED", "UNRESOLVED"),
+    "raster_network": ("CONTACT_AS_DRAWN", "NOT_CONTACT_AS_DRAWN", "UNRESOLVED", "REJECTED"),
+    "raster_centrelines": ("CONTINUOUS_AS_DRAWN", "SEPARATE_AS_DRAWN", "UNRESOLVED", "REJECTED"),
 }
 
 
@@ -35,7 +41,9 @@ def latest_analysis_ids(db, extraction_id: str) -> dict[str, str]:
     q = {
         "geometry": "geometry_analysis", "symbols": "symbol_analysis", "linework": "linework_analysis",
         "catalogue": "catalog_analysis", "signals": "signal_analysis", "ocr": "ocr_analysis",
-        "text_links": "text_link_analysis",
+        "text_links": "text_link_analysis", "raster": "raster_analysis",
+        "raster_network": "raster_network_analysis",
+        "raster_centrelines": "raster_centreline_analysis",
     }
     out = {}
     for layer, table in q.items():
@@ -101,6 +109,34 @@ def list_findings(db, extraction_id: str, layer: str, *, limit: int = 500) -> li
             out.append({"layer": layer, "id": c["candidate_id"], "page": c["page"], "bbox": _box(c),
                         "kind": c["kind"], "label": c["kind"].replace("_", " ").title(),
                         "state": _decision(db.latest_geometry_decision(c["candidate_id"])), "detail": g})
+    elif layer == "raster":
+        for c in db.list_raster_valves(aid, limit=limit):
+            cand = c["candidate"]
+            out.append({"layer": layer, "id": c["candidate_id"], "page": c["page"],
+                        "bbox": _box(cand), "kind": cand["kind"],
+                        "label": ("Unverified raster outlined-bowtie glyph" if cand["kind"].startswith("OUTLINED")
+                                  else "Unverified raster filled-bowtie glyph"),
+                        "state": _decision(db.latest_raster_review(c["candidate_id"])),
+                        "detail": cand})
+    elif layer == 'raster_network':
+        for c in db.list_raster_network_contacts(aid,limit=limit):
+            cand=c['candidate'];at=cand['point']
+            out.append({'layer':layer,'id':c['candidate_id'],'page':c['page'],
+                        'bbox':{'x0':max(0.,at[0]-.004),'y0':max(0.,at[1]-.004),
+                                'x1':min(1.,at[0]+.004),'y1':min(1.,at[1]+.004)},
+                        'kind':cand['kind'],'label':cand['kind'].replace('_',' ').title(),
+                        'state':_decision(db.latest_raster_network_review(c['candidate_id'])),
+                        'detail':cand})
+    elif layer == 'raster_centrelines':
+        for c in db.list_raster_centreline_gaps(aid,limit=min(limit,3500)):
+            cand=c['candidate'];at=cand['point']
+            out.append({'layer':layer,'id':c['candidate_id'],'page':c['page'],
+                        'bbox':{'x0':max(0.,at[0]-.004),'y0':max(0.,at[1]-.004),
+                                'x1':min(1.,at[0]+.004),'y1':min(1.,at[1]+.004)},
+                        'kind':'COLLINEAR_GAP_UNRESOLVED',
+                        'label':f"Possible {cand['gap_px']} px raster gap",
+                        'state':_decision(db.latest_raster_centreline_review(c['candidate_id'])),
+                        'detail':cand})
     elif layer == "signals":
         for c in db.list_signal_candidates(aid, limit=limit):
             cand = c.get("candidate") or json.loads(c["candidate_json"])
@@ -126,6 +162,12 @@ def review_finding(db, layer: str, finding_id: str, *, actor: str, decision: str
     if layer == "text_links":
         return db.review_text_link(finding_id, actor=actor, decision=decision, reason=reason,
                                    selected_text=selected_text)
+    if layer == "raster":
+        return db.review_raster_valve(finding_id, actor=actor, decision=decision, reason=reason)
+    if layer == 'raster_centrelines':
+        return db.review_raster_centreline_gap(finding_id,actor=actor,decision=decision,reason=reason)
+    if layer == 'raster_network':
+        return db.review_raster_network_contact(finding_id,actor=actor,decision=decision,reason=reason)
     if layer == "geometry":
         return db.review_geometry(finding_id, actor=actor, decision=decision, reason=reason)
     return db.review_signal(finding_id, actor=actor, decision=decision, reason=reason)

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from dataclasses import dataclass, field
 
 from . import SCHEMA_VERSION, __version__
@@ -60,12 +61,23 @@ class ReadParams:
     extras: dict = field(default_factory=dict)    # must stay empty; non-empty is refused by `validate_params`
 
     def validate(self) -> None:
+        if not isinstance(self.extras, dict):
+            raise RefusedInput("PID_BAD_PARAMETER", "Unknown parameters must be represented as an object.")
         if self.extras:
-            raise RefusedInput("PID_UNKNOWN_PARAMETER", "Unknown parameter(s): " + ", ".join(sorted(self.extras)))
+            raise RefusedInput("PID_UNKNOWN_PARAMETER", "Unknown parameter(s): " + ", ".join(sorted(map(str, self.extras))))
+        for name in ("max_pdf_bytes", "max_pages", "max_render_pixels"):
+            value = getattr(self, name)
+            if type(value) is not int or value < 1:
+                raise RefusedInput("PID_BAD_PARAMETER", f"{name} must be a positive integer.")
         if self.max_pdf_bytes > MAX_PDF_BYTES or self.max_pages > MAX_PAGES or self.max_render_pixels > MAX_RENDER_PIXELS:
             raise RefusedInput("PID_LIMIT_RAISED", "A parameter may lower a host limit but never raise it.")
-        if not 0 <= self.bulk_accept_min_confidence <= 1:
-            raise RefusedInput("PID_BAD_PARAMETER", "bulk_accept_min_confidence must be between 0 and 1.")
+        score = self.bulk_accept_min_confidence
+        if type(score) not in (int, float) or not math.isfinite(score) or not 0 <= score <= 1:
+            raise RefusedInput("PID_BAD_PARAMETER", "bulk_accept_min_confidence must be a finite number between 0 and 1.")
+        if self.pages is not None:
+            if (not isinstance(self.pages, (tuple, list)) or len(self.pages) > self.max_pages or
+                any(type(p) is not int or p < 1 for p in self.pages)):
+                raise RefusedInput("PID_BAD_PARAMETER", "pages must contain 1-based positive integer page numbers within the configured page limit.")
 
     def as_dict(self) -> dict:
         return {"pages": list(self.pages) if self.pages is not None else None, "bulk_accept_min_confidence": self.bulk_accept_min_confidence,

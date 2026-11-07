@@ -1,0 +1,220 @@
+{
+  "provenance": "User-supplied research pack source_snapshot/; NOT a live Git checkout",
+  "files": [
+    {
+      "path": "src/pid_reader/__init__.py",
+      "source_snapshot_sha256": "4960e58921cd35f2f1cd5cf9706c3e41c629d61bc34e484ba8f0270403a657dc",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/api.py",
+      "source_snapshot_sha256": "9733f2bff73bb8bc22f597014968629bdcc62e2f491f372be0ae2429b3e873a2",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/cli.py",
+      "source_snapshot_sha256": "c16f6d44f72e0acea774b93f087a18cb2dda84a7409355163ad64228d9ad333e",
+      "reconciliation": "SUPERSEDES_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/__init__.py",
+      "source_snapshot_sha256": "3f28736e04f237f4db05cbaa9db8e52b8d67741edcbdd3a0d73cf8a9f65ff012",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/batch.py",
+      "source_snapshot_sha256": "0247c7ae16abb0ae72b37888201443c021394a0a9faae39ef3d5d66fb77681f8",
+      "reconciliation": "SUPERSEDES_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/connectivity.py",
+      "source_snapshot_sha256": "121c39a0c2efc736514ba630c75904f4f2dd547564e3635d6dc2d00aba527e10",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/dexpi.py",
+      "source_snapshot_sha256": "130fcbe5597bad5749166f8c31463f19160b6ae2e7f69a48289711ad79bc4337",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/drawing_graph.py",
+      "source_snapshot_sha256": "6e9b619693fe6aa5e7c56981389729542e45da74f09d54fa61a4999f22a7c83c",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/findings.py",
+      "source_snapshot_sha256": "98cc93a7211794a683be3f293b4d6373ca35f32928569377b063d8d86108df9e",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/isolation.py",
+      "source_snapshot_sha256": "494148694ac834aa66dff08cadb56b11f554100199e815de1e66ab949c422a70",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/linework.py",
+      "source_snapshot_sha256": "372bbea45180f45d23fb132678f6d150658cf72d42d47ebe25e27901e73d7ec1",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/migrations.py",
+      "source_snapshot_sha256": "221948166effab49616bcc3bbfb0004a05c5b73b50e3f3b880ff7efed533efd8",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/pipeline.py",
+      "source_snapshot_sha256": "aac0cc9fa3d9c2b69236aec579cc3afc366b10f4bfda872185f105f88584eed2",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/project.py",
+      "source_snapshot_sha256": "51c57fa00ff4949aaf73ca203f37b6eddd1a77804a74d4b92995fa499e106c53",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/project_links.py",
+      "source_snapshot_sha256": "1e2cc45691f521a9a7432557669dec7127493fc90a42e8a053fe531cd748e258",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/reports.py",
+      "source_snapshot_sha256": "fc977e65a36b11fd78301464560f83ef2223b03966840eef1ae3968fe00029a7",
+      "reconciliation": "SUPERSEDES_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/revisions.py",
+      "source_snapshot_sha256": "51efdbb140db9f1816bff0fc65b877ded078388353ec6fbe04ea7d2fc763de1f",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/signal_links.py",
+      "source_snapshot_sha256": "4a1652d9f5d5bf75da78b74c13c11859313342758b4eb18f3b0f535d904e5cc2",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/signal_paths.py",
+      "source_snapshot_sha256": "cb650957b886ae9bb7fccd369ecb8a475425450b510f7ad932abc367a84a13ba",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/standalone_read.py",
+      "source_snapshot_sha256": "0f669b2880b9ee312febf284cc06e3b37feb9fcf3f8a9b26f0a2bd2bf828e7f0",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/standalone_worker.py",
+      "source_snapshot_sha256": "1b14719b384827aa89171622ade768431f65f855cafa60c0a8e9a65a18111752",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/symbol_catalog.py",
+      "source_snapshot_sha256": "7fb56a2bd7a3c8fd87a2c6870754cbb4687ab7eea31667fbc1fbe638923a68b3",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/symbols.py",
+      "source_snapshot_sha256": "b2bfcf410e8cc9980ea666b15a83ce958f396187ea18a4a41e1aea678174af38",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/tag_profiles.py",
+      "source_snapshot_sha256": "45666d745edbcd4f78cb42b4e9130933d3439133d68a11db59b29e9a57903cdd",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/text_links.py",
+      "source_snapshot_sha256": "466613cbcd711f1468160de133bebe4fcb10765bb450ad09f306635b28083327",
+      "reconciliation": "SUPERSEDES_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/topology.py",
+      "source_snapshot_sha256": "27a6f4786218ac43ade2bf3f05eeab4ee828cf028eea56baf3c058e1efb6603b",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/engineering/workspace.py",
+      "source_snapshot_sha256": "be9275b0ce57b8e817fbf4c4665e645db920012442dca08cbf222d7f4e09c6f2",
+      "reconciliation": "SUPERSEDES_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/entry.py",
+      "source_snapshot_sha256": "f14ed6c51151e5926f314ff8252a0ed35c27c07b5d44c513cbaa8ebd5ea45c53",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/formats/__init__.py",
+      "source_snapshot_sha256": "9bc93e13564a1df388400d9be5f31448634320dc18c1d0a23c5c2101e343ac76",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/formats/dxf_source.py",
+      "source_snapshot_sha256": "560a2cd1f5a6dff6bd589eb30a4ba8416a369ca55ddb164eac2cc93249c0ad0f",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/formats/ocr_source.py",
+      "source_snapshot_sha256": "be27ef1928bb9efea36bd08a082a22b70c91604422e225efa0a18f31be138a01",
+      "reconciliation": "SUPERSEDES_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/formats/page_coordinates.py",
+      "source_snapshot_sha256": "a359577999ba8feccd78d682dc52c95e7668bcd0a2d64d3bf8684c6977865831",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/formats/pdf_source.py",
+      "source_snapshot_sha256": "ded680a69639a6ec5dad936f74c7951858d04a6eaffed1bf489e9edb4e9c20cc",
+      "reconciliation": "SUPERSEDES_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/release_assurance.py",
+      "source_snapshot_sha256": "dd83cd48632037947021625257bc6dfad0069b6d814480f3bfe38368793b3fd9",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/ui/__init__.py",
+      "source_snapshot_sha256": "2efbe0459c43855e861a5ed13755c8519347f11bc3e4c3df28f804ab7b4aed9e",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/ui/app.py",
+      "source_snapshot_sha256": "c4bff1f2b7843c4ee075e7ddb762a159b02852f153d02ed0f61496cd804824c2",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/ui/desktop.py",
+      "source_snapshot_sha256": "9166ade8f686c46cf178a97751a950b53ba9131c460ea0559883d3dfdf34fd2c",
+      "reconciliation": "SAME_AS_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/ui/graphview.py",
+      "source_snapshot_sha256": "9106911d5e10bbd723323a25059248f55f437ce10c2a06cbd1407a204ff8236d",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/ui/main_window.py",
+      "source_snapshot_sha256": "f86eabb7ed709a6a8aa5834dd0c9cf261f805fcddf5d0223842287282afa6e43",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/ui/tabs.py",
+      "source_snapshot_sha256": "4e2f1aec422908fe76f40527b31ca571b277b2edcf4373c4d885e112ee88dd7f",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/ui/tasks.py",
+      "source_snapshot_sha256": "0beacd305bb099097228e98173ffebc9c7ba993c0f719f4d36856da173dd813f",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/ui/viewer.py",
+      "source_snapshot_sha256": "675a06067f445ba682a42bebdf23aea8ebaa13d81491e0f207e5d831b15f3c6a",
+      "reconciliation": "NEW_SINCE_REV_Q"
+    },
+    {
+      "path": "src/pid_reader/worker.py",
+      "source_snapshot_sha256": "02259ddee61c90e104ac0f691362f982aa82f7dcbe66e32921c67d37be554bfc",
+      "reconciliation": "SUPERSEDES_REV_Q"
+    }
+  ]
+}

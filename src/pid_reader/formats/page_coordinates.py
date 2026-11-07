@@ -53,6 +53,26 @@ class PageFrame:
             raise ValueError("Source point is outside rendered CropBox")
         return max(0., min(1., a)), max(0., min(1., b))
 
+    def media_bbox_to_render_clipped(self, b: dict) -> dict | None:
+        """Map a MediaBox-normalized source rectangle into the visible CropBox.
+
+        A source box entirely outside the visible CropBox has no overlay. Partial
+        regions are clipped, not extended or falsely placed on the drawing.
+        """
+        if not isinstance(b,dict) or set(b)!={"x0","y0","x1","y1"}:
+            raise ValueError("Invalid MediaBox rectangle")
+        a=[b["x0"],b["y0"],b["x1"],b["y1"]]
+        if not all(isfinite(x) and 0<=x<=1 for x in a) or a[0]>=a[2] or a[1]>=a[3]:
+            raise ValueError("Invalid normalized MediaBox box")
+        x0=(a[0]*self.media_width-self.crop_x0)/self.crop_width
+        x1=(a[2]*self.media_width-self.crop_x0)/self.crop_width
+        y0=(a[1]*self.media_height-self.crop_top)/self.crop_height
+        y1=(a[3]*self.media_height-self.crop_top)/self.crop_height
+        if x1<=0 or x0>=1 or y1<=0 or y0>=1:
+            return None
+        return {"x0":round(max(0,x0),7),"y0":round(max(0,y0),7),
+                "x1":round(min(1,x1),7),"y1":round(min(1,y1),7)}
+
     def bbox_to_media(self, b: dict) -> dict:
         if not isinstance(b, dict) or set(b) != {"x0","y0","x1","y1"}:
             raise ValueError("Invalid rendered bounding box")

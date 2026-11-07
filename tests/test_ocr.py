@@ -22,7 +22,7 @@ def test_standalone_ocr_rejects_reused_page_numbers(raster_pdf):
     with pytest.raises(ValueError,match="Unique"):
         ocr_pdf_preview(raster_pdf,pages=(1,1))
     with pytest.raises(ValueError,match="pixel budget"):
-        ocr_pdf_preview(raster_pdf,max_pixels=1000)
+        ocr_pdf_preview(raster_pdf,max_pixels=1000,dpi=180)
 
 
 @pytest.mark.skipif(not shutil.which("tesseract"),reason="Optional local Tesseract not installed")

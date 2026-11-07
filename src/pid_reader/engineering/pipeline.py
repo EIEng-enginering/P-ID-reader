@@ -17,7 +17,7 @@ from typing import Callable
 
 from ..api import CancelToken, Cancelled, canonical_json
 
-STAGES = ("geometry", "symbols", "linework", "catalogue", "signals", "ocr", "text_links")
+STAGES = ("geometry", "raster", "symbols", "linework", "catalogue", "signals", "ocr", "text_links", "raster_network", "raster_centrelines")
 
 
 def _noop(_stage: str, _fraction: float, _message: str) -> None:
@@ -76,6 +76,30 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         raise
     except Exception as exc:  # recorded, later stages that depend on it are skipped
         mark("geometry", "FAILED", f"{type(exc).__name__}: {exc}")
+
+    # Rev S: raster evidence for pages with no native straight vector strokes.
+    # This is independent of native topology and never changes its conclusions.
+    try:
+        check(); step("raster", "Observing scanned linework and geometric valve glyphs")
+        from .raster_geometry import raster_available, analyze_raster_geometry
+        if not raster_available():
+            mark("raster", "SKIPPED", "Install optional local raster dependencies (opencv/numpy/pdfium)")
+        else:
+            vector_pages = {row["page"] for row in (topology or {}).get("segments", [])}
+            scan_pages = tuple(n for n in pages if n not in vector_pages)
+            if not scan_pages:
+                mark("raster", "SKIPPED", "native straight strokes available on selected pages; raster is opt-in via CLI")
+            else:
+                result = analyze_raster_geometry(source, pages=scan_pages, cancel=cancel)
+                ids["raster"] = db.add_raster_analysis(extraction_id, result)
+                counts["raster_strokes"] = len(result["stroke_candidates"])
+                counts["raster_filled_valves"] = len(result["filled_valve_candidates"])
+                counts["raster_outlined_valves"] = len(result.get("outline_valve_candidates", []))
+                mark("raster", "DONE", f"{counts['raster_strokes']} raster strokes, {counts['raster_filled_valves']} filled and {counts['raster_outlined_valves']} outlined glyph proposals")
+    except Cancelled:
+        raise
+    except Exception as exc:
+        mark("raster", "FAILED", f"{type(exc).__name__}: {exc}")
 
     symbols = None
     if "geometry" in ids:
@@ -177,6 +201,42 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             mark("text_links", "FAILED", f"{type(exc).__name__}: {exc}")
     else:
         mark("text_links", "SKIPPED", "needs symbols and OCR")
+
+    if 'raster' in ids:
+        try:
+            check();step('raster_network','Classifying raster stroke context and unresolved contacts')
+            from .raster_network import build_raster_network
+            raster_result=db.get_raster_analysis(ids['raster'])
+            context=build_raster_network(raster_result,ocr)
+            ids['raster_network']=db.add_raster_network_analysis(
+                extraction_id,ids['raster'],context,ocr_analysis_id=ids.get('ocr'))
+            counts['raster_contacts']=len(context['contact_candidates'])
+            mark('raster_network','DONE',f"{counts['raster_contacts']} unresolved contact proposals")
+        except Cancelled:
+            raise
+        except Exception as exc:
+            mark('raster_network','FAILED',f'{type(exc).__name__}: {exc}')
+    else:
+        mark('raster_network','SKIPPED','requires raster evidence')
+
+    if 'raster_network' in ids and 'raster' in ids:
+        try:
+            check();step('raster_centrelines','Consolidating duplicate-supported raster centrelines')
+            from .raster_centrelines import build_raster_centrelines
+            raster_result=db.get_raster_analysis(ids['raster'])
+            network=db.get_raster_network_analysis(ids['raster_network'])
+            lines=build_raster_centrelines(raster_result,network)
+            ids['raster_centrelines']=db.add_raster_centreline_analysis(
+                extraction_id,ids['raster'],ids['raster_network'],lines)
+            counts['raster_centrelines']=len(lines['centrelines'])
+            counts['raster_gaps']=len(lines['gap_candidates'])
+            mark('raster_centrelines','DONE',f"{counts['raster_centrelines']} centrelines, {counts['raster_gaps']} unresolved gaps")
+        except Cancelled:
+            raise
+        except Exception as exc:
+            mark('raster_centrelines','FAILED',f'{type(exc).__name__}: {exc}')
+    else:
+        mark('raster_centrelines','SKIPPED','requires raster network evidence')
 
     progress("done", 1.0, "Analysis finished")
     return {"extraction_id": extraction_id, "analyses": ids, "counts": counts, "stages": stages,

@@ -150,6 +150,234 @@ class ProjectStore:
             self._append_event("EXTRACTION_IMPORTED",eid,{"source_sha256":digest,"result_hash":result["provenance"]["result_sha256"]},now)
         return eid
 
+    # --- Rev S/T: immutable raster strokes, filled and outlined glyph proposals ---
+
+    def add_raster_analysis(self, extraction_id: str, result: dict) -> str:
+        """Store unverified pixel observations, never modify accepted Worksheet records."""
+        from .raster_geometry import validate_raster_result
+        row=self.db.execute("SELECT document_sha256,result_json FROM extraction WHERE extraction_id=?",
+                            (extraction_id,)).fetchone()
+        if row is None:
+            raise KeyError("Raster source extraction not found")
+        source=self.get_source_pdf(row[0])
+        if source is None:
+            raise ValueError("Immutable PDF source bytes are required for raster coordinate verification")
+        problems=validate_raster_result(result, source)
+        if problems:
+            raise ValueError("Invalid raster evidence: " + "; ".join(problems[:5]))
+        imported=json.loads(row[1])
+        page_set={x["page"] for x in imported["pages"]}
+        if not set(result["selected_pages"]).issubset(page_set):
+            raise ValueError("Raster analysis pages exceed extraction selection")
+        aid=_global_id("raster-analysis",extraction_id,result["result_sha256"])
+        now=_utc()
+        with self.db:
+            if self.db.execute("SELECT 1 FROM raster_analysis WHERE analysis_id=?",(aid,)).fetchone():
+                return aid
+            self.db.execute("INSERT INTO raster_analysis VALUES(?,?,?,?,?,?)",
+                (aid,extraction_id,result["algorithm"],result["result_sha256"],canonical_json(result),now))
+            for candidate in (result["filled_valve_candidates"] + result.get("outline_valve_candidates", [])):
+                cid=_global_id("raster-valve",aid,candidate["id"])
+                self.db.execute("INSERT INTO raster_valve_candidate VALUES(?,?,?,?,?)",
+                    (cid,aid,candidate["id"],candidate["page"],canonical_json(candidate)))
+            self._append_event("RASTER_ANALYSIS_IMPORTED",aid,
+                {"extraction_id":extraction_id,"result_hash":result["result_sha256"],
+                 "stroke_count":len(result["stroke_candidates"]),
+                 "filled_valve_count":len(result["filled_valve_candidates"]),
+                 "outlined_valve_count":len(result.get("outline_valve_candidates", []))},now)
+        return aid
+
+    def get_raster_analysis(self, analysis_id: str) -> dict:
+        r=self.db.execute("SELECT result_json FROM raster_analysis WHERE analysis_id=?",(analysis_id,)).fetchone()
+        if r is None:
+            raise KeyError("Raster analysis not found")
+        return json.loads(r[0])
+
+    def list_raster_valves(self, analysis_id: str, *, limit: int=200) -> list[dict]:
+        if type(limit) is not int or not 1<=limit<=1000:
+            raise ValueError("Raster candidate limit must be 1-1000")
+        rows=self.db.execute("SELECT candidate_id,analysis_id,page,candidate_json FROM raster_valve_candidate "
+                             "WHERE analysis_id=? ORDER BY page,candidate_id LIMIT ?",(analysis_id,limit))
+        return [{"candidate_id":r[0],"analysis_id":r[1],"page":r[2],
+                 "candidate":json.loads(r[3])} for r in rows]
+
+    def review_raster_valve(self, candidate_id: str, *, actor: str, decision: str, reason: str) -> str:
+        if decision not in {"ACCEPTED_AS_READING","REJECTED","UNRESOLVED"}:
+            raise ValueError("Invalid raster review decision")
+        if not isinstance(actor,str) or not actor.strip() or len(actor)>150:
+            raise ValueError("Named raster reviewer required")
+        if not isinstance(reason,str) or len(reason.strip())<5 or len(reason)>2000:
+            raise ValueError("Detailed raster review reason required")
+        if self.db.execute("SELECT 1 FROM raster_valve_candidate WHERE candidate_id=?",
+                           (candidate_id,)).fetchone() is None:
+            raise KeyError("Unknown raster valve proposal")
+        rid="rdec-"+uuid4().hex
+        now=_utc()
+        with self.db:
+            self.db.execute("INSERT INTO raster_valve_decision VALUES(?,?,?,?,?,?)",
+                            (rid,candidate_id,actor,decision,reason.strip(),now))
+            self._append_event("RASTER_VALVE_REVIEW",candidate_id,
+                               {"decision_id":rid,"actor":actor.strip(),"decision":decision,
+                                "reason":reason.strip()},now)
+        return rid
+
+    def latest_raster_review(self, candidate_id: str) -> dict | None:
+        row=self.db.execute("SELECT * FROM raster_valve_decision WHERE candidate_id=? "
+                            "ORDER BY rowid DESC LIMIT 1",(candidate_id,)).fetchone()
+        return dict(row) if row else None
+
+    # --- Rev U: derived raster role and possible contact proposals (standalone) ---
+
+    def add_raster_network_analysis(self, extraction_id: str, raster_analysis_id: str,
+                                    result: dict, ocr_analysis_id: str | None = None) -> str:
+        from .raster_network import validate_raster_network
+        row=self.db.execute("SELECT extraction_id FROM raster_analysis WHERE analysis_id=?",
+                            (raster_analysis_id,)).fetchone()
+        if row is None or row[0]!=extraction_id:
+            raise ValueError('Raster analysis/extraction mismatch')
+        raster=self.get_raster_analysis(raster_analysis_id)
+        ocr=None
+        if ocr_analysis_id is not None:
+            check=self.db.execute("SELECT extraction_id FROM ocr_analysis WHERE analysis_id=?",
+                                  (ocr_analysis_id,)).fetchone()
+            if check is None or check[0]!=extraction_id:
+                raise ValueError('OCR analysis/extraction mismatch')
+            ocr=self.get_ocr_analysis(ocr_analysis_id)
+        problems=validate_raster_network(result,raster,ocr)
+        if problems:
+            raise ValueError('Invalid derived raster evidence: '+'; '.join(problems[:3]))
+        aid=_global_id('raster-network',extraction_id,raster_analysis_id,
+                       ocr_analysis_id or '',result['result_sha256'])
+        now=_utc()
+        with self.db:
+            if self.db.execute('SELECT 1 FROM raster_network_analysis WHERE analysis_id=?',(aid,)).fetchone():
+                return aid
+            self.db.execute('INSERT INTO raster_network_analysis VALUES(?,?,?,?,?,?,?)',
+                            (aid,extraction_id,raster_analysis_id,ocr_analysis_id,
+                             result['result_sha256'],canonical_json(result),now))
+            for cand in result['contact_candidates']:
+                cid=_global_id('raster-net-contact',aid,cand['id'])
+                self.db.execute('INSERT INTO raster_network_candidate VALUES(?,?,?,?,?,?)',
+                                (cid,aid,cand['id'],cand['page'],cand['kind'],canonical_json(cand)))
+            self._append_event('RASTER_NETWORK_IMPORTED',aid,
+                               {'extraction_id':extraction_id,'raster_analysis_id':raster_analysis_id,
+                                'ocr_analysis_id':ocr_analysis_id,'result_hash':result['result_sha256'],
+                                'contacts':len(result['contact_candidates'])},now)
+        return aid
+
+    def get_raster_network_analysis(self, analysis_id: str) -> dict:
+        row=self.db.execute('SELECT result_json FROM raster_network_analysis WHERE analysis_id=?',(analysis_id,)).fetchone()
+        if row is None:raise KeyError('Unknown raster network analysis')
+        return json.loads(row[0])
+
+    def list_raster_network_contacts(self, analysis_id: str, *, limit: int = 200) -> list[dict]:
+        if type(limit) is not int or not 1<=limit<=1000:
+            raise ValueError('Raster contact limit must be 1-1000')
+        rows=self.db.execute('SELECT candidate_id,page,kind,candidate_json FROM raster_network_candidate '
+                             'WHERE analysis_id=? ORDER BY page,candidate_id LIMIT ?', (analysis_id,limit))
+        return [{'candidate_id':r[0],'analysis_id':analysis_id,'page':r[1],'kind':r[2],
+                 'candidate':json.loads(r[3])} for r in rows]
+
+    def review_raster_network_contact(self, candidate_id: str, *, actor: str, decision: str,
+                                      reason: str) -> str:
+        if decision not in {'CONTACT_AS_DRAWN','NOT_CONTACT_AS_DRAWN','UNRESOLVED','REJECTED'}:
+            raise ValueError('Unknown raster contact review decision')
+        if not isinstance(actor,str) or not actor.strip() or len(actor)>150:
+            raise ValueError('Named raster contact reviewer required')
+        if not isinstance(reason,str) or not 5<=len(reason.strip())<=2000:
+            raise ValueError('Raster contact review requires an explanation')
+        if self.db.execute('SELECT 1 FROM raster_network_candidate WHERE candidate_id=?',
+                           (candidate_id,)).fetchone() is None:
+            raise KeyError('Raster contact proposal not found')
+        rid='rndec-'+uuid4().hex;now=_utc()
+        with self.db:
+            self.db.execute('INSERT INTO raster_network_decision VALUES(?,?,?,?,?,?)',
+                            (rid,candidate_id,actor.strip(),decision,reason.strip(),now))
+            self._append_event('RASTER_NETWORK_CONTACT_REVIEW',candidate_id,
+                               {'decision_id':rid,'actor':actor.strip(),'decision':decision,
+                                'reason':reason.strip()},now)
+        return rid
+
+    def latest_raster_network_review(self, candidate_id: str) -> dict | None:
+        row=self.db.execute('SELECT * FROM raster_network_decision WHERE candidate_id=? '
+                            'ORDER BY rowid DESC LIMIT 1',(candidate_id,)).fetchone()
+        return dict(row) if row else None
+
+    # --- Rev V: duplicate-supported raster centrelines and review-only gaps ---
+
+    def add_raster_centreline_analysis(self, extraction_id: str, raster_analysis_id: str,
+                                       network_analysis_id: str, result: dict) -> str:
+        from .raster_centrelines import validate_raster_centrelines
+        row=self.db.execute('SELECT extraction_id,raster_analysis_id FROM raster_network_analysis WHERE analysis_id=?',
+                            (network_analysis_id,)).fetchone()
+        if row is None or row[0]!=extraction_id or row[1]!=raster_analysis_id:
+            raise ValueError('Raster network/extraction/source mismatch')
+        raster=self.get_raster_analysis(raster_analysis_id)
+        network=self.get_raster_network_analysis(network_analysis_id)
+        # Trust no derived network merely because it has a rehashed JSON object.
+        source_network=self.db.execute('SELECT ocr_analysis_id FROM raster_network_analysis WHERE analysis_id=?',
+                                       (network_analysis_id,)).fetchone()
+        from .raster_network import validate_raster_network
+        ocr=self.get_ocr_analysis(source_network[0]) if source_network[0] else None
+        if validate_raster_network(network,raster,ocr):
+            raise ValueError('Raster network evidence validation failed')
+        problems=validate_raster_centrelines(result,raster,network)
+        if problems:raise ValueError('Invalid derived centreline evidence: '+'; '.join(problems[:2]))
+        aid=_global_id('raster-centrelines',extraction_id,raster_analysis_id,network_analysis_id,result['result_sha256'])
+        now=_utc()
+        with self.db:
+            if self.db.execute('SELECT 1 FROM raster_centreline_analysis WHERE analysis_id=?',(aid,)).fetchone():return aid
+            self.db.execute('INSERT INTO raster_centreline_analysis VALUES(?,?,?,?,?,?,?)',
+                            (aid,extraction_id,raster_analysis_id,network_analysis_id,
+                             result['result_sha256'],canonical_json(result),now))
+            for cand in result['gap_candidates']:
+                cid=_global_id('raster-centreline-gap',aid,cand['id'])
+                self.db.execute('INSERT INTO raster_centreline_gap VALUES(?,?,?,?,?)',
+                                (cid,aid,cand['id'],cand['page'],canonical_json(cand)))
+            self._append_event('RASTER_CENTRELINES_IMPORTED',aid,
+                               {'extraction_id':extraction_id,'raster_analysis_id':raster_analysis_id,
+                                'network_analysis_id':network_analysis_id,
+                                'result_hash':result['result_sha256'],
+                                'centrelines':len(result['centrelines']),
+                                'gaps':len(result['gap_candidates'])},now)
+        return aid
+
+    def get_raster_centreline_analysis(self, analysis_id: str) -> dict:
+        row=self.db.execute('SELECT result_json FROM raster_centreline_analysis WHERE analysis_id=?',(analysis_id,)).fetchone()
+        if row is None:raise KeyError('Unknown raster centreline analysis')
+        return json.loads(row[0])
+
+    def list_raster_centreline_gaps(self, analysis_id: str, *, limit: int = 200) -> list[dict]:
+        if type(limit) is not int or not 1<=limit<=3500:raise ValueError('Gap list limit must be 1-3500')
+        rows=self.db.execute('SELECT candidate_id,page,candidate_json FROM raster_centreline_gap '
+                             'WHERE analysis_id=? ORDER BY page,candidate_id LIMIT ?',(analysis_id,limit))
+        return [{'candidate_id':r[0],'analysis_id':analysis_id,'page':r[1],
+                 'candidate':json.loads(r[2])} for r in rows]
+
+    def review_raster_centreline_gap(self, candidate_id: str, *, actor: str,
+                                     decision: str, reason: str) -> str:
+        if decision not in {'CONTINUOUS_AS_DRAWN','SEPARATE_AS_DRAWN','UNRESOLVED','REJECTED'}:
+            raise ValueError('Unknown centreline gap review decision')
+        if not isinstance(actor,str) or not actor.strip() or len(actor)>150:
+            raise ValueError('Named centreline gap reviewer required')
+        if not isinstance(reason,str) or not 5<=len(reason.strip())<=2000:
+            raise ValueError('Centreline gap review requires an explanation')
+        if self.db.execute('SELECT 1 FROM raster_centreline_gap WHERE candidate_id=?',(candidate_id,)).fetchone() is None:
+            raise KeyError('Unknown centreline gap candidate')
+        rid='rcdec-'+uuid4().hex;now=_utc()
+        with self.db:
+            self.db.execute('INSERT INTO raster_centreline_decision VALUES(?,?,?,?,?,?)',
+                            (rid,candidate_id,actor.strip(),decision,reason.strip(),now))
+            self._append_event('RASTER_CENTRELINE_GAP_REVIEW',candidate_id,
+                               {'decision_id':rid,'actor':actor.strip(),'decision':decision,
+                                'reason':reason.strip()},now)
+        return rid
+
+    def latest_raster_centreline_review(self, candidate_id: str) -> dict | None:
+        row=self.db.execute('SELECT * FROM raster_centreline_decision WHERE candidate_id=? '
+                            'ORDER BY rowid DESC LIMIT 1',(candidate_id,)).fetchone()
+        return dict(row) if row else None
+
     def list_objects(self, *, extraction_id: str | None = None, text: str = "", object_class: str = "", limit: int = 200) -> list[dict]:
         if limit < 1 or limit > 1000:
             raise ValueError("Limit out of permitted range")
