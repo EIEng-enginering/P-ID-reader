@@ -53,7 +53,12 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
     if not chosen or len(chosen)!=len(set(chosen)) or any(type(n) is not int or not 1<=n<=count for n in chosen):
         raise ValueError('Unique, valid OCR page selection required')
     document_sha=sha256(pdf_bytes).hexdigest()
-    engine_version=str(pytesseract.get_tesseract_version())
+    try:
+        engine_version=str(pytesseract.get_tesseract_version())
+    except pytesseract.TesseractNotFoundError:
+        # A missing binary is reported by image_to_data below with a clear error;
+        # this keeps injected/mocked word engines usable.
+        engine_version='UNAVAILABLE'
     output=[]
     with pdfplumber.open(BytesIO(pdf_bytes)) as geometry_pdf:
       frames = {page_number: frame_from_pdfplumber(geometry_pdf.pages[page_number-1]) for page_number in chosen}

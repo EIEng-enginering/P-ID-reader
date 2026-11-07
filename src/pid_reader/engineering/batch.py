@@ -14,8 +14,22 @@ MAX_FILES = 250
 MAX_CANDIDATES = 500
 
 
+_REPARSE_POINT = 0x400  # FILE_ATTRIBUTE_REPARSE_POINT (Windows symlinks, junctions, cloud placeholders)
+
+
+def _is_link(path: Path) -> bool:
+    """True for POSIX symlinks and any Windows reparse point (symlink/junction)."""
+    if path.is_symlink():
+        return True
+    try:
+        attrs = getattr(path.lstat(), 'st_file_attributes', 0)
+    except OSError:
+        return False
+    return bool(attrs & _REPARSE_POINT)
+
+
 def _safe_input(path: Path) -> Path:
-    if path.is_symlink() or not path.is_file() or path.suffix.lower() != '.pdf':
+    if _is_link(path) or not path.is_file() or path.suffix.lower() != '.pdf':
         raise ValueError(f'Not an eligible regular PDF: {path}')
     return path.resolve(strict=True)
 
@@ -26,7 +40,7 @@ def collect_files(inputs: list[str | Path]) -> list[Path]:
     out = []
     for input_path in inputs:
         path = Path(input_path)
-        if path.is_symlink():
+        if _is_link(path):
             raise ValueError('Symlinked input is not permitted')
         if path.is_dir():
             out.extend(_safe_input(p) for p in sorted(path.iterdir()) if p.suffix.lower() == '.pdf')

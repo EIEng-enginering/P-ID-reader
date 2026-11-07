@@ -161,7 +161,11 @@ def test_oversize_preflight_recorded_without_partial_import(tmp_path):
 
 def test_batch_rejects_symlink_duplicate_and_non_pdf(tmp_path):
     p=tmp_path/'a.pdf'; p.write_bytes(pdf())
-    alias=tmp_path/'link.pdf';alias.symlink_to(p)
+    alias=tmp_path/'link.pdf'
+    try:
+        alias.symlink_to(p)
+    except OSError:
+        pytest.skip('Symlink creation needs Windows Developer Mode/elevation; see test_batch_rejects_windows_reparse_point')
     with pytest.raises(ValueError,match='Symlink'):
         collect_files([alias])
     with pytest.raises(ValueError,match='more than once'):
@@ -170,6 +174,24 @@ def test_batch_rejects_symlink_duplicate_and_non_pdf(tmp_path):
         collect_files([tmp_path/'missing.pdf'])
     with pytest.raises(ValueError,match='eligible'):
         collect_files([tmp_path/'a.txt'])
+
+
+def test_batch_rejects_windows_reparse_point(tmp_path, monkeypatch):
+    # Simulates a junction/symlink/placeholder: Windows reports FILE_ATTRIBUTE_REPARSE_POINT.
+    import pathlib
+    p=tmp_path/'a.pdf'; p.write_bytes(pdf())
+    real=pathlib.Path.lstat
+    def fake(self,*a,**k):
+        st=real(self,*a,**k)
+        if self.name=='a.pdf':
+            class S:
+                st_file_attributes=0x400
+                def __getattr__(s,n): return getattr(st,n)
+            return S()
+        return st
+    monkeypatch.setattr(pathlib.Path,'lstat',fake)
+    with pytest.raises(ValueError):
+        collect_files([p])
 
 
 def test_project_search_keeps_provenance_reviews_and_literal_percent(tmp_path):
