@@ -10,3 +10,4 @@ Inital files/
 fixtures/*.pre-v*.sqlite
 *.bak
 Example P&IDs/
+Release/

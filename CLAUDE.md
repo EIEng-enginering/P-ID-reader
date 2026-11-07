@@ -1,3 +1,11 @@
+# CURRENT INSTRUCTIONS — WIN-R01 (supersedes Rev Q notes below where they conflict)
+
+Rev Q was imported unmodified (commit b147c4f) and extended on Windows Python 3.12. Read `docs/WIN_R01_STATUS.md` (gates, limits), `docs/OPEN_ISSUES.md` (W-001…W-012), `docs/adr/ADR-WIN-R01.md`, `docs/USER_GUIDE.md`.
+Rules that still hold: frozen R1 contract/API/worker/schema v1 and standalone DB v9 stay unchanged; all readings are unverified proposals; no HAZOP/LOPA/SIL/IPL conclusions; stage Git paths explicitly (never `git add -A`: `Example P&IDs/` is a 1.1 GB user library and is git-ignored); no pushes without the owner; high-write data stays outside OneDrive (`C:\PIDWork`, `%LOCALAPPDATA%\PIDReader`).
+Environment: `C:\PIDWorkenv312` (Python 3.12.10, PySide6 6.12.0, RapidOCR). Commands: `pytest -q tests`, `python tools/release_preflight.py`, `python -m pid_reader.cli gui`.
+
+---
+
 # CURRENT INSTRUCTIONS — REV Q (overrides earlier snapshot labels below)
 
 Read `00_START_HERE_FOR_CLAUDE.md` FIRST, then `docs/REV_Q_IMPLEMENTATION_NOTES.md`, `docs/RELEASE_ACCEPTANCE_MATRIX.md`, `docs/DEVELOPMENT_STATUS.json`, and the unmodified R1 contract. Rev Q is cumulative and complete as a **ChatGPT-to-Claude code handoff**, not a finished engineering-accepted product. Existing `CLAUDE.md` historical sections below remain for audit only. All Q1–Q50 Option A are owner-approved, normal coding and tests need no repeated signoff; never assume rights to spend, upload private drawings, rewrite the live host, break the R1 contract or push protected Git branches. Use Python 3.12 on Windows and run source-isolation preflight. Current local Linux tests and historical records under `TEST_RESULTS` do not certify Windows/industrial operation.

@@ -1,3 +1,5 @@
+> **Current state (WIN-R01, 7 Nov 2026):** see `docs/USER_GUIDE.md` (run/evaluate), `docs/WIN_R01_STATUS.md` (gates and limits) and `CHANGELOG.md`. The text below is the earlier ChatGPT README (Rev Q) kept for history.
+
 # P&ID Reader — cumulative final ChatGPT development handoff Rev Q
 
 **Authoritative current handoff:** `00_START_HERE_FOR_CLAUDE.md` and `docs/RELEASE_ACCEPTANCE_MATRIX.md`. The codebase version is `0.11.0-dev0`, standalone SQLite schema v9, original Worksheet extraction schema v1. All owner decisions Q1–Q50 Option A are approved. The release is **developer code, not yet a Windows or engineering-qualified application**. Rev Q local tests and contract validation are recorded under `TEST_RESULTS/LOCAL_DEV_R11/`.
