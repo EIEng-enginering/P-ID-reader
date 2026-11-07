@@ -1,0 +1,4526 @@
+{
+ "kind": "SYNTHETIC_DEVELOPER_BENCHMARK_NOT_INDEPENDENT",
+ "split": "dev",
+ "drawings": 90,
+ "errors": 0,
+ "seconds": 194.7,
+ "overall": {
+  "tags": {
+   "tp": 1582,
+   "fp": 0,
+   "fn": 0,
+   "precision": 1.0,
+   "recall": 1.0
+  },
+  "lines": {
+   "tp": 425,
+   "fp": 0,
+   "fn": 0,
+   "precision": 1.0,
+   "recall": 1.0
+  },
+  "valves": {
+   "tp": 402,
+   "fp": 0,
+   "fn": 64,
+   "precision": 1.0,
+   "recall": 0.8627
+  },
+  "paths": {
+   "tp": 463,
+   "fp": 0,
+   "fn": 85,
+   "precision": 1.0,
+   "recall": 0.8449
+  }
+ },
+ "class_accuracy_of_found_tags": {
+  "correct": 1582,
+  "total": 1582
+ },
+ "by_variant": {
+  "cropped": {
+   "drawings": 13,
+   "tags": {
+    "tp": 216,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "lines": {
+    "tp": 59,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "valves": {
+    "tp": 63,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 77,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  "rot180": {
+   "drawings": 17,
+   "tags": {
+    "tp": 277,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "lines": {
+    "tp": 89,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "valves": {
+    "tp": 86,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 94,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  "rot90": {
+   "drawings": 12,
+   "tags": {
+    "tp": 219,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "lines": {
+    "tp": 65,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "valves": {
+    "tp": 63,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 76,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  "scanned": {
+   "drawings": 13,
+   "tags": {
+    "tp": 246,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "lines": {
+    "tp": 53,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 64,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 85,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  "vector": {
+   "drawings": 35,
+   "tags": {
+    "tp": 624,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "lines": {
+    "tp": 159,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "valves": {
+    "tp": 190,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 216,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  }
+ },
+ "per_drawing": [
+  {
+   "file": "drawing_003.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 27,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 27,
+   "class_total": 27,
+   "missing_tags": [],
+   "lines": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_004.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 10,
+   "class_total": 10,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_005.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_008.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 13,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 13,
+   "class_total": 13,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_009.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 19,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 19,
+   "class_total": 19,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_010.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 9,
+   "class_total": 9,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_011.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 10,
+   "class_total": 10,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_012.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 15,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 15,
+   "class_total": 15,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_013.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 14,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 14,
+   "class_total": 14,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_014.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 24,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 24,
+   "class_total": 24,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_016.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 20,
+   "class_total": 20,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_017.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 19,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 19,
+   "class_total": 19,
+   "missing_tags": [],
+   "lines": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_018.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 8,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_019.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 12,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 12,
+   "class_total": 12,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_020.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 22,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 22,
+   "class_total": 22,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_021.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 7,
+   "class_total": 7,
+   "missing_tags": [],
+   "lines": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_024.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 13,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 13,
+   "class_total": 13,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_025.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 9,
+   "class_total": 9,
+   "missing_tags": [],
+   "lines": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": null,
+    "recall": null
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_026.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_027.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_028.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 7,
+   "class_total": 7,
+   "missing_tags": [],
+   "lines": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 1,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_029.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 19,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 19,
+   "class_total": 19,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 5,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_030.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_031.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 18,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 18,
+   "class_total": 18,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_032.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 13,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 13,
+   "class_total": 13,
+   "missing_tags": [],
+   "lines": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_033.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 18,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 18,
+   "class_total": 18,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_034.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 8,
+   "class_total": 8,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_035.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 12,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 12,
+   "class_total": 12,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_036.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 25,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 25,
+   "class_total": 25,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_037.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 12,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 12,
+   "class_total": 12,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 3,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_038.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 13,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 13,
+   "class_total": 13,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_040.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_041.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 18,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 18,
+   "class_total": 18,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_044.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 18,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 18,
+   "class_total": 18,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_045.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_048.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 26,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 26,
+   "class_total": 26,
+   "missing_tags": [],
+   "lines": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_049.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_050.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 20,
+   "class_total": 20,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_051.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 25,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 25,
+   "class_total": 25,
+   "missing_tags": [],
+   "lines": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_052.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 14,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 14,
+   "class_total": 14,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_053.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 16,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 16,
+   "class_total": 16,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_054.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 19,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 19,
+   "class_total": 19,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_055.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 10,
+   "class_total": 10,
+   "missing_tags": [],
+   "lines": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": null,
+    "recall": null
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_056.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 34,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 34,
+   "class_total": 34,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 12,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_057.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 11,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 11,
+   "class_total": 11,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 2,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_058.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 11,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 11,
+   "class_total": 11,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_059.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 21,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 21,
+   "class_total": 21,
+   "missing_tags": [],
+   "lines": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_060.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 10,
+   "class_total": 10,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_062.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 5,
+   "class_total": 5,
+   "missing_tags": [],
+   "lines": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_063.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 19,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 19,
+   "class_total": 19,
+   "missing_tags": [],
+   "lines": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_064.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 5,
+   "class_total": 5,
+   "missing_tags": [],
+   "lines": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_066.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 29,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 29,
+   "class_total": 29,
+   "missing_tags": [],
+   "lines": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_067.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 22,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 22,
+   "class_total": 22,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_070.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 23,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 23,
+   "class_total": 23,
+   "missing_tags": [],
+   "lines": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 7,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 8,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_071.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 20,
+   "class_total": 20,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_072.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 16,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 16,
+   "class_total": 16,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_073.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 23,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 23,
+   "class_total": 23,
+   "missing_tags": [],
+   "lines": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_074.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 28,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 28,
+   "class_total": 28,
+   "missing_tags": [],
+   "lines": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_075.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 29,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 29,
+   "class_total": 29,
+   "missing_tags": [],
+   "lines": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_077.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 20,
+   "class_total": 20,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_078.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 14,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 14,
+   "class_total": 14,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_079.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 19,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 19,
+   "class_total": 19,
+   "missing_tags": [],
+   "lines": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_080.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 25,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 25,
+   "class_total": 25,
+   "missing_tags": [],
+   "lines": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 11,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_081.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 20,
+   "class_total": 20,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_082.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 18,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 18,
+   "class_total": 18,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 5,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_084.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 7,
+   "class_total": 7,
+   "missing_tags": [],
+   "lines": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_085.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 20,
+   "class_total": 20,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_086.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 17,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 17,
+   "class_total": 17,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 5,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 7,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_090.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 17,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 17,
+   "class_total": 17,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_091.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 11,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 11,
+   "class_total": 11,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_092.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 26,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 26,
+   "class_total": 26,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 7,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 8,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_093.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 27,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 27,
+   "class_total": 27,
+   "missing_tags": [],
+   "lines": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 7,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 10,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_094.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 18,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 18,
+   "class_total": 18,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_095.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 9,
+   "class_total": 9,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 2,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 3,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_097.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 10,
+   "class_total": 10,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_098.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 24,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 24,
+   "class_total": 24,
+   "missing_tags": [],
+   "lines": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": null,
+    "recall": null
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 8,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_099.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 5,
+   "class_total": 5,
+   "missing_tags": [],
+   "lines": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": null,
+    "recall": null
+   },
+   "paths": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_100.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 12,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 12,
+   "class_total": 12,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_102.pdf",
+   "variant": "scanned",
+   "split": "dev",
+   "tags": {
+    "tp": 32,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 32,
+   "class_total": 32,
+   "missing_tags": [],
+   "lines": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "DONE",
+    "text_links": "DONE"
+   },
+   "valves": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 9,
+    "precision": null,
+    "recall": 0.0
+   },
+   "paths": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 10,
+    "precision": null,
+    "recall": 0.0
+   }
+  },
+  {
+   "file": "drawing_103.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 17,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 17,
+   "class_total": 17,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_104.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 10,
+   "class_total": 10,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_105.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 20,
+   "class_total": 20,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_106.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 22,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 22,
+   "class_total": 22,
+   "missing_tags": [],
+   "lines": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_108.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 11,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 11,
+   "class_total": 11,
+   "missing_tags": [],
+   "lines": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_110.pdf",
+   "variant": "rot180",
+   "split": "dev",
+   "tags": {
+    "tp": 15,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 15,
+   "class_total": 15,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_111.pdf",
+   "variant": "rot90",
+   "split": "dev",
+   "tags": {
+    "tp": 13,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 13,
+   "class_total": 13,
+   "missing_tags": [],
+   "lines": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 5,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_113.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 31,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 31,
+   "class_total": 31,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 10,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 11,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_114.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 31,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 31,
+   "class_total": 31,
+   "missing_tags": [],
+   "lines": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 11,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_117.pdf",
+   "variant": "cropped",
+   "split": "dev",
+   "tags": {
+    "tp": 15,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 15,
+   "class_total": 15,
+   "missing_tags": [],
+   "lines": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 7,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  },
+  {
+   "file": "drawing_119.pdf",
+   "variant": "vector",
+   "split": "dev",
+   "tags": {
+    "tp": 18,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "class_correct": 18,
+   "class_total": 18,
+   "missing_tags": [],
+   "lines": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "pages_read": [
+    "READ"
+   ],
+   "stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "valves": {
+    "tp": 4,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   },
+   "paths": {
+    "tp": 6,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0
+   }
+  }
+ ],
+ "not_evaluated": [
+  "instrument-to-equipment signal attachment",
+  "off-page connectors",
+  "flow direction",
+  "real industrial drawings (no independent ground truth exists yet)"
+ ]
+}

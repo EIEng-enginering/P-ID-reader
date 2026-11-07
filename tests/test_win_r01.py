@@ -331,3 +331,19 @@ def test_normal_text_not_reversed_or_split():
     pdf = _pdf_with(lambda c: (c.drawString(100, 200, 'P-102A'), c.drawString(200, 200, 'LT-301')))
     result = read_pid(pdf, ReadParams(), filename='n.pdf')
     assert {o['text'] for o in result['objects'] if o['class'] not in ('LINE', 'NOTE')} == {'P-102A', 'LT-301'}
+
+
+def test_entry_dispatch_routes_worker_flags(monkeypatch, tmp_path):
+    import pid_reader.entry as entry
+    import pid_reader.worker as w
+    seen = {}
+    monkeypatch.setattr(w, 'main', lambda a: seen.setdefault('a', a) and 0)
+    assert entry.main(['--pid-worker', 'run', '--x'], default='cli') == 0
+    assert seen['a'] == ['run', '--x']
+
+
+def test_dexpi_adapter_refuses_instead_of_faking_conformance():
+    from pid_reader.engineering import dexpi
+    assert dexpi.STATUS == 'NOT_IMPLEMENTED'
+    with pytest.raises(dexpi.DexpiNotAvailable):
+        dexpi.export_dexpi(object(), 'x.xml')

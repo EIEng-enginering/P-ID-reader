@@ -1,0 +1,1633 @@
+{
+ "sample": 47,
+ "records": [
+  {
+   "file": "_supplemental_legends_and_simplified/S005_netl_nt0006553_ignik_semiannual_2012-06_p158.pdf",
+   "bytes": 314845,
+   "read_seconds": 1.34,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 4
+   },
+   "object_count": 4,
+   "ocr_used": false,
+   "analysis_seconds": 0.77,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "_supplemental_legends_and_simplified/S019_ukgov_peterhead_ccs_K31_transport_storage_PIDs_p043.pdf",
+   "bytes": 174781,
+   "read_seconds": 1.17,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 2
+   },
+   "object_count": 2,
+   "ocr_used": false,
+   "analysis_seconds": 0.14,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 3,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "_supplemental_legends_and_simplified/S003_cer_2937435_p002.pdf",
+   "bytes": 318074,
+   "read_seconds": 77.53,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "TANK": 1
+   },
+   "object_count": 1,
+   "ocr_used": true,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "compressors/S023_cer_2693621_p002.pdf",
+   "bytes": 539151,
+   "read_seconds": 4.03,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 169,
+    "NOTE": 10
+   },
+   "object_count": 179,
+   "ocr_used": false,
+   "analysis_seconds": 7.62,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 1762,
+    "contacts": 991,
+    "symbols": 35,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "flare_relief_blowdown/S031_cer_2937850_p009.pdf",
+   "bytes": 65118,
+   "read_seconds": 1.31,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 1
+   },
+   "object_count": 1,
+   "ocr_used": false,
+   "analysis_seconds": 0.11,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "flare_relief_blowdown/S055_ukgov_peterhead_ccs_K31_transport_storage_PIDs_p040.pdf",
+   "bytes": 479832,
+   "read_seconds": 1.39,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 2
+   },
+   "object_count": 2,
+   "ocr_used": false,
+   "analysis_seconds": 0.14,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 3,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "flare_relief_blowdown/S052_ukgov_peterhead_11003_app5_storage_p021.pdf",
+   "bytes": 679995,
+   "read_seconds": 6.61,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 180
+   },
+   "object_count": 180,
+   "ocr_used": false,
+   "analysis_seconds": 8.95,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 2633,
+    "contacts": 1680,
+    "symbols": 16,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "gas_dehydration/S059_cer_653891_p001.pdf",
+   "bytes": 165541,
+   "read_seconds": 32.73,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "INSTRUMENT": 2,
+    "LINE": 3,
+    "VESSEL": 3
+   },
+   "object_count": 8,
+   "ocr_used": true,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "gas_dehydration/S061_cer_653891_p003.pdf",
+   "bytes": 185991,
+   "read_seconds": 29.53,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "HEAT_EXCHANGER": 3,
+    "LINE": 3,
+    "PUMP": 1,
+    "VESSEL": 2
+   },
+   "object_count": 9,
+   "ocr_used": true,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "gas_dehydration/S062_nmocd_GW-54_2020-04-23_p039.pdf",
+   "bytes": 102753,
+   "read_seconds": 0.94,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {},
+   "object_count": 0,
+   "ocr_used": false,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "gas_treating/S069_nmocd_GW-54_2020-04-23_p029.pdf",
+   "bytes": 85502,
+   "read_seconds": 38.84,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "FILTER": 1,
+    "LINE": 2,
+    "PUMP": 4,
+    "VESSEL": 1
+   },
+   "object_count": 8,
+   "ocr_used": true,
+   "analysis_seconds": 0.11,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "gas_treating/S066_cer_346257_p001.pdf",
+   "bytes": 174677,
+   "read_seconds": 45.62,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "FILTER": 1,
+    "HEAT_EXCHANGER": 1,
+    "PUMP": 2,
+    "VESSEL": 4
+   },
+   "object_count": 8,
+   "ocr_used": true,
+   "analysis_seconds": 0.11,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "gas_treating/S070_nmocd_GW-54_2020-04-23_p030.pdf",
+   "bytes": 91235,
+   "read_seconds": 1.42,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 32
+   },
+   "object_count": 32,
+   "ocr_used": false,
+   "analysis_seconds": 0.19,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "heat_exchangers_heaters/S080_cer_4692469_p008.pdf",
+   "bytes": 178362,
+   "read_seconds": 4.92,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 659,
+    "NOTE": 28
+   },
+   "object_count": 687,
+   "ocr_used": false,
+   "analysis_seconds": 2.98,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  },
+  {
+   "file": "heat_exchangers_heaters/S083_cer_4692471_p022.pdf",
+   "bytes": 128342,
+   "read_seconds": 2.64,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 609
+   },
+   "object_count": 609,
+   "ocr_used": false,
+   "analysis_seconds": 1.72,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  },
+  {
+   "file": "heat_exchangers_heaters/S081_cer_4692469_p017.pdf",
+   "bytes": 131520,
+   "read_seconds": 2.7,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 664
+   },
+   "object_count": 664,
+   "ocr_used": false,
+   "analysis_seconds": 1.92,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  },
+  {
+   "file": "metering/S240_cer_4417901_p002.pdf",
+   "bytes": 750727,
+   "read_seconds": 6.59,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 108,
+    "NOTE": 3
+   },
+   "object_count": 111,
+   "ocr_used": false,
+   "analysis_seconds": 5.73,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many possible stroke intersections"
+   }
+  },
+  {
+   "file": "metering/S280_cer_4724057_p001.pdf",
+   "bytes": 742663,
+   "read_seconds": 6.05,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 103,
+    "NOTE": 5
+   },
+   "object_count": 108,
+   "ocr_used": false,
+   "analysis_seconds": 4.67,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many possible stroke intersections"
+   }
+  },
+  {
+   "file": "metering/S281_cer_4724731_p001.pdf",
+   "bytes": 753327,
+   "read_seconds": 6.03,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 95,
+    "NOTE": 3
+   },
+   "object_count": 98,
+   "ocr_used": false,
+   "analysis_seconds": 10.61,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 1040,
+    "contacts": 7652,
+    "symbols": 11,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "pigging_launchers_receivers/S294_cer_2882796_p003.pdf",
+   "bytes": 187340,
+   "read_seconds": 1.26,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 1
+   },
+   "object_count": 1,
+   "ocr_used": false,
+   "analysis_seconds": 0.06,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "pigging_launchers_receivers/S305_ukgov_peterhead_ccs_K31_transport_storage_PIDs_p028.pdf",
+   "bytes": 504143,
+   "read_seconds": 1.73,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 2
+   },
+   "object_count": 2,
+   "ocr_used": false,
+   "analysis_seconds": 0.12,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 3,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "pigging_launchers_receivers/S301_ukgov_peterhead_11003_app5_storage_p019.pdf",
+   "bytes": 771098,
+   "read_seconds": 17.7,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 582
+   },
+   "object_count": 582,
+   "ocr_used": false,
+   "analysis_seconds": 10.19,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  },
+  {
+   "file": "pipeline_valves_regulating/S313_ukgov_peterhead_11003_app5_storage_p034.pdf",
+   "bytes": 240177,
+   "read_seconds": 5.19,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 351,
+    "NOTE": 19
+   },
+   "object_count": 370,
+   "ocr_used": false,
+   "analysis_seconds": 5.51,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  },
+  {
+   "file": "pipeline_valves_regulating/S314_ukgov_peterhead_ccs_K31_transport_storage_PIDs_p025.pdf",
+   "bytes": 221103,
+   "read_seconds": 1.31,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 2
+   },
+   "object_count": 2,
+   "ocr_used": false,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 3,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "pipeline_valves_regulating/S310_cer_4647122_p002.pdf",
+   "bytes": 809553,
+   "read_seconds": 8.14,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 78
+   },
+   "object_count": 78,
+   "ocr_used": false,
+   "analysis_seconds": 5.83,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many possible stroke intersections"
+   }
+  },
+  {
+   "file": "produced_water_water_injection/S320_cer_4665318_p008.pdf",
+   "bytes": 363369,
+   "read_seconds": 5.67,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 987,
+    "NOTE": 32
+   },
+   "object_count": 1019,
+   "ocr_used": false,
+   "analysis_seconds": 4.42,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  },
+  {
+   "file": "produced_water_water_injection/S331_cer_4692388_p001.pdf",
+   "bytes": 362063,
+   "read_seconds": 5.34,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 1069,
+    "NOTE": 32
+   },
+   "object_count": 1101,
+   "ocr_used": false,
+   "analysis_seconds": 6.44,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  },
+  {
+   "file": "produced_water_water_injection/S322_cer_4665318_p010.pdf",
+   "bytes": 449949,
+   "read_seconds": 6.66,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 716,
+    "NOTE": 32,
+    "PUMP": 1
+   },
+   "object_count": 749,
+   "ocr_used": false,
+   "analysis_seconds": 23.27,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 3520,
+    "contacts": 983,
+    "symbols": 117,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "pumps/S336_cer_2935633_p009.pdf",
+   "bytes": 143738,
+   "read_seconds": 28.8,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {},
+   "object_count": 0,
+   "ocr_used": false,
+   "analysis_seconds": 0.06,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "pumps/S335_cer_2935633_p008.pdf",
+   "bytes": 244981,
+   "read_seconds": 55.06,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "INSTRUMENT": 1,
+    "LINE": 1
+   },
+   "object_count": 2,
+   "ocr_used": true,
+   "analysis_seconds": 0.05,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "pumps/S416_ukgov_peterhead_ccs_K31_transport_storage_PIDs_p038.pdf",
+   "bytes": 673631,
+   "read_seconds": 1.22,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 2
+   },
+   "object_count": 2,
+   "ocr_used": false,
+   "analysis_seconds": 0.08,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 3,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "separators_scrubbers/S422_cer_887175_p001.pdf",
+   "bytes": 127073,
+   "read_seconds": 30.19,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "INSTRUMENT": 2,
+    "LINE": 3,
+    "PSV": 2
+   },
+   "object_count": 7,
+   "ocr_used": true,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "separators_scrubbers/S418_cer_455653_p003.pdf",
+   "bytes": 84188,
+   "read_seconds": 36.92,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "COLUMN": 1,
+    "VESSEL": 2
+   },
+   "object_count": 3,
+   "ocr_used": true,
+   "analysis_seconds": 0.05,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "separators_scrubbers/S421_cer_654028_p002.pdf",
+   "bytes": 178825,
+   "read_seconds": 40.17,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 1
+   },
+   "object_count": 1,
+   "ocr_used": true,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "subsea/S425_cer_315402_p001.pdf",
+   "bytes": 424427,
+   "status": "REFUSED",
+   "code": "PID_WORKER_FAILED",
+   "read_seconds": 3.86
+  },
+  {
+   "file": "utilities/S439_cer_4692388_p017.pdf",
+   "bytes": 250682,
+   "read_seconds": 6.91,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 548,
+    "NOTE": 26
+   },
+   "object_count": 574,
+   "ocr_used": false,
+   "analysis_seconds": 34.47,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 3784,
+    "contacts": 777,
+    "symbols": 136,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "utilities/S449_petrobras_I-DE-3010.2Q-5423-944-P4X-006_0_p001.pdf",
+   "bytes": 226920,
+   "read_seconds": 4.44,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "COLUMN": 2,
+    "LINE": 997,
+    "NOTE": 1022
+   },
+   "object_count": 2021,
+   "ocr_used": false,
+   "analysis_seconds": 5.61,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "FAILED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 3146,
+    "contacts": 2774
+   },
+   "analysis_failures": {
+    "symbols": "ValueError: Invalid symbol evidence: Duplicate/invalid symbol ID; Duplicate/invalid symbol ID; Duplicate/invalid symbol ID; Duplicate/invalid symbol ID; Duplica"
+   }
+  },
+  {
+   "file": "utilities/S426_cer_2882796_p002.pdf",
+   "bytes": 174232,
+   "read_seconds": 0.94,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 1
+   },
+   "object_count": 1,
+   "ocr_used": false,
+   "analysis_seconds": 0.05,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "vessels_tanks/S523_ukgov_peterhead_ccs_K31_transport_storage_PIDs_p061.pdf",
+   "bytes": 1970019,
+   "read_seconds": 0.95,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 2
+   },
+   "object_count": 2,
+   "ocr_used": false,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 3,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "vessels_tanks/S484_cer_4692388_p033.pdf",
+   "bytes": 271674,
+   "read_seconds": 2.66,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 359,
+    "NOTE": 30,
+    "TANK": 2
+   },
+   "object_count": 391,
+   "ocr_used": false,
+   "analysis_seconds": 18.27,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 2919,
+    "contacts": 1114,
+    "symbols": 82,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "vessels_tanks/S512_ukgov_peterhead_ccs_K31_transport_storage_PIDs_p047.pdf",
+   "bytes": 644998,
+   "read_seconds": 2.17,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "MIXED",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "NOTE": 2
+   },
+   "object_count": 2,
+   "ocr_used": false,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 3,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "wellheads_manifolds/S592_ukgov_peterhead_11003_app5_storage_p017.pdf",
+   "bytes": 713295,
+   "read_seconds": 6.36,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 326
+   },
+   "object_count": 326,
+   "ocr_used": false,
+   "analysis_seconds": 21.5,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 3528,
+    "contacts": 2241,
+    "symbols": 42,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "wellheads_manifolds/S563_cer_4692469_p014.pdf",
+   "bytes": 280786,
+   "read_seconds": 6.22,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 771,
+    "NOTE": 32
+   },
+   "object_count": 803,
+   "ocr_used": false,
+   "analysis_seconds": 2.44,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  },
+  {
+   "file": "wellheads_manifolds/S567_cer_4692469_p022.pdf",
+   "bytes": 550210,
+   "read_seconds": 8.14,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 587,
+    "NOTE": 32
+   },
+   "object_count": 619,
+   "ocr_used": false,
+   "analysis_seconds": 25.56,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 3151,
+    "contacts": 1848,
+    "symbols": 124,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "whole_facility/S597_cer_2936844_p009.pdf",
+   "bytes": 61302,
+   "read_seconds": 29.09,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {},
+   "object_count": 0,
+   "ocr_used": false,
+   "analysis_seconds": 0.09,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "whole_facility/S599_cer_2936844_p011.pdf",
+   "bytes": 80310,
+   "read_seconds": 38.78,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "RASTER_ONLY",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "HEAT_EXCHANGER": 1,
+    "PUMP": 2
+   },
+   "object_count": 3,
+   "ocr_used": true,
+   "analysis_seconds": 0.11,
+   "analysis_stages": {
+    "geometry": "DONE",
+    "symbols": "DONE",
+    "linework": "DONE",
+    "catalogue": "DONE",
+    "signals": "DONE",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {
+    "segments": 0,
+    "contacts": 0,
+    "symbols": 0,
+    "valves": 0,
+    "catalogue_matches": 0,
+    "signal_candidates": 0
+   },
+   "analysis_failures": {}
+  },
+  {
+   "file": "whole_facility/S608_cer_470458_p001.pdf",
+   "bytes": 262207,
+   "read_seconds": 10.47,
+   "status": "READ",
+   "pages": [
+    {
+     "classification": "VECTOR_TEXT",
+     "read_status": "READ"
+    }
+   ],
+   "classes": {
+    "LINE": 464
+   },
+   "object_count": 464,
+   "ocr_used": false,
+   "analysis_seconds": 6.69,
+   "analysis_stages": {
+    "geometry": "FAILED",
+    "symbols": "SKIPPED",
+    "linework": "SKIPPED",
+    "catalogue": "SKIPPED",
+    "signals": "SKIPPED",
+    "ocr": "SKIPPED",
+    "text_links": "SKIPPED"
+   },
+   "analysis_counts": {},
+   "analysis_failures": {
+    "geometry": "LimitExceeded: Too many native vector segments for this analyzer"
+   }
+  }
+ ]
+}

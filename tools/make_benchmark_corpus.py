@@ -95,6 +95,7 @@ class Drawing:
                 x_start, x_end = a["right"], b["left"]
                 nvalves = rng.choice([0, 1, 1, 2])
                 span = x_end - x_start
+                nvalves = min(nvalves, int(span // 70))   # glyphs and labels must not overlap each other
                 centres = [x_start + span * (k + 1) / (nvalves + 1) for k in range(nvalves)]
                 cursor = x_start
                 valve_tags = []

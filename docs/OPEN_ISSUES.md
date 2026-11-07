@@ -113,3 +113,20 @@ Original Worksheet R1 worker and host G4-G7 remain unchanged and NOT_RUN.
 - **Q-005 P1:** Worker stages complete result in provided scratch and atomically publishes only output path, but host scratch must be cleaned by the host on forced kill; same-volume host output requirement must be rehearsed.
 - **Q-006 P1:** Python editable install contamination can cause subprocess to import an earlier Rev I package. The new source-isolation preflight protects QA; continue strict environment verification on Windows.
 - **Q-007 P1:** Handoff file SHA manifest is integrity checking, not trusted code signing. Git remote write access, protected branches and credentials are not confirmed.
+
+## WIN-R01 (Claude, 2026-11-07) — new and updated issues
+
+| ID | Priority | Issue | Next action |
+|---|---|---|---|
+| W-001 | P0 | Real public sheets: only 12 of 46 sampled sheets yielded any named equipment/instrument/valve tag; most real sheets are dense, scanned, or have sparse text layers. | Build a labelled real-drawing gold set with an independent reviewer; extend tag grammar through **project tag profiles** (not by tuning on the public set); evaluate on held-out sheets. |
+| W-002 | P0 | Geometry analyser caps at 4 000 strokes: 12/46 sampled sheets get text only. (Supersedes H-001 for practical impact.) | Page tiling with explicit completeness reporting; raise caps in all validators together. |
+| W-003 | P0 | Scanned sheets get OCR text only — no valves/symbols/connectivity (synthetic scanned: valves 0/64, paths 0/85). | Raster line/symbol detection (OpenCV is already present) or vectorisation front-end; benchmark per class. |
+| W-004 | P0 | No qualified pretrained symbol detector; template catalogue is 11 synthetic templates. | Candidate-model licence/provenance review, adapter, per-class benchmark vs templates. |
+| W-005 | P0 | Independent accuracy benchmark, hostile-PDF testing, host G4–G7, legal dependency review, final acceptance remain NOT_RUN (see acceptance matrix). | Owner action: reviewer, labelled drawings, host copy. |
+| W-006 | P1 | One sampled sheet (`subsea/S425…`) ended `PID_WORKER_FAILED` under a 3 GB cap (abnormal child exit). | Reproduce, find cause (memory vs crash), add specific error code. |
+| W-007 | P1 | Unsigned executables / installer; installer rehearsed on this PC only. | Code-signing certificate (owner spend); clean-VM install test. |
+| W-008 | P1 | GUI: no keyboard-only/DPI 175 %/screen-reader review; graph labels small on very large pages; no drag-to-annotate off-page connectors; no pagination of >2000 findings per layer. | Manual UX review; extend. |
+| W-009 | P1 | Child-process wrapper is not a sandbox (no AppContainer/low integrity). | Windows AppContainer worker; fuzz corpus. |
+| W-010 | P1 | Backup is manual (GUI/CLI); no scheduled backup or WAL-aware crash test on Windows beyond unit tests. | Crash-injection test; optional auto-backup on close. |
+| W-011 | P2 | Exports: no PDF/DOCX/XLSX; DEXPI disabled by design. | Add XLSX (permissive licence) when requested; DEXPI only after typed connectivity + validator. |
+| W-012 | P2 | Upside-down text is re-ordered per *page*; individual rotated words on otherwise upright pages (e.g. vertical labels) are not re-oriented. | Per-word orientation from character matrices. |
