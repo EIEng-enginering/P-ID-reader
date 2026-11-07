@@ -58,3 +58,52 @@ def test_rapidocr_forged_engine_label_rejected(tmp_path):
                 'raw_ocr_score': .9, 'review_state': 'PROPOSED', 'engine': 'cloud_ocr'}]}]}
     problems = validate_ocr_source(ocr, extraction)
     assert problems
+
+
+# ---- full analysis pipeline -------------------------------------------------
+
+def test_pipeline_runs_all_layers_and_is_idempotent(tmp_path):
+    from pid_reader.engineering.pipeline import analyze_drawing, STAGES
+    pdf = (FIX / 'synthetic_symbols_ports.pdf').read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename='s.pdf')
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        seen = []
+        out = analyze_drawing(db, eid, ocr_engine=None, progress=lambda s, f, m: seen.append(s))
+        assert set(out['stages']) == set(STAGES)
+        assert out['stages']['geometry']['status'] == 'DONE'
+        assert out['stages']['symbols']['status'] == 'DONE'
+        assert out['stages']['ocr']['status'] == 'SKIPPED'
+        assert out['stages']['text_links']['status'] == 'SKIPPED'
+        assert seen and seen[-1] == 'done'
+        again = analyze_drawing(db, eid, ocr_engine=None)
+        assert again['analyses'] == out['analyses']
+        assert db.verify_audit_chain()
+
+
+@pytest.mark.skipif(not ocr_source.rapidocr_available(), reason='RapidOCR (optional) not installed')
+def test_pipeline_with_rapidocr_links_tags(tmp_path):
+    from pid_reader.engineering.pipeline import analyze_drawing
+    pdf = (FIX / 'synthetic_symbols_ports.pdf').read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename='s.pdf')
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        out = analyze_drawing(db, eid, ocr_engine='rapidocr')
+        assert out['stages']['ocr']['status'] == 'DONE', out['stages']['ocr']
+        assert out['stages']['text_links']['status'] == 'DONE', out['stages']['text_links']
+
+
+def test_pipeline_cancel_stops_cleanly(tmp_path):
+    from pid_reader.api import CancelToken, Cancelled
+    from pid_reader.engineering.pipeline import analyze_drawing
+    pdf = (FIX / 'synthetic_symbols_ports.pdf').read_bytes()
+    extraction = read_pid(pdf, ReadParams(), filename='s.pdf')
+    token = CancelToken()
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        eid = db.add_extraction(extraction, source_pdf_bytes=pdf)
+        def stop(stage, frac, msg):
+            if stage == 'symbols':
+                token.cancel()
+        with pytest.raises(Cancelled):
+            analyze_drawing(db, eid, ocr_engine=None, progress=stop, cancel=token)
+        assert db.verify_audit_chain()

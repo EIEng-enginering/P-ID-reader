@@ -146,6 +146,10 @@ def main(argv: list[str] | None = None) -> int:
     report.add_argument("--extraction-ids",nargs="*");report.add_argument("--max-records",type=int,default=20000)
     report.add_argument("--overwrite",action="store_true")
     backup=sub.add_parser("backup-project");backup.add_argument("database");backup.add_argument("destination")
+    aa=sub.add_parser("analyze-all",help="Run every analysis layer on a stored drawing (proposals only)")
+    aa.add_argument("database");aa.add_argument("extraction_id")
+    aa.add_argument("--ocr",choices=("auto","tesseract","rapidocr","off"),default="auto")
+    aa.add_argument("--catalogue-id",default=None)
     sub.add_parser("gui").add_argument("database")
     args=p.parse_args(argv)
     try:
@@ -181,6 +185,12 @@ def main(argv: list[str] | None = None) -> int:
                 if args.output_json:
                     Path(args.output_json).write_text(canonical_json(doc),encoding="utf-8")
                 print(canonical_json({"extraction_id":extraction,"objects":len(doc["objects"]),"connections":len(doc["connections"]),"pages":len(doc["pages"]),"warnings":len(doc["warnings"])}))
+            elif args.cmd=="analyze-all":
+                from .engineering.pipeline import analyze_drawing
+                out=analyze_drawing(db,args.extraction_id,ocr_engine=None if args.ocr=="off" else args.ocr,
+                                    catalogue_id=args.catalogue_id,
+                                    progress=lambda st,fr,msg:print(f"[{fr:4.0%}] {msg}",file=sys.stderr))
+                print(canonical_json(out))
             elif args.cmd=="list":
                 print(json.dumps(db.list_objects(text=args.text,limit=args.limit),indent=2))
             elif args.cmd=="show":
