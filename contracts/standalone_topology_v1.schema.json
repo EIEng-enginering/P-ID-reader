@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/pid-reader/standalone-topology-v1.schema.json",
+  "title": "P&ID standalone vector topology observations (geometry only)",
+  "description": "This is NOT an engineering process connection graph and is NOT the Worksheet R1 extraction schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "algorithm", "source_sha256", "page_count", "selected_pages", "segments", "contact_candidates", "shape_candidates", "warnings", "disclaimer", "result_sha256"],
+  "properties": {
+    "schema": {"const": "pid-reader-standalone-topology-v1"},
+    "algorithm": {"const": "vector-topology-0.2"},
+    "source_sha256": {"$ref": "#/$defs/sha"},
+    "page_count": {"type": "integer", "minimum": 1, "maximum": 500},
+    "selected_pages": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+    "segments": {"type": "array", "maxItems": 4000, "items": {"$ref": "#/$defs/segment"}},
+    "contact_candidates": {"type": "array", "maxItems": 12000, "items": {"$ref": "#/$defs/contact"}},
+    "shape_candidates": {"type": "array", "items": {"$ref": "#/$defs/shape"}},
+    "warnings": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["page", "code", "message"], "properties": {"page": {"type": "integer", "minimum": 1}, "code": {"type": "string"}, "message": {"type": "string"}}}},
+    "disclaimer": {"type": "string", "minLength": 10},
+    "result_sha256": {"$ref": "#/$defs/sha"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "point": {"type": "array", "prefixItems": [{"type": "number", "minimum": 0, "maximum": 1}, {"type": "number", "minimum": 0, "maximum": 1}], "items": false, "minItems": 2, "maxItems": 2},
+    "bbox": {"type": "object", "additionalProperties": false, "required": ["x0", "y0", "x1", "y1"], "properties": {"x0": {"type": "number", "minimum": 0, "maximum": 1}, "y0": {"type": "number", "minimum": 0, "maximum": 1}, "x1": {"type": "number", "minimum": 0, "maximum": 1}, "y1": {"type": "number", "minimum": 0, "maximum": 1}}},
+    "segment": {"type": "object", "additionalProperties": false, "required": ["id", "page", "endpoints", "style", "line_width_pt", "status"], "properties": {"id": {"type": "string", "pattern": "^stroke-[0-9a-f]{16}$"}, "page": {"type": "integer", "minimum": 1}, "endpoints": {"type": "array", "items": {"$ref": "#/$defs/point"}, "minItems": 2, "maxItems": 2}, "style": {"enum": ["SOLID_OR_UNKNOWN", "DASHED_OR_DOTTED"]}, "line_width_pt": {"type": "number", "minimum": 0}, "status": {"const": "PROPOSED_GEOMETRY"}}},
+    "contact": {"type": "object", "additionalProperties": false, "required": ["id", "page", "kind", "point", "bbox", "segment_ids", "status", "limitation"], "properties": {"id": {"type": "string", "pattern": "^contact-[0-9a-f]{16}$"}, "page": {"type": "integer", "minimum": 1}, "kind": {"enum": ["ENDPOINT_TOUCH_CANDIDATE", "BRANCH_TEE_AMBIGUOUS", "CROSSING_AMBIGUOUS", "COLLINEAR_OVERLAP_AMBIGUOUS"]}, "point": {"$ref": "#/$defs/point"}, "bbox": {"$ref": "#/$defs/bbox"}, "segment_ids": {"type": "array", "items": {"type": "string", "pattern": "^stroke-[0-9a-f]{16}$"}, "minItems": 2, "maxItems": 2}, "status": {"const": "UNRESOLVED"}, "limitation": {"type": "string"}}},
+    "shape": {"type": "object", "additionalProperties": false, "required": ["id", "page", "shape", "bbox", "status", "limitation"], "properties": {"id": {"type": "string", "pattern": "^shape-[0-9a-f]{16}$"}, "page": {"type": "integer", "minimum": 1}, "shape": {"enum": ["CLOSED_NEAR_CIRCULAR_OUTLINE", "RECTANGULAR_OUTLINE"]}, "bbox": {"$ref": "#/$defs/bbox"}, "status": {"const": "PROPOSED_GEOMETRY"}, "limitation": {"type": "string"}}}
+  }
+}

@@ -1,0 +1,1204 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "module_name": "pid_reader",
+    "module_version": "0.8.0-dev0",
+    "schema_version": 1,
+    "params": {
+      "pages": null,
+      "bulk_accept_min_confidence": 0.9,
+      "max_pdf_bytes": 16777216,
+      "max_pages": 500,
+      "max_render_pixels": 12000000
+    },
+    "params_sha256": "96996ff691f447db0cb60b487771bfe30c35a78b7a00440c2b41d93180d19b6a",
+    "input_sha256": "1a8708e0a4aecc1366085a1c023b8aebb7fa40260f055fb40e6d476d764f435d",
+    "models": [],
+    "run_id": "79a16460-879c-479e-a82e-62b0806234bd",
+    "started_utc": "2026-11-07T03:19:21Z",
+    "finished_utc": "2026-11-07T03:19:21Z",
+    "host": {
+      "os": "Linux",
+      "python": "3.13.5"
+    },
+    "limitations_text": "Development reading of native PDF text and straight vector strokes only. No packaged OCR for scanned pages; geometric symbols, instruments without printed tags, curves, crossings, plant state, off-page continuity and functional safety are not determined. Line-to-line endpoint proposals are not confirmation of process connectivity.",
+    "reader_confidence_note": "Reader confidence is an uncalibrated heuristic, not extraction accuracy or plant certainty.",
+    "result_sha256": "6957d45a40fc5b6277df8b96678a7a681cf4b32a4ddfc9d6ecf2624ce557d956"
+  },
+  "document": {
+    "document_revision_id": "source-1a8708e0a4aecc13",
+    "sha256": "1a8708e0a4aecc1366085a1c023b8aebb7fa40260f055fb40e6d476d764f435d",
+    "filename": "synthetic_catalog_symbols.pdf",
+    "page_count": 1
+  },
+  "pages": [
+    {
+      "page": 1,
+      "classification": "VECTOR_TEXT",
+      "reason": "Native text or vector strokes found on the PDF page.",
+      "rotation": 0,
+      "read_status": "READ"
+    }
+  ],
+  "objects": [
+    {
+      "id": "obj-284c6ca43f83c51e",
+      "class": "NOTE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.0583333,
+        "y0": 0.05121,
+        "x1": 0.5683533,
+        "y1": 0.08121
+      },
+      "text": "SYNTHETIC P&ID SYMBOL CATALOGUE - NO PLANT",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.5,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.0583333,
+            "y0": 0.05121,
+            "x1": 0.5683533,
+            "y1": 0.08121
+          },
+          "text": "SYNTHETIC P&ID SYMBOL CATALOGUE - NO PLANT"
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-c3319ab29cf6f8c7",
+      "class": "NOTE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.122675,
+        "y0": 0.250175,
+        "x1": 0.3722333,
+        "y1": 0.277675
+      },
+      "text": "PT-101 V-101",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.5,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.122675,
+            "y0": 0.250175,
+            "x1": 0.3722333,
+            "y1": 0.277675
+          },
+          "text": "PT-101 V-101"
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-85e849417472f388",
+      "class": "VESSEL",
+      "page": 1,
+      "bbox": {
+        "x0": 0.3277667,
+        "y0": 0.250175,
+        "x1": 0.3722333,
+        "y1": 0.275175
+      },
+      "text": "V-101",
+      "parsed": {
+        "parse_status": "PARSED",
+        "normalised_tag": "V-101",
+        "suffix": ""
+      },
+      "confidence": 0.76,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.3277667,
+            "y0": 0.250175,
+            "x1": 0.3722333,
+            "y1": 0.275175
+          },
+          "text": "V-101"
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-756ea5adef6cd2f7",
+      "class": "INSTRUMENT",
+      "page": 1,
+      "bbox": {
+        "x0": 0.122675,
+        "y0": 0.252675,
+        "x1": 0.177325,
+        "y1": 0.277675
+      },
+      "text": "PT-101",
+      "parsed": {
+        "parse_status": "PARTIAL",
+        "normalised_tag": "PT-101",
+        "measured_variable": "P",
+        "function_letters": "T",
+        "loop_number": "101",
+        "suffix": ""
+      },
+      "confidence": 0.7,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.122675,
+            "y0": 0.252675,
+            "x1": 0.177325,
+            "y1": 0.277675
+          },
+          "text": "PT-101"
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-cb51d6ce73574416",
+      "class": "PUMP",
+      "page": 1,
+      "bbox": {
+        "x0": 0.5344333,
+        "y0": 0.277675,
+        "x1": 0.5789,
+        "y1": 0.302675
+      },
+      "text": "P-201",
+      "parsed": {
+        "parse_status": "PARSED",
+        "normalised_tag": "P-201",
+        "suffix": ""
+      },
+      "confidence": 0.76,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.5344333,
+            "y0": 0.277675,
+            "x1": 0.5789,
+            "y1": 0.302675
+          },
+          "text": "P-201"
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-cb862b033fdf7ff5",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.72,
+        "y0": 0.515,
+        "x1": 0.7202,
+        "y1": 0.6575
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.72,
+            "y0": 0.515,
+            "x1": 0.7202,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-0423cd8def5039aa",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.3,
+        "y0": 0.6275,
+        "x1": 0.33,
+        "y1": 0.6575
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.3,
+            "y0": 0.6275,
+            "x1": 0.33,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-ada24ae4677ebc33",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.3,
+        "y0": 0.6275,
+        "x1": 0.3002,
+        "y1": 0.6875
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.3,
+            "y0": 0.6275,
+            "x1": 0.3002,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-69a5d449c79e783b",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.33,
+        "y0": 0.6275,
+        "x1": 0.36,
+        "y1": 0.6575
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.33,
+            "y0": 0.6275,
+            "x1": 0.36,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-0d386920fe9c6e81",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.36,
+        "y0": 0.6275,
+        "x1": 0.3602,
+        "y1": 0.6875
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.36,
+            "y0": 0.6275,
+            "x1": 0.3602,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-a4d0505701e7bcbc",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.69,
+        "y0": 0.6275,
+        "x1": 0.6902,
+        "y1": 0.6875
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.69,
+            "y0": 0.6275,
+            "x1": 0.6902,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-e1f10f2ac44253d2",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.69,
+        "y0": 0.6275,
+        "x1": 0.72,
+        "y1": 0.6575
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.69,
+            "y0": 0.6275,
+            "x1": 0.72,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-03d35b7a4d70f491",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.72,
+        "y0": 0.6275,
+        "x1": 0.75,
+        "y1": 0.6575
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.72,
+            "y0": 0.6275,
+            "x1": 0.75,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-1ee15a58669da02d",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.75,
+        "y0": 0.6275,
+        "x1": 0.7502,
+        "y1": 0.6875
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.75,
+            "y0": 0.6275,
+            "x1": 0.7502,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-7b97ec3198839a8a",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.2233333,
+        "y0": 0.6575,
+        "x1": 0.3,
+        "y1": 0.6577
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.2233333,
+            "y0": 0.6575,
+            "x1": 0.3,
+            "y1": 0.6577
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-210c1b7ceebc9b6d",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.3,
+        "y0": 0.6575,
+        "x1": 0.33,
+        "y1": 0.6875
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.3,
+            "y0": 0.6575,
+            "x1": 0.33,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-e5d185b14c723d14",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.33,
+        "y0": 0.6575,
+        "x1": 0.36,
+        "y1": 0.6875
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.33,
+            "y0": 0.6575,
+            "x1": 0.36,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-2861b7214177e715",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.36,
+        "y0": 0.6575,
+        "x1": 0.4366667,
+        "y1": 0.6577
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.36,
+            "y0": 0.6575,
+            "x1": 0.4366667,
+            "y1": 0.6577
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-9ed622400dfc68dc",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.6133333,
+        "y0": 0.6575,
+        "x1": 0.69,
+        "y1": 0.6577
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.6133333,
+            "y0": 0.6575,
+            "x1": 0.69,
+            "y1": 0.6577
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-e87055f3335e9d43",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.69,
+        "y0": 0.6575,
+        "x1": 0.72,
+        "y1": 0.6875
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.69,
+            "y0": 0.6575,
+            "x1": 0.72,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-462bf3c9ba654111",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.72,
+        "y0": 0.6575,
+        "x1": 0.75,
+        "y1": 0.6875
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.72,
+            "y0": 0.6575,
+            "x1": 0.75,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-31763fdc96401ecf",
+      "class": "LINE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.75,
+        "y0": 0.6575,
+        "x1": 0.8266667,
+        "y1": 0.6577
+      },
+      "text": "",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.38,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.75,
+            "y0": 0.6575,
+            "x1": 0.8266667,
+            "y1": 0.6577
+          },
+          "text": ""
+        }
+      ],
+      "attributes": {}
+    },
+    {
+      "id": "obj-afdc663450d92107",
+      "class": "NOTE",
+      "page": 1,
+      "bbox": {
+        "x0": 0.0583333,
+        "y0": 0.897675,
+        "x1": 0.6113167,
+        "y1": 0.922675
+      },
+      "text": "One stemmed-valve style and one ordinary bow-tie style. All are proposals.",
+      "parsed": {
+        "parse_status": "UNPARSED"
+      },
+      "confidence": 0.5,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.0583333,
+            "y0": 0.897675,
+            "x1": 0.6113167,
+            "y1": 0.922675
+          },
+          "text": "One stemmed-valve style and one ordinary bow-tie style. All are proposals."
+        }
+      ],
+      "attributes": {}
+    }
+  ],
+  "connections": [
+    {
+      "id": "con-0732032334e55ae1",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-1ee15a58669da02d"
+      },
+      "to": {
+        "object_id": "obj-462bf3c9ba654111"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.75,
+          0.6275
+        ],
+        [
+          0.72,
+          0.6575
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.72,
+            "y0": 0.6275,
+            "x1": 0.75,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-0cba1e1372c761b3",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-69a5d449c79e783b"
+      },
+      "to": {
+        "object_id": "obj-2861b7214177e715"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.33,
+          0.6275
+        ],
+        [
+          0.4366667,
+          0.6575
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.33,
+            "y0": 0.6275,
+            "x1": 0.4366667,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-1472936215684bbe",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-210c1b7ceebc9b6d"
+      },
+      "to": {
+        "object_id": "obj-7b97ec3198839a8a"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.33,
+          0.6875
+        ],
+        [
+          0.2233333,
+          0.6575
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.2233333,
+            "y0": 0.6575,
+            "x1": 0.33,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-55ba02f2e7352f63",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-462bf3c9ba654111"
+      },
+      "to": {
+        "object_id": "obj-cb862b033fdf7ff5"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.75,
+          0.6875
+        ],
+        [
+          0.72,
+          0.515
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.72,
+            "y0": 0.515,
+            "x1": 0.75,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-66e8ccb220a6dafc",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-e1f10f2ac44253d2"
+      },
+      "to": {
+        "object_id": "obj-cb862b033fdf7ff5"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.69,
+          0.6275
+        ],
+        [
+          0.72,
+          0.515
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.69,
+            "y0": 0.515,
+            "x1": 0.72,
+            "y1": 0.6275
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-8d071c34e0622c2e",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-0423cd8def5039aa"
+      },
+      "to": {
+        "object_id": "obj-e5d185b14c723d14"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.3,
+          0.6275
+        ],
+        [
+          0.36,
+          0.6875
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.3,
+            "y0": 0.6275,
+            "x1": 0.36,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-a3891558a590e0ed",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-a4d0505701e7bcbc"
+      },
+      "to": {
+        "object_id": "obj-e1f10f2ac44253d2"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.69,
+          0.6875
+        ],
+        [
+          0.72,
+          0.6575
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.69,
+            "y0": 0.6575,
+            "x1": 0.72,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-a9a080d5cd687776",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-e1f10f2ac44253d2"
+      },
+      "to": {
+        "object_id": "obj-462bf3c9ba654111"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.69,
+          0.6275
+        ],
+        [
+          0.75,
+          0.6875
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.69,
+            "y0": 0.6275,
+            "x1": 0.75,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-ad1b5cd52a71f5d0",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-03d35b7a4d70f491"
+      },
+      "to": {
+        "object_id": "obj-31763fdc96401ecf"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.72,
+          0.6275
+        ],
+        [
+          0.8266667,
+          0.6575
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.72,
+            "y0": 0.6275,
+            "x1": 0.8266667,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-b93a45a5ad48ec0d",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-e87055f3335e9d43"
+      },
+      "to": {
+        "object_id": "obj-9ed622400dfc68dc"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.72,
+          0.6875
+        ],
+        [
+          0.6133333,
+          0.6575
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.6133333,
+            "y0": 0.6575,
+            "x1": 0.72,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-e2241658a4472d1c",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-0d386920fe9c6e81"
+      },
+      "to": {
+        "object_id": "obj-e5d185b14c723d14"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.36,
+          0.6275
+        ],
+        [
+          0.33,
+          0.6575
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.33,
+            "y0": 0.6275,
+            "x1": 0.36,
+            "y1": 0.6575
+          },
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "con-eff1f434c31087b1",
+      "type": "UNKNOWN",
+      "from": {
+        "object_id": "obj-ada24ae4677ebc33"
+      },
+      "to": {
+        "object_id": "obj-0423cd8def5039aa"
+      },
+      "direction": "UNKNOWN",
+      "polyline": [
+        [
+          0.3,
+          0.6875
+        ],
+        [
+          0.33,
+          0.6575
+        ]
+      ],
+      "confidence": 0.32,
+      "status": "UNVERIFIED",
+      "evidence": [
+        {
+          "page": 1,
+          "bbox": {
+            "x0": 0.3,
+            "y0": 0.6575,
+            "x1": 0.33,
+            "y1": 0.6875
+          },
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "loop_proposals": [],
+  "shared_component_evidence": [],
+  "unreadable_regions": [
+    {
+      "id": "reg-5c74292349698bf9",
+      "page": 1,
+      "bbox": {
+        "x0": 0,
+        "y0": 0,
+        "x1": 1,
+        "y1": 1
+      },
+      "code": "SYMBOLS_NOT_INTERPRETED",
+      "message": "Graphic symbols and curved paths on this source page may be outside current recognition scope."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "OTHER",
+      "page": 1,
+      "message": "This build detects native text and straight vector strokes only; symbols and many line relationships remain unread."
+    }
+  ],
+  "summary": {
+    "counts_by_class": {
+      "INSTRUMENT": 1,
+      "LINE": 17,
+      "NOTE": 3,
+      "PUMP": 1,
+      "VESSEL": 1
+    },
+    "object_count": 23,
+    "connection_count": 12,
+    "duplicate_tags": [],
+    "tags_without_object": 0,
+    "objects_without_tag": 0,
+    "dangling_connections": 0
+  }
+}

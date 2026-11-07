@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standalone P&ID linework/valve hypotheses v1 (not Worksheet R1)",
+  "type": "object",
+  "required": ["schema", "algorithm", "source_sha256", "extraction_sha256", "topology_sha256", "symbol_sha256", "selected_pages", "valve_candidates", "valve_port_candidates", "stroke_roles", "mixed_style_contacts", "limitations", "result_sha256"],
+  "properties": {
+    "schema": {"const": "pid-reader-standalone-linework-v1"},
+    "algorithm": {"const": "vector-linework-proposals-0.1"},
+    "source_sha256": {"$ref": "#/$defs/sha"},
+    "extraction_sha256": {"$ref": "#/$defs/sha"},
+    "topology_sha256": {"$ref": "#/$defs/sha"},
+    "symbol_sha256": {"$ref": "#/$defs/sha"},
+    "result_sha256": {"$ref": "#/$defs/sha"},
+    "selected_pages": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 1}, "uniqueItems": true},
+    "valve_candidates": {"type": "array", "items": {"$ref": "#/$defs/valve"}},
+    "valve_port_candidates": {"type": "array", "items": {"$ref": "#/$defs/port"}},
+    "stroke_roles": {"type": "array", "items": {"$ref": "#/$defs/stroke"}},
+    "mixed_style_contacts": {"type": "array", "items": {"$ref": "#/$defs/contact"}},
+    "limitations": {"type": "string", "minLength": 10}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "point": {"type": "array", "prefixItems": [{"type":"number","minimum":0,"maximum":1},{"type":"number","minimum":0,"maximum":1}], "items": false, "minItems":2, "maxItems":2},
+    "bbox": {"type":"object", "required":["x0","y0","x1","y1"],"properties":{"x0":{"type":"number","minimum":0,"maximum":1},"y0":{"type":"number","minimum":0,"maximum":1},"x1":{"type":"number","minimum":0,"maximum":1},"y1":{"type":"number","minimum":0,"maximum":1}},"additionalProperties":false},
+    "valve": {"type":"object", "required":["id","page","kind","orientation","centre","bbox","evidence_segment_ids","status","limitations"],"properties":{"id":{"type":"string"},"page":{"type":"integer","minimum":1},"kind":{"const":"BOWTIE_VALVE_GEOMETRY_CANDIDATE"},"orientation":{"enum":["HORIZONTAL_AXIS","VERTICAL_AXIS"]},"centre":{"$ref":"#/$defs/point"},"bbox":{"$ref":"#/$defs/bbox"},"evidence_segment_ids":{"type":"array","minItems":6,"maxItems":6,"uniqueItems":true,"items":{"type":"string"}},"status":{"const":"PROPOSED_UNVERIFIED"},"limitations":{"type":"string"}},"additionalProperties":false},
+    "port": {"type":"object", "required":["id","page","valve_id","side","segment_id","endpoint_index","point","status","limitations"],"properties":{"id":{"type":"string"},"page":{"type":"integer","minimum":1},"valve_id":{"type":"string"},"side":{"enum":["LEFT","RIGHT","TOP","BOTTOM"]},"segment_id":{"type":"string"},"endpoint_index":{"type":"integer","minimum":0,"maximum":1},"point":{"$ref":"#/$defs/point"},"status":{"const":"PROPOSED_UNVERIFIED"},"limitations":{"type":"string"}},"additionalProperties":false},
+    "stroke": {"type":"object", "required":["id","page","segment_id","drawing_style","role","status","limitations"],"properties":{"id":{"type":"string"},"page":{"type":"integer","minimum":1},"segment_id":{"type":"string"},"drawing_style":{"enum":["SOLID_OR_UNKNOWN","DASHED_OR_DOTTED"]},"role":{"enum":["VALVE_GLYPH_STROKE","SIGNAL_STYLE_CANDIDATE","SOLID_UNCLASSIFIED_LINEWORK"]},"status":{"const":"PROPOSED_UNVERIFIED"},"limitations":{"type":"string"}},"additionalProperties":false},
+    "contact": {"type":"object", "required":["id","page","contact_id","roles","status","limitations"],"properties":{"id":{"type":"string"},"page":{"type":"integer","minimum":1},"contact_id":{"type":"string"},"roles":{"type":"array","items":{"type":"string"},"minItems":2,"maxItems":2},"status":{"const":"UNRESOLVED"},"limitations":{"type":"string"}},"additionalProperties":false}
+  }
+}

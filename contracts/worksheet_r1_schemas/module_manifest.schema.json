@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "module_manifest.schema.json",
+  "title": "module.json of the P&ID reader module",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "version", "summary", "python", "platform", "host", "entry_points", "capabilities", "object_classes", "bulk_accept_blocked_classes", "dependencies", "models", "limits", "error_codes", "schema_versions", "evidence"],
+  "properties": {
+    "name": {"const": "pid_reader"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+([-+][0-9A-Za-z.-]+)?$"},
+    "summary": {"type": "string", "minLength": 10, "maxLength": 300},
+    "python": {"const": "3.12"},
+    "platform": {"const": "win_amd64"},
+    "host": {"type": "object", "additionalProperties": false, "required": ["contract_min", "contract_max", "schema_min", "qt"],
+             "properties": {"contract_min": {"type": "string", "pattern": "^R[0-9]+$"}, "contract_max": {"type": ["string", "null"]}, "schema_min": {"type": "integer", "minimum": 23}, "qt": {"const": "PySide6==6.12.0"}}},
+    "entry_points": {"type": "object", "additionalProperties": false, "required": ["library", "worker", "migration", "ui"],
+                     "properties": {"library": {"const": "pid_reader.api:read_pid"}, "worker": {"const": "pid_reader.worker"}, "migration": {"type": "string"}, "ui": {"type": "string"}}},
+    "capabilities": {"type": "array", "items": {"enum": ["READ_PDF_VECTOR", "READ_PDF_RASTER_OCR", "SYMBOL_RECOGNITION", "CONNECTIVITY", "LOOP_PROPOSALS", "TITLE_BLOCK", "LEGEND_ADAPTATION", "DIFF", "OPTIONAL_REMOTE_MODEL"]}, "uniqueItems": true},
+    "object_classes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "bulk_accept_blocked_classes": {"type": "array", "items": {"type": "string"}, "description": "Classes that failed their owner-set threshold (L03)."},
+    "dependencies": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["package", "version", "licence", "source", "wheel_sha256", "used_for"],
+                                               "properties": {"package": {"type": "string"}, "version": {"type": "string"}, "licence": {"type": "string"}, "source": {"type": "string"}, "wheel_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "used_for": {"type": "string"}}}},
+    "models": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "sha256", "licence", "training_data_provenance", "model_card"],
+                                          "properties": {"id": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "licence": {"type": "string"}, "training_data_provenance": {"type": "string"}, "model_card": {"type": "string"}}}},
+    "limits": {"type": "object", "additionalProperties": false, "required": ["max_pdf_bytes", "max_pages", "max_render_pixels", "max_objects_per_run", "max_stored_result_bytes", "peak_memory_mb", "seconds_per_page_reference", "reference_pc"],
+               "properties": {"max_pdf_bytes": {"type": "integer", "maximum": 16777216}, "max_pages": {"type": "integer", "maximum": 500}, "max_render_pixels": {"type": "integer", "maximum": 12000000},
+                              "max_objects_per_run": {"type": "integer"}, "max_stored_result_bytes": {"type": "integer"}, "peak_memory_mb": {"type": "integer"}, "seconds_per_page_reference": {"type": "number"}, "reference_pc": {"type": "string"}}},
+    "error_codes": {"type": "array", "items": {"type": "string", "pattern": "^PID_[A-Z0-9_]+$"}, "uniqueItems": true},
+    "schema_versions": {"type": "object", "additionalProperties": false, "required": ["reads", "writes"], "properties": {"reads": {"type": "array", "items": {"type": "integer"}}, "writes": {"type": "integer"}}},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["benchmark_report_id", "independent_run", "thresholds_record"],
+                 "properties": {"benchmark_report_id": {"type": ["string", "null"]}, "independent_run": {"enum": ["NOT_RUN", "DONE"]}, "thresholds_record": {"type": ["string", "null"]}}}
+  }
+}

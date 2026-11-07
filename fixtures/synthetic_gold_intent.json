@@ -1,0 +1,11 @@
+{
+  "fixture": "synthetic_pid_vector.pdf",
+  "purpose": "synthetic development demonstrations only",
+  "expected_visible_tags": [
+    "V-101",
+    "PT-101",
+    "XV-201",
+    "P-102A"
+  ],
+  "known_limitations": "Visual valve geometry, loops and actual physical connectivity require specialist algorithms; do not assume the initial reader will infer them."
+}

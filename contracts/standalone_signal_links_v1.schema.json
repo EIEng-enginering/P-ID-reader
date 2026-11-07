@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standalone signal hypotheses (not Worksheet R1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "algorithm",
+    "source_sha256",
+    "extraction_sha256",
+    "topology_sha256",
+    "symbol_sha256",
+    "linework_sha256",
+    "candidates",
+    "limitations",
+    "result_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pid-reader-standalone-signal-links-v1"
+    },
+    "algorithm": {
+      "const": "signal-outline-hypotheses-0.1"
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "extraction_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "topology_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "symbol_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "linework_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "limitations": {
+      "type": "string"
+    },
+    "candidates": {
+      "type": "array",
+      "maxItems": 8000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "page",
+          "segment_id",
+          "segment_style",
+          "endpoint_index",
+          "point",
+          "symbol_id",
+          "symbol_bbox",
+          "candidate_kind",
+          "association_state",
+          "review_state",
+          "limitations"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "segment_id": {
+            "type": "string"
+          },
+          "segment_style": {
+            "const": "DASHED_OR_DOTTED"
+          },
+          "endpoint_index": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "point": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "symbol_id": {
+            "type": "string"
+          },
+          "symbol_bbox": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "x0",
+              "y0",
+              "x1",
+              "y1"
+            ],
+            "properties": {
+              "x0": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "y0": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "x1": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "y1": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "candidate_kind": {
+            "const": "SIGNAL_STYLE_ENDPOINT_TO_INSTRUMENT_OUTLINE"
+          },
+          "association_state": {
+            "enum": [
+              "ONE_OUTLINE",
+              "ALTERNATIVE_OUTLINES"
+            ]
+          },
+          "review_state": {
+            "const": "PROPOSED_UNVERIFIED"
+          },
+          "limitations": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

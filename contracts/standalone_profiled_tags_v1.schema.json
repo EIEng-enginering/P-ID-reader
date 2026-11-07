@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standalone project-specific tag interpretations",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "algorithm",
+    "source_sha256",
+    "text_link_sha256",
+    "tag_profile_sha256",
+    "tag_profile",
+    "entries",
+    "limitations",
+    "result_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pid-reader-standalone-profiled-tags-v1"
+    },
+    "algorithm": {
+      "const": "versioned-tag-profile-0.1"
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "text_link_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "tag_profile_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "tag_profile": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "separators",
+        "digit_min",
+        "digit_max",
+        "suffix_max",
+        "prefix_classes"
+      ]
+    },
+    "limitations": {
+      "type": "string"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "proposal_id",
+          "symbol_id",
+          "alternatives",
+          "review_state"
+        ],
+        "properties": {
+          "proposal_id": {
+            "type": "string"
+          },
+          "symbol_id": {
+            "type": "string"
+          },
+          "review_state": {
+            "const": "PROPOSED_UNVERIFIED"
+          },
+          "alternatives": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "source_text",
+                "source_proposal_id",
+                "class_hypotheses"
+              ],
+              "properties": {
+                "source_text": {
+                  "type": "string"
+                },
+                "source_proposal_id": {
+                  "type": "string"
+                },
+                "class_hypotheses": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "text",
+                      "prefix",
+                      "separator",
+                      "number",
+                      "suffix",
+                      "class_proposal"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/pid-reader/standalone-symbols-v1.schema.json",
+  "title": "Standalone evidence-linked symbol and outline-port proposals",
+  "description": "Never represents confirmed engineering or plant connectivity. Separate from frozen Worksheet R1 payload.",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "algorithm", "source_sha256", "extraction_sha256", "topology_sha256", "selected_pages", "symbol_candidates", "port_candidates", "limitations", "result_sha256"],
+  "properties": {
+    "schema": {"const": "pid-reader-standalone-symbols-v1"},
+    "algorithm": {"const": "vector-symbol-proposals-0.1"},
+    "source_sha256": {"$ref": "#/$defs/sha"},
+    "extraction_sha256": {"$ref": "#/$defs/sha"},
+    "topology_sha256": {"$ref": "#/$defs/sha"},
+    "selected_pages": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1, "maximum": 500}},
+    "symbol_candidates": {"type": "array", "maxItems": 12000, "items": {"$ref": "#/$defs/symbol"}},
+    "port_candidates": {"type": "array", "maxItems": 24000, "items": {"$ref": "#/$defs/port"}},
+    "limitations": {"type": "string", "minLength": 20},
+    "result_sha256": {"$ref": "#/$defs/sha"}
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "bbox": {"type": "object", "additionalProperties": false,
+      "required": ["x0", "y0", "x1", "y1"],
+      "properties": {"x0": {"type": "number", "minimum": 0, "maximum": 1}, "y0": {"type": "number", "minimum": 0, "maximum": 1}, "x1": {"type": "number", "minimum": 0, "maximum": 1}, "y1": {"type": "number", "minimum": 0, "maximum": 1}}},
+    "point": {"type": "array", "minItems": 2, "maxItems": 2, "prefixItems": [{"type": "number", "minimum": 0, "maximum": 1}, {"type": "number", "minimum": 0, "maximum": 1}], "items": false},
+    "symbol": {"type": "object", "additionalProperties": false,
+      "required": ["id", "page", "shape_id", "outline_kind", "candidate_class", "bbox", "tag_object_ids", "text_association", "status", "evidence", "limitations"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^sym-[a-f0-9]{16}$"},
+        "page": {"type": "integer", "minimum": 1},
+        "shape_id": {"type": "string", "pattern": "^shape-[a-f0-9]{16}$"},
+        "outline_kind": {"enum": ["RECTANGULAR_OUTLINE", "CLOSED_NEAR_CIRCULAR_OUTLINE"]},
+        "candidate_class": {"enum": ["INSTRUMENT_BUBBLE_CANDIDATE", "EQUIPMENT_OUTLINE_CANDIDATE", "AMBIGUOUS_OUTLINE", "UNCLASSIFIED_OUTLINE"]},
+        "bbox": {"$ref": "#/$defs/bbox"},
+        "tag_object_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^obj-[a-f0-9]{16}$"}},
+        "text_association": {"enum": ["SINGLE_TEXT_CENTRE_OVERLAP", "MULTIPLE_TEXT_CANDIDATES", "NO_TAG_CENTRE_OVERLAP"]},
+        "status": {"const": "PROPOSED_UNVERIFIED"},
+        "evidence": {"type": "object", "additionalProperties": false,
+          "required": ["shape_id", "tag_object_ids"],
+          "properties": {"shape_id": {"type": "string"}, "tag_object_ids": {"type": "array", "items": {"type": "string"}}}},
+        "limitations": {"type": "string", "minLength": 20}
+      }
+    },
+    "port": {"type": "object", "additionalProperties": false,
+      "required": ["id", "page", "symbol_id", "segment_id", "segment_endpoint_index", "point", "status", "limitations"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^port-[a-f0-9]{16}$"},
+        "page": {"type": "integer", "minimum": 1},
+        "symbol_id": {"type": "string", "pattern": "^sym-[a-f0-9]{16}$"},
+        "segment_id": {"type": "string", "pattern": "^stroke-[a-f0-9]{16}$"},
+        "segment_endpoint_index": {"type": "integer", "enum": [0, 1]},
+        "point": {"$ref": "#/$defs/point"},
+        "status": {"const": "PROPOSED_UNVERIFIED"},
+        "limitations": {"type": "string", "minLength": 20}
+      }
+    }
+  }
+}

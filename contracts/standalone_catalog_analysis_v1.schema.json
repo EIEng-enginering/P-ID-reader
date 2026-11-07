@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standalone Rev N symbol catalogue analysis proposals",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "algorithm",
+    "source_sha256",
+    "extraction_sha256",
+    "topology_sha256",
+    "symbol_sha256",
+    "linework_sha256",
+    "catalogue_sha256",
+    "catalogue_name",
+    "catalogue_revision",
+    "candidates",
+    "limitations",
+    "result_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pid-reader-standalone-catalog-analysis-v1"
+    },
+    "algorithm": {
+      "const": "conservative-vector-template-matching-0.1"
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "extraction_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "topology_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "symbol_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "linework_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "catalogue_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "catalogue_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 250
+    },
+    "catalogue_revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 250
+    },
+    "limitations": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 250
+    },
+    "candidates": {
+      "type": "array",
+      "maxItems": 20000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "page",
+          "bbox",
+          "template_id",
+          "candidate_class",
+          "basis",
+          "evidence",
+          "state",
+          "limitations"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 250
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500
+          },
+          "bbox": {
+            "type": "object",
+            "required": [
+              "x0",
+              "x1",
+              "y0",
+              "y1"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "x0": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "x1": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "y0": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "y1": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "template_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 250
+          },
+          "candidate_class": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 250
+          },
+          "basis": {
+            "enum": [
+              "TAG_AND_OUTLINE",
+              "SIX_STROKE_GLYPH",
+              "VALVE_CIRCLE_STEM_COMBINATION"
+            ]
+          },
+          "evidence": {
+            "type": "object"
+          },
+          "state": {
+            "const": "PROPOSED_UNVERIFIED"
+          },
+          "limitations": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 250
+          }
+        }
+      }
+    }
+  }
+}

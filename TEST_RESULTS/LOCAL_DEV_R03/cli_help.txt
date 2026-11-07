@@ -1,0 +1,10 @@
+usage: pid-reader [-h]
+                  {init-project,import-pdf,list,show,connections,review,export,inspect-dxf,ocr-preview,analyze-topology,topology-candidates,review-topology,analyze-symbols,symbol-candidates,review-symbol,backup-project,gui} ...
+
+Evidence-first P&ID reader development CLI
+
+positional arguments:
+  {init-project,import-pdf,list,show,connections,review,export,inspect-dxf,ocr-preview,analyze-topology,topology-candidates,review-topology,analyze-symbols,symbol-candidates,review-symbol,backup-project,gui}
+
+options:
+  -h, --help            show this help message and exit

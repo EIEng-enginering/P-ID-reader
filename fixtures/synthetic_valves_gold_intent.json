@@ -1,0 +1,13 @@
+{
+  "purpose": "Human-authored test intent only; not an independent benchmark",
+  "expected_shape_count": 2,
+  "expected_valve_port_candidates": 4,
+  "expected_orientations": [
+    "HORIZONTAL_AXIS",
+    "VERTICAL_AXIS"
+  ],
+  "negative_case": "Plain X crossing without two rails is not a valve",
+  "line_style_policy": "Dashed strokes are signal-style PROPOSALS only; solid linework has unknown engineering role",
+  "graph_policy": "Crossings are not traversable without reviewed CONNECTED_AS_DRAWN decisions",
+  "engineering_status": "Synthetic geometry test; no physical plant representation"
+}

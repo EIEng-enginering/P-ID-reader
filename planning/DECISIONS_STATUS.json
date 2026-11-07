@@ -1,0 +1,43 @@
+{
+  "stage1": {
+    "questions": "Q1-Q10",
+    "selected_option": "A",
+    "status": "APPROVED"
+  },
+  "stage2": {
+    "questions": "Q11-Q20",
+    "selected_option": "A",
+    "status": "APPROVED"
+  },
+  "stage3": {
+    "questions": "Q21-Q30",
+    "selected_option": "A",
+    "status": "APPROVED"
+  },
+  "stage4": {
+    "questions": "Q31-Q40",
+    "selected_option": "A",
+    "status": "APPROVED"
+  },
+  "stage5": {
+    "questions": "Q41-Q50",
+    "selected_option": "A",
+    "status": "APPROVED",
+    "approved_date": "2026-11-07",
+    "authority": "Owner approval of all recommended development defaults and standing autonomous development mandate in conversation"
+  },
+  "autonomous_development": {
+    "status": "APPROVED_WITH_BOUNDARIES",
+    "scope": "All 50 design decisions; in-scope local coding, tests, technical choices and incremental work packages",
+    "review_policy": "One final finished-product review; no per-WP owner approval",
+    "does_not_authorise": [
+      "new charges",
+      "private-source data disclosure",
+      "destructive or protected Git operations",
+      "changes to the live Worksheet host",
+      "breaking R1 contract",
+      "independent engineering validation claims",
+      "tool/OS permission bypass"
+    ]
+  }
+}

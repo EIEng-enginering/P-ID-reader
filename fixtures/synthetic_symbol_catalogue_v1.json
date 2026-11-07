@@ -1,0 +1,99 @@
+{
+  "schema": "pid-reader-standalone-catalog-v1",
+  "catalogue_name": "Synthetic generic vector templates",
+  "revision": "1",
+  "licence": "Original synthetic definitions",
+  "templates": [
+    {
+      "template_id": "instrument-bubble",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "INSTRUMENT_BUBBLE_STYLE",
+      "outline_shape": "CLOSED_NEAR_CIRCULAR_OUTLINE",
+      "source_classes": [
+        "INSTRUMENT"
+      ]
+    },
+    {
+      "template_id": "pump-circle-tagged",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "PUMP_CIRCULAR_OUTLINE_STYLE",
+      "outline_shape": "CLOSED_NEAR_CIRCULAR_OUTLINE",
+      "source_classes": [
+        "PUMP"
+      ]
+    },
+    {
+      "template_id": "pump-rect-tagged",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "PUMP_RECTANGULAR_OUTLINE_STYLE",
+      "outline_shape": "RECTANGULAR_OUTLINE",
+      "source_classes": [
+        "PUMP"
+      ]
+    },
+    {
+      "template_id": "vessel-rect-tagged",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "VESSEL_RECTANGULAR_OUTLINE_STYLE",
+      "outline_shape": "RECTANGULAR_OUTLINE",
+      "source_classes": [
+        "VESSEL"
+      ]
+    },
+    {
+      "template_id": "tank-rect-tagged",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "TANK_RECTANGULAR_OUTLINE_STYLE",
+      "outline_shape": "RECTANGULAR_OUTLINE",
+      "source_classes": [
+        "TANK"
+      ]
+    },
+    {
+      "template_id": "column-rect-tagged",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "COLUMN_RECTANGULAR_OUTLINE_STYLE",
+      "outline_shape": "RECTANGULAR_OUTLINE",
+      "source_classes": [
+        "COLUMN"
+      ]
+    },
+    {
+      "template_id": "compressor-rect-tagged",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "COMPRESSOR_RECTANGULAR_OUTLINE_STYLE",
+      "outline_shape": "RECTANGULAR_OUTLINE",
+      "source_classes": [
+        "COMPRESSOR"
+      ]
+    },
+    {
+      "template_id": "exchanger-rect-tagged",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "EXCHANGER_RECTANGULAR_OUTLINE_STYLE",
+      "outline_shape": "RECTANGULAR_OUTLINE",
+      "source_classes": [
+        "HEAT_EXCHANGER"
+      ]
+    },
+    {
+      "template_id": "filter-rect-tagged",
+      "feature": "TAGGED_OUTLINE",
+      "candidate_class": "FILTER_RECTANGULAR_OUTLINE_STYLE",
+      "outline_shape": "RECTANGULAR_OUTLINE",
+      "source_classes": [
+        "FILTER"
+      ]
+    },
+    {
+      "template_id": "bowtie-six-stroke",
+      "feature": "BOWTIE_VALVE",
+      "candidate_class": "GENERIC_BOWTIE_VALVE_STYLE"
+    },
+    {
+      "template_id": "bowtie-with-stem-circle",
+      "feature": "BOWTIE_STEM_CIRCLE",
+      "candidate_class": "VALVE_WITH_STEM_CIRCLE_STYLE"
+    }
+  ]
+}

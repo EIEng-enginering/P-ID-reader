@@ -1,0 +1,24 @@
+{
+ "$schema":"https://json-schema.org/draft/2020-12/schema",
+ "title":"Standalone source-linked dashed stroke path (not a control loop)",
+ "type":"object",
+ "required":["schema","source_sha256","extraction_sha256","topology_sha256","linework_sha256","signal_sha256","review_snapshot_sha256","start_segment_id","include_unreviewed","max_hops","segments","contacts","instrument_outline_endpoints","limitations","result_sha256"],
+ "properties":{
+   "schema":{"const":"pid-reader-standalone-signal-path-v1"},
+   "source_sha256":{"$ref":"#/$defs/hash"},
+   "extraction_sha256":{"$ref":"#/$defs/hash"},
+   "topology_sha256":{"$ref":"#/$defs/hash"},
+   "linework_sha256":{"$ref":"#/$defs/hash"},
+   "signal_sha256":{"$ref":"#/$defs/hash"},
+   "review_snapshot_sha256":{"$ref":"#/$defs/hash"},
+   "start_segment_id":{"type":"string","minLength":1},
+   "include_unreviewed":{"type":"boolean"},
+   "max_hops":{"type":"integer","minimum":0,"maximum":60},
+   "segments":{"type":"array","maxItems":3000,"items":{"type":"object","required":["segment_id","page","endpoints","hops"]}},
+   "contacts":{"type":"array","maxItems":7000,"items":{"type":"object","required":["contact_id","from_segment_id","to_segment_id","state","point"]}},
+   "instrument_outline_endpoints":{"type":"array","items":{"type":"object","required":["candidate_id","symbol_id","segment_id","page","point","state"]}},
+   "limitations":{"type":"string","minLength":1},
+   "result_sha256":{"$ref":"#/$defs/hash"}
+ },
+ "$defs":{"hash":{"type":"string","pattern":"^[a-f0-9]{64}$"}}
+}

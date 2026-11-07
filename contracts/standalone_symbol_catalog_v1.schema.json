@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standalone Rev N evidence-based symbol template catalogue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "catalogue_name",
+    "revision",
+    "licence",
+    "templates"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pid-reader-standalone-catalog-v1"
+    },
+    "catalogue_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "licence": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180
+    },
+    "templates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "template_id",
+              "feature",
+              "candidate_class",
+              "outline_shape",
+              "source_classes"
+            ],
+            "properties": {
+              "template_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{2,63}$"
+              },
+              "feature": {
+                "const": "TAGGED_OUTLINE"
+              },
+              "candidate_class": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+              },
+              "outline_shape": {
+                "enum": [
+                  "RECTANGULAR_OUTLINE",
+                  "CLOSED_NEAR_CIRCULAR_OUTLINE"
+                ]
+              },
+              "source_classes": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 16,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "VESSEL",
+                    "TANK",
+                    "COLUMN",
+                    "HEAT_EXCHANGER",
+                    "PUMP",
+                    "COMPRESSOR",
+                    "FILTER",
+                    "VALVE_MANUAL",
+                    "VALVE_CONTROL",
+                    "VALVE_ONOFF",
+                    "VALVE_CHECK",
+                    "PSV",
+                    "RUPTURE_DISC",
+                    "INSTRUMENT",
+                    "OTHER",
+                    "UNKNOWN"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "template_id",
+              "feature",
+              "candidate_class"
+            ],
+            "properties": {
+              "template_id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9-]{2,63}$"
+              },
+              "feature": {
+                "enum": [
+                  "BOWTIE_VALVE",
+                  "BOWTIE_STEM_CIRCLE"
+                ]
+              },
+              "candidate_class": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

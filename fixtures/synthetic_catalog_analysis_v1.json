@@ -1,0 +1,148 @@
+{
+  "schema": "pid-reader-standalone-catalog-analysis-v1",
+  "algorithm": "conservative-vector-template-matching-0.1",
+  "source_sha256": "1a8708e0a4aecc1366085a1c023b8aebb7fa40260f055fb40e6d476d764f435d",
+  "extraction_sha256": "c8d528550fda0d8d7629b3726713b285b3e9f1fde660e707525647130407a837",
+  "topology_sha256": "7314ddb4994ff505835c8418e51693ef5f30f953ffdc7f75ec0fa1b3221ef8e3",
+  "symbol_sha256": "698b788b83cf25cf452877b6554315e67679c7c616fb13473843d26cc7d30308",
+  "linework_sha256": "f7b1b0e29e76abc207a1aa6a8c9942e3449cc339b9c479c40fa8e5cd10b9e90e",
+  "catalogue_sha256": "ad0ad62b4e0502544165cb16e1dc907a9fc26c10ed12def26007443a3687366a",
+  "catalogue_name": "Synthetic generic vector templates",
+  "catalogue_revision": "1",
+  "candidates": [
+    {
+      "id": "catalog-candidate-5d4e1db4026df233",
+      "page": 1,
+      "bbox": {
+        "x0": 0.1133333,
+        "y0": 0.2075,
+        "x1": 0.1866667,
+        "y1": 0.3175
+      },
+      "template_id": "instrument-bubble",
+      "candidate_class": "INSTRUMENT_BUBBLE_STYLE",
+      "basis": "TAG_AND_OUTLINE",
+      "evidence": {
+        "symbol_id": "sym-a2f29e7fec947a1a",
+        "shape_id": "shape-62071dc1cda133f7",
+        "tag_object_id": "obj-756ea5adef6cd2f7"
+      },
+      "state": "PROPOSED_UNVERIFIED",
+      "limitations": "Symbol template/style match on drawing only; not proven equipment or valve function."
+    },
+    {
+      "id": "catalog-candidate-5f56d5c41dbec3f8",
+      "page": 1,
+      "bbox": {
+        "x0": 0.69,
+        "y0": 0.6275,
+        "x1": 0.75,
+        "y1": 0.6875
+      },
+      "template_id": "bowtie-six-stroke",
+      "candidate_class": "GENERIC_BOWTIE_VALVE_STYLE",
+      "basis": "SIX_STROKE_GLYPH",
+      "evidence": {
+        "valve_id": "vshape-f929ee7ab4cfb006",
+        "stroke_ids": [
+          "stroke-274c57f04fbc5338",
+          "stroke-2f502db573b963e7",
+          "stroke-5de9328e0d5ee09f",
+          "stroke-66833c9c070b5421",
+          "stroke-b1f6623931a5e7eb",
+          "stroke-fadcb46b21c57c16"
+        ]
+      },
+      "state": "PROPOSED_UNVERIFIED",
+      "limitations": "Symbol template/style match on drawing only; not proven equipment or valve function."
+    },
+    {
+      "id": "catalog-candidate-6df7e2a013fd2efc",
+      "page": 1,
+      "bbox": {
+        "x0": 0.2833333,
+        "y0": 0.205,
+        "x1": 0.4166667,
+        "y1": 0.33
+      },
+      "template_id": "vessel-rect-tagged",
+      "candidate_class": "VESSEL_RECTANGULAR_OUTLINE_STYLE",
+      "basis": "TAG_AND_OUTLINE",
+      "evidence": {
+        "symbol_id": "sym-8da8c4c65e4ea2f3",
+        "shape_id": "shape-54d8012064a4508f",
+        "tag_object_id": "obj-85e849417472f388"
+      },
+      "state": "PROPOSED_UNVERIFIED",
+      "limitations": "Symbol template/style match on drawing only; not proven equipment or valve function."
+    },
+    {
+      "id": "catalog-candidate-879276eebc54ca91",
+      "page": 1,
+      "bbox": {
+        "x0": 0.69,
+        "y0": 0.45,
+        "x1": 0.75,
+        "y1": 0.6875
+      },
+      "template_id": "bowtie-with-stem-circle",
+      "candidate_class": "VALVE_WITH_STEM_CIRCLE_STYLE",
+      "basis": "VALVE_CIRCLE_STEM_COMBINATION",
+      "evidence": {
+        "valve_id": "vshape-f929ee7ab4cfb006",
+        "actuator_shape_id": "shape-e27dae87a31a365f",
+        "stem_segment_id": "stroke-37cdea4f2add549a"
+      },
+      "state": "PROPOSED_UNVERIFIED",
+      "limitations": "Symbol template/style match on drawing only; not proven equipment or valve function."
+    },
+    {
+      "id": "catalog-candidate-9951d38046780ad4",
+      "page": 1,
+      "bbox": {
+        "x0": 0.5166667,
+        "y0": 0.2275,
+        "x1": 0.5966667,
+        "y1": 0.3475
+      },
+      "template_id": "pump-circle-tagged",
+      "candidate_class": "PUMP_CIRCULAR_OUTLINE_STYLE",
+      "basis": "TAG_AND_OUTLINE",
+      "evidence": {
+        "symbol_id": "sym-398f2063302a7990",
+        "shape_id": "shape-15c2d848e247ed9d",
+        "tag_object_id": "obj-cb51d6ce73574416"
+      },
+      "state": "PROPOSED_UNVERIFIED",
+      "limitations": "Symbol template/style match on drawing only; not proven equipment or valve function."
+    },
+    {
+      "id": "catalog-candidate-ddbd4cb2270f0d89",
+      "page": 1,
+      "bbox": {
+        "x0": 0.3,
+        "y0": 0.6275,
+        "x1": 0.36,
+        "y1": 0.6875
+      },
+      "template_id": "bowtie-six-stroke",
+      "candidate_class": "GENERIC_BOWTIE_VALVE_STYLE",
+      "basis": "SIX_STROKE_GLYPH",
+      "evidence": {
+        "valve_id": "vshape-1490378c2a085ae1",
+        "stroke_ids": [
+          "stroke-080c19049bf3a1d0",
+          "stroke-298eb74657738249",
+          "stroke-47570fd43f8e2c02",
+          "stroke-6fef1f025b656335",
+          "stroke-872931d09bbada4d",
+          "stroke-db8bf73fa1a7730c"
+        ]
+      },
+      "state": "PROPOSED_UNVERIFIED",
+      "limitations": "Symbol template/style match on drawing only; not proven equipment or valve function."
+    }
+  ],
+  "limitations": "Training-free vector and tag matching only; no model was trained or executed. Templates do not validate physical equipment identity, plant state, signal function, IPL or SIL.",
+  "result_sha256": "3af8fb12a37ceca2e7e66a9502d8466b18f2086f51d640ff8612fbd360196f13"
+}

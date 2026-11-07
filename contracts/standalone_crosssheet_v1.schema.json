@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Standalone explicitly annotated drawing reference candidates (not plant connectivity)",
+  "type": "object",
+  "required": [
+    "schema",
+    "algorithm",
+    "selected_extractions",
+    "source_hashes",
+    "annotation_ids",
+    "candidates",
+    "limitations",
+    "result_sha256",
+    "drawing_catalogue_snapshot"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pid-reader-standalone-crosssheet-v1"
+    },
+    "algorithm": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selected_extractions": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 500,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "source_hashes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      }
+    },
+    "annotation_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "label_key",
+          "from_annotation_id",
+          "to_annotation_id",
+          "from_extraction_id",
+          "to_extraction_id",
+          "from_source_sha256",
+          "to_source_sha256",
+          "state",
+          "ambiguity",
+          "limitations"
+        ]
+      }
+    },
+    "limitations": {
+      "type": "string",
+      "minLength": 1
+    },
+    "result_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "drawing_catalogue_snapshot": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "registration_id",
+          "drawing_no",
+          "revision_label",
+          "facility",
+          "area",
+          "document_sha256"
+        ]
+      }
+    }
+  }
+}

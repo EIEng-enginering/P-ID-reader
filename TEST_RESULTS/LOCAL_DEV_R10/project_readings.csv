@@ -1,0 +1,20 @@
+DRAWING READINGS ONLY - NO PLANT VERIFICATION
+drawing_no,revision_label,source_name,document_sha256,page,object_class,tag_text,state,reviewed_by,observation_id
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,,PROPOSED,,obs-0a4843e66093b26d933567bf
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,,PROPOSED,,obs-117d21fd5e63bf7b03450340
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,,PROPOSED,,obs-2f69f120bcf702743967cf5d
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,,PROPOSED,,obs-31910ae2e93c6b6d005142ad
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,,PROPOSED,,obs-5a7533856266cda86daf0508
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,,PROPOSED,,obs-5e460bb58f8da144bf3a96d4
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,,PROPOSED,,obs-cfe4d0df948149a0850eb710
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,,PROPOSED,,obs-df4ea4b59fbea14ebb871684
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,LINE,"6""-P-1501-A1A",PROPOSED,,obs-d705218dc821fc1b827b2021
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,NOTE,DRAWING: SYN-PID-001,PROPOSED,,obs-5aaa72fc0dba1dd8d7e9f4a7
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,NOTE,NOTE 1: This drawing is a synthetic benchmark fixture only.,PROPOSED,,obs-2b0fce7575f7d8ee14504105
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,PUMP,P-102A,PROPOSED,,obs-f7c2dc217c999e5f50b963c8
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,INSTRUMENT,PT-101,PROPOSED,,obs-7781c881075c6963a15d3d6b
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,NOTE,REV: A,PROPOSED,,obs-3235d3d0f70670ff84d210fc
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,NOTE,SHEET: 1 OF 1,PROPOSED,,obs-28a380069ae0da7068b5ecf7
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,NOTE,SYNTHETIC P&ID / NOT AN OPERATING FACILITY,PROPOSED,,obs-16d2e685a55204d172b6d437
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,VESSEL,V-101,PROPOSED,,obs-f4e77f97d401371645bbf303
+,,synthetic_pid_vector.pdf,e15744911708b2367afc835d357440c8f06f1d54b54b9fec6e0f8e8f997bce23,1,VALVE_ONOFF,XV-201,PROPOSED,,obs-3c2ea096a46d27b5784dc2a2

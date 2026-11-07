@@ -1,0 +1,21 @@
+test_a_box_outside_the_page_or_inverted_is_refused (test_check_extraction.RuleTests.test_a_box_outside_the_page_or_inverted_is_refused) ... ok
+test_a_connection_to_nothing_is_refused (test_check_extraction.RuleTests.test_a_connection_to_nothing_is_refused) ... ok
+test_a_number_attribute_must_be_a_verbatim_string (test_check_extraction.RuleTests.test_a_number_attribute_must_be_a_verbatim_string) ... ok
+test_a_refused_page_needs_a_code_and_holds_no_objects (test_check_extraction.RuleTests.test_a_refused_page_needs_a_code_and_holds_no_objects) ... ok
+test_an_object_must_stay_unverified (test_check_extraction.RuleTests.test_an_object_must_stay_unverified) ... ok
+test_an_unknown_class_is_refused (test_check_extraction.RuleTests.test_an_unknown_class_is_refused) ... ok
+test_missing_evidence_is_refused (test_check_extraction.RuleTests.test_missing_evidence_is_refused) ... ok
+test_module_text_cannot_say_verified_but_may_deny_it (test_check_extraction.RuleTests.test_module_text_cannot_say_verified_but_may_deny_it) ... ok
+test_summary_counts_must_match (test_check_extraction.RuleTests.test_summary_counts_must_match) ... ok
+test_text_printed_on_the_drawing_is_exempt (test_check_extraction.RuleTests.test_text_printed_on_the_drawing_is_exempt) ... ok
+test_the_absence_statement_is_required (test_check_extraction.RuleTests.test_the_absence_statement_is_required) ... ok
+test_the_loop_statement_cannot_be_changed_into_a_claim (test_check_extraction.RuleTests.test_the_loop_statement_cannot_be_changed_into_a_claim) ... ok
+test_a_tampered_result_is_caught_by_its_hash (test_check_extraction.SampleTests.test_a_tampered_result_is_caught_by_its_hash) ... ok
+test_ids_are_deterministic_and_ignore_float_noise (test_check_extraction.SampleTests.test_ids_are_deterministic_and_ignore_float_noise) ... ok
+test_run_fields_do_not_change_the_result_hash_but_content_does (test_check_extraction.SampleTests.test_run_fields_do_not_change_the_result_hash_but_content_does) ... ok
+test_the_sample_passes_and_both_hash_rules_agree (test_check_extraction.SampleTests.test_the_sample_passes_and_both_hash_rules_agree) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.015s
+
+OK

@@ -1,0 +1,106 @@
+%PDF-1.3
+%“Œ‹ž ReportLab Generated PDF document (opensource)
+1 0 obj
+<<
+/F1 2 0 R /F2 3 0 R
+>>
+endobj
+2 0 obj
+<<
+/BaseFont /Helvetica /Encoding /WinAnsiEncoding /Name /F1 /Subtype /Type1 /Type /Font
+>>
+endobj
+3 0 obj
+<<
+/BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding /Name /F2 /Subtype /Type1 /Type /Font
+>>
+endobj
+4 0 obj
+<<
+/Contents 8 0 R /MediaBox [ 0 0 640 400 ] /Parent 7 0 R /Resources <<
+/Font 1 0 R /ProcSet [ /PDF /Text /ImageB /ImageC /ImageI ]
+>> /Rotate 0 /Trans <<
+
+>> 
+  /Type /Page
+>>
+endobj
+5 0 obj
+<<
+/PageMode /UseNone /Pages 7 0 R /Type /Catalog
+>>
+endobj
+6 0 obj
+<<
+/Author (anonymous) /CreationDate (D:20000101000000+00'00') /Creator (anonymous) /Keywords () /ModDate (D:20000101000000+00'00') /Producer (ReportLab PDF Library - \(opensource\)) 
+  /Subject (unspecified) /Title (Synthetic Rev O Comparison B - Not Plant Evidence) /Trapped /False
+>>
+endobj
+7 0 obj
+<<
+/Count 1 /Kids [ 4 0 R ] /Type /Pages
+>>
+endobj
+8 0 obj
+<<
+/Length 931
+>>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+BT /F2 14 Tf 16.8 TL ET
+BT 1 0 0 1 32 364 Tm (SYNTHETIC P&ID - REV B - TEST ONLY) Tj T* ET
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 32 345 Tm (CONTROLLED DRAWING REVISION TEST: NOT A VERIFIED FACILITY) Tj T* ET
+BT /F2 12 Tf 14.4 TL ET
+n
+167 205 m
+167 217.1503 157.1503 227 145 227 c
+132.8497 227 123 217.1503 123 205 c
+123 192.8497 132.8497 183 145 183 c
+157.1503 183 167 192.8497 167 205 c
+S
+n 22 205 m 123 205 l S
+n 167 205 m 480 205 l S
+BT 1 0 0 1 128.992 160 Tm (P-101) Tj T* ET
+n
+343 270 m
+343 278.8366 335.8366 286 327 286 c
+318.1634 286 311 278.8366 311 270 c
+311 261.1634 318.1634 254 327 254 c
+335.8366 254 343 261.1634 343 270 c
+S
+BT /F1 9 Tf 10.8 TL ET
+BT 1 0 0 1 312.2445 266 Tm (PT-201) Tj T* ET
+[4 4] 0 d
+n 327 254 m 327 205 l S
+[] 0 d
+BT 1 0 0 1 486 207 Tm (V-301) Tj T* ET
+BT /F1 10 Tf 12 TL ET
+BT 1 0 0 1 32 60 Tm (DRAWING EVIDENCE ONLY - ALL CONNECTIONS ARE UNVERIFIED) Tj T* ET
+ 
+endstream
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000061 00000 n 
+0000000102 00000 n 
+0000000209 00000 n 
+0000000321 00000 n 
+0000000514 00000 n 
+0000000582 00000 n 
+0000000884 00000 n 
+0000000943 00000 n 
+trailer
+<<
+/ID 
+[<99ed9c31ae4ee836eb30a5e62e96d0ff><99ed9c31ae4ee836eb30a5e62e96d0ff>]
+% ReportLab generated PDF document -- digest (opensource)
+
+/Info 6 0 R
+/Root 5 0 R
+/Size 9
+>>
+startxref
+1924
+%%EOF
