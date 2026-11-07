@@ -51,3 +51,9 @@ engineering-validated. Gate vocabulary: `PASS` (executed, evidence kept), `FAIL`
 6. Connectivity paths mean "ink joins two outlines in this drawing", never verified piping, flow, valve state or loops. No instrument-loop, off-page or flow-direction inference.
 7. Resource limits are not a security sandbox. Binaries are unsigned. Installer untested on a clean second machine.
 8. Synthetic benchmark numbers are saturated regression checks on drawings produced by this repository's generator.
+
+## 4. Update after real-sheet testing (7 Nov 2026, later session)
+* Sheet S023 (public TransCanada P&ID, outlined lettering): named instrument tags 0 → **13** (tiled high-resolution OCR, OCR on text-poor vector sheets, stacked bubble-text assembly, per-bubble magnified re-read). All 13 checked by eye against the render; **not** an independent measurement and **one sheet only**.
+* Still failing on S023: **no valves** (filled/curved glyphs), no line-number records (`NPS 20`…), equipment blocks (heater, manifolds) not read as equipment, no flow direction, no loops, title block/tables not parsed.
+* Reports now include analysis layers, findings, proposed connectivity, all OCR words and an annotated drawing image (HTML); JSON has the same data without images.
+* Full-library run (608 sheets) was started and **stopped after 15 sheets** by the owner; throughput lesson: OCR processes must be thread-limited (`PID_OCR_THREADS`) — three unrestricted OCR engines on four cores ran ~7× slower than one.
