@@ -221,3 +221,22 @@ def test_window_larger_than_screen_is_fitted(qapp, tmp_path):
     assert w.width() <= max(area.width(), w.minimumSizeHint().width()) + 2
     w.close()
 
+
+
+def test_saved_but_missing_ocr_engine_falls_back_to_automatic(qapp, tmp_path):
+    from PySide6.QtCore import QSettings
+    from pid_reader.formats.ocr_source import available_engines
+    from pid_reader.ui import main_window as mw
+    QSettings.setDefaultFormat(QSettings.Format.IniFormat)
+    QSettings.setPath(QSettings.Format.IniFormat, QSettings.Scope.UserScope, str(tmp_path / 'qs2'))
+    s = QSettings(mw.ORG, mw.APP)
+    s.clear()
+    missing = next((e for e in ('tesseract', 'rapidocr') if e not in available_engines()), None)
+    if missing is None:
+        pytest.skip('both OCR engines are installed')
+    s.setValue('ocr_engine', missing)
+    w = mw.MainWindow(str(tmp_path / 'o.sqlite'))
+    assert w.ocr_engine() == 'auto'
+    s.setValue('ocr_engine', 'off')
+    assert w.ocr_engine() == 'off'
+    w.close()

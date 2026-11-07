@@ -196,6 +196,9 @@ def read_pid_standalone(pdf_bytes: bytes, params: ReadParams, cancel: CancelToke
     from ..formats.pdf_source import _parse_tag, _make_obj
     if ocr_engine == "auto" and not available_engines():
         return base  # visible refusal stays; the UI explains that no OCR engine is installed
+    if ocr_engine in ("tesseract", "rapidocr") and ocr_engine not in available_engines():
+        raise RefusedInput("PID_OCR_ENGINE_UNAVAILABLE",
+                           f"The {ocr_engine} OCR engine is not installed on this computer.")
     ocr = ocr_pdf_preview(pdf_bytes, pages=tuple(sorted(set(refused) | set(sparse))), engine=ocr_engine)
     if cancel:
         cancel.check()

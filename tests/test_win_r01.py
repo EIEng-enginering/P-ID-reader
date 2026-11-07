@@ -723,3 +723,26 @@ def test_cli_prints_ocr_text_even_if_console_codepage_cannot_encode_it(tmp_path,
         assert json.loads(text.strip().splitlines()[-1])['sheet_fields']
     finally:
         sys.stdout = old
+
+
+# ---- missing OCR engine: clear refusal instead of "exit 4" ------------------------
+
+@pytest.mark.skipif('tesseract' in ocr_source.available_engines(), reason='Tesseract is installed here')
+def test_unavailable_ocr_engine_is_refused_with_a_clear_message_not_exit_4():
+    from pid_reader.api import RefusedInput
+    from pid_reader.engineering.isolation import read_pid_isolated
+    from pid_reader.engineering.standalone_read import read_pid_standalone
+    scanned = _scanned_pdf()
+    with pytest.raises(RefusedInput) as direct:
+        read_pid_standalone(scanned, ReadParams(), filename='scan.pdf', ocr_engine='tesseract')
+    assert direct.value.code == 'PID_OCR_ENGINE_UNAVAILABLE'
+    with pytest.raises(RefusedInput) as isolated:
+        read_pid_isolated(scanned, ReadParams(), filename='scan.pdf', ocr_engine='tesseract')
+    assert isolated.value.code == 'PID_OCR_ENGINE_UNAVAILABLE'
+    assert 'Tools' in str(isolated.value) and 'OCR engine' in str(isolated.value)
+
+
+def test_vector_sheet_needs_no_ocr_engine_even_if_unavailable_one_is_selected():
+    from pid_reader.engineering.standalone_read import read_pid_standalone
+    result = read_pid_standalone((FIX / 'synthetic_pid_vector.pdf').read_bytes(), ReadParams(), filename='v.pdf', ocr_engine='tesseract')
+    assert result['pages'][0]['read_status'] == 'READ'

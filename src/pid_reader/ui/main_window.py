@@ -144,7 +144,16 @@ class MainWindow(QMainWindow):
         return name
 
     def ocr_engine(self) -> str:
-        return self.settings.value("ocr_engine", "auto", str)
+        """Saved choice, but never an engine that is not installed (that makes scanned sheets fail)."""
+        saved = self.settings.value("ocr_engine", "auto", str)
+        if saved in ("tesseract", "rapidocr"):
+            from ..formats.ocr_source import available_engines
+            if saved not in available_engines():
+                if not getattr(self, "_warned_engine", False):
+                    self._warned_engine = True
+                    self.statusBar().showMessage(f"The {saved} OCR engine is not installed; using Automatic instead.", 15000)
+                return "auto"
+        return saved
 
     def settings_set(self, key: str, value) -> None:
         self.settings.setValue(key, value)
@@ -412,9 +421,13 @@ class MainWindow(QMainWindow):
         act(m, "Reviewer &name…", self.set_reviewer)
         om = m.addMenu("&OCR engine for scanned pages")
         grp = QActionGroup(self)
+        from ..formats.ocr_source import available_engines
+        installed = set(available_engines())
         for label, val in (("Automatic (Tesseract if installed, else RapidOCR)", "auto"), ("RapidOCR (bundled)", "rapidocr"),
                            ("Tesseract", "tesseract"), ("Off (refuse scanned pages)", "off")):
-            a = QAction(label, self, checkable=True)
+            missing = val in ("tesseract", "rapidocr") and val not in installed
+            a = QAction(label + (" \u2014 not installed" if missing else ""), self, checkable=True)
+            a.setEnabled(not missing)
             a.setChecked(self.ocr_engine() == val)
             a.triggered.connect(lambda _=False, v=val: self.settings.setValue("ocr_engine", v))
             grp.addAction(a)

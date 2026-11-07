@@ -288,15 +288,32 @@ def read_pid_isolated(pdf_bytes: bytes, params: ReadParams, *, filename: str = "
                 raise RefusedInput("PID_MALFORMED", "Worker output failed independent structural and hash checks.") from exc
             return result
         if code == EXIT_LIMIT:
-            raise LimitExceeded(event.get("code", "PID_LIMIT"), "Reader limit exceeded.")
+            raise LimitExceeded(event.get("code", "PID_LIMIT"), _explain(event.get("code", "PID_LIMIT"), "Reader limit exceeded."))
         if code == EXIT_REFUSED:
-            raise RefusedInput(event.get("code", "PID_MALFORMED"), "Reader refused the input.")
+            raise RefusedInput(event.get("code", "PID_MALFORMED"), _explain(event.get("code", "PID_MALFORMED"), "Reader refused the input."))
         if code == EXIT_CANCELLED:
             raise Cancelled()
-        raise LimitExceeded("PID_WORKER_FAILED",
-                            f"Reader process ended abnormally (exit {code}); the input may exceed memory limits.")
+        kind = event.get("kind") if event.get("event") == "error" else None
+        if kind == "MemoryError":
+            raise LimitExceeded("PID_MEMORY", f"The reader ran out of memory (limit {memory_mb} MB). The sheet may be too large.")
+        detail = f"internal error: {kind}" if kind else "no error detail was reported"
+        raise LimitExceeded("PID_WORKER_FAILED", f"Reader process ended abnormally (exit {code}; {detail}).")
     finally:
         shutil.rmtree(root, ignore_errors=True)
+
+
+_EXPLANATIONS = {
+    "PID_OCR_ENGINE_UNAVAILABLE": "The chosen OCR engine is not installed. Open Tools \u2192 OCR engine and choose Automatic or RapidOCR.",
+    "PID_NO_TEXT_LAYER": "This page is an image and OCR is switched off. Choose an OCR engine under Tools \u2192 OCR engine.",
+    "PID_LIMIT_BYTES": "The PDF is larger than the 16 MB limit.",
+    "PID_LIMIT_PAGES": "The PDF has more pages than the limit allows.",
+    "PID_ENCRYPTED": "The PDF is password protected.",
+    "PID_MALFORMED": "The file could not be read as a PDF.",
+}
+
+
+def _explain(code: str, default: str) -> str:
+    return _EXPLANATIONS.get(code, default)
 
 
 def memory_cap_enforced() -> bool:
