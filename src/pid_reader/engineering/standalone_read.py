@@ -36,7 +36,7 @@ def _rapid_models() -> list[dict]:
 
 
 _FUNCTION_FIRST = "PFTLAZHSWJX"
-_FUNCTION_REST = set("ITCRYSHLAEDQZVKXMOGFP")
+_FUNCTION_REST = set("ITCRYSHLAEDQZVKXMOGFPBWNUJ")
 _NOT_FUNCTIONS = {"HOLD", "VENT", "NEW", "LINE", "NPS", "PLC", "SCADA", "CELL", "TITLE", "SIZE", "MAKE", "MODEL",
                   "FAIL", "NOTE", "REV", "DATE", "SET", "POINT", "TBD", "ABOVE", "BELOW", "GROUND", "EXISTING"}
 SPARSE_WORDS = 120          # a vector sheet with fewer text words than this ...
@@ -99,6 +99,86 @@ def _stacked_instrument_tags(words: list[dict]) -> list[dict]:
     return out
 
 
+BUBBLE_AREA = (1.2e-4, 3.0e-3)     # normalised page area of a plausible instrument bubble
+
+
+def _valid_function(text: str) -> bool:
+    return (2 <= len(text) <= 5 and text.isalpha() and text.isupper() and text not in _NOT_FUNCTIONS
+            and text[0] in _FUNCTION_FIRST and set(text[1:]) <= _FUNCTION_REST)
+
+
+def _tag_from_bubble_lines(texts: list[str]) -> tuple[str, str, str] | None:
+    """(function letters, number, tag) from the text lines read inside one bubble, or None."""
+    import re
+    lines = [t.strip().upper() for t in texts if t.strip()]
+    for t in lines:
+        m = re.fullmatch(r"([A-Z]{2,5})[\s-]?(\d{2,4}[A-Z]?)", t)
+        if m and _valid_function(m.group(1)):
+            return m.group(1), m.group(2), f"{m.group(1)}-{m.group(2)}"
+    for i, t in enumerate(lines[:-1]):
+        n = lines[i + 1]
+        if _valid_function(t) and re.fullmatch(r"\d{2,4}[A-Z]?", n):
+            return t, n, f"{t}-{n}"
+    return None
+
+
+def _bubble_pass(pdf_bytes: bytes, page_number: int, existing: list[dict]) -> list[dict]:
+    """Re-read each instrument-bubble-sized circle on its own, cropped and magnified.
+
+    Whole-sheet OCR loses small stacked lettering; a tight crop upscaled to a legible size recovers
+    many tags. Needs vector geometry (circle outlines), so it applies to text-poor vector sheets only.
+    Returns tag proposals ``{text, func, num, bbox, score}``; nothing is accepted automatically.
+    """
+    import numpy as np
+    import pypdfium2 as pdfium
+    from PIL import Image
+    from ..formats.ocr_source import _rapid_engine
+    from .topology import analyze_pdf_topology
+    try:
+        geometry = analyze_pdf_topology(pdf_bytes, pages=(page_number,))
+    except Exception:
+        return []
+    bubbles = []
+    for shape in geometry["shape_candidates"]:
+        b = shape["bbox"]
+        area = (b["x1"] - b["x0"]) * (b["y1"] - b["y0"])
+        if shape["shape"] == "CLOSED_NEAR_CIRCULAR_OUTLINE" and BUBBLE_AREA[0] <= area <= BUBBLE_AREA[1]:
+            bubbles.append(b)
+    if not bubbles:
+        return []
+    page = pdfium.PdfDocument(pdf_bytes)[page_number - 1]
+    w, h = page.get_size()
+    page_img = page.render(scale=min(6.0, 6500.0 / max(w, h))).to_pil().convert("L")
+    iw, ih = page_img.size
+    engine = _rapid_engine()
+    taken = {o["text"] for o in existing if o["page"] == page_number}
+    found = []
+    for b in bubbles:
+        cx, cy = (b["x0"] + b["x1"]) / 2, (b["y0"] + b["y1"]) / 2
+        if any(o["page"] == page_number and o["class"] == "INSTRUMENT" and
+               b["x0"] <= (o["bbox"]["x0"] + o["bbox"]["x1"]) / 2 <= b["x1"] and
+               b["y0"] <= (o["bbox"]["y0"] + o["bbox"]["y1"]) / 2 <= b["y1"] for o in existing):
+            continue                                       # this bubble is already tagged
+        padx, pady = (b["x1"] - b["x0"]) * 0.2, (b["y1"] - b["y0"]) * 0.2
+        box = (int((b["x0"] - padx) * iw), int((b["y0"] - pady) * ih), int((b["x1"] + padx) * iw), int((b["y1"] + pady) * ih))
+        crop = page_img.crop(box)
+        if crop.height < 8 or crop.width < 8:
+            continue
+        factor = max(1.0, 220.0 / crop.height)
+        crop = crop.resize((int(crop.width * factor), int(crop.height * factor)), Image.LANCZOS)
+        canvas = Image.new("L", (crop.width + 60, crop.height + 60), 255)
+        canvas.paste(crop, (30, 30))
+        res, _t = engine(np.asarray(canvas.convert("RGB")))
+        lines = sorted(res or [], key=lambda r: min(p[1] for p in r[0]))
+        hit = _tag_from_bubble_lines([r[1] for r in lines])
+        if not hit or hit[2] in taken:
+            continue
+        taken.add(hit[2])
+        score = min(float(r[2]) for r in lines) if lines else 0.0
+        found.append({"text": hit[2], "func": hit[0], "num": hit[1], "bbox": dict(b), "score": score})
+    return found
+
+
 def read_pid_standalone(pdf_bytes: bytes, params: ReadParams, cancel: CancelToken | None = None, *,
                         document_revision_id: str = "", filename: str = "", expected_sha256: str = "",
                         ocr_engine: str | None = "auto") -> dict:
@@ -151,6 +231,19 @@ def read_pid_standalone(pdf_bytes: bytes, params: ReadParams, cancel: CancelToke
                 seen.add(obj["id"])
                 result["objects"].append(obj)
                 count += 1
+        if engine_name == "rapidocr" and number in sparse and number not in refused:
+            for bt in _bubble_pass(pdf_bytes, number, result["objects"]):
+                letters = bt["func"]
+                parsed = {"parse_status": "PARTIAL", "normalised_tag": bt["text"], "measured_variable": letters[0],
+                          "function_letters": letters[1:], "loop_number": bt["num"], "suffix": ""}
+                obj = _make_obj("INSTRUMENT", number, dict(bt["bbox"]), bt["text"], parsed,
+                                round(min(0.45, max(0.05, bt["score"])), 3),
+                                {"source": "OCR", "ocr_engine": engine_name, "bubble_crop": "true",
+                                 "raw_ocr_score": f"{bt['score']:.4f}"})
+                if obj["id"] not in seen:
+                    seen.add(obj["id"])
+                    result["objects"].append(obj)
+                    count += 1
         for word in page_entry["words"]:
             cls, parsed, conf = _parse_tag(word["text"])
             if cls == "NOTE" or word["text"] in native_texts:

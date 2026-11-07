@@ -421,3 +421,15 @@ def test_report_includes_analysis_layers_and_connectivity(tmp_path):
             assert needle in html
         assert 'Valves / line styles' in html
         assert make_report(db, include_analysis=False)['analysis'] == []
+
+
+def test_tag_from_bubble_lines_accepts_stacked_and_single_line_forms_only():
+    from pid_reader.engineering.standalone_read import _tag_from_bubble_lines as t
+    assert t(["0", "PIT", "100"]) == ("PIT", "100", "PIT-100")        # leading loop-number zero ignored
+    assert t(["ZSC", "201"])[2] == "ZSC-201"
+    assert t(["PIC 102"])[2] == "PIC-102"
+    assert t(["FBV", "200"])[2] == "FBV-200"
+    assert t(["IF"]) is None                                          # symbol label, no number
+    assert t(["HOLD", "100"]) is None                                 # not an instrument function
+    assert t(["NEW", "2015"]) is None
+    assert t([]) is None
