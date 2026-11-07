@@ -80,7 +80,7 @@ def validate_ocr_source(ocr: dict, extraction: dict) -> list[str]:
             if (not isinstance(text, str) or not text.strip() or len(text) > 1000
                 or not _valid_box(box) or type(word.get("page")) is not int
                 or word["page"] != page["page"] or word.get("review_state") != "PROPOSED"
-                or word.get("engine") != "local_tesseract"
+                or word.get("engine") not in OCR_ENGINES
                 or type(score) not in (float, int) or not isfinite(score) or not 0 <= score <= 1):
                 issues.append("Invalid OCR word contents or geometry")
                 continue
@@ -89,6 +89,9 @@ def validate_ocr_source(ocr: dict, extraction: dict) -> list[str]:
                 issues.append("OCR word identity invalid or duplicated")
             seen.add(word["id"])
     return issues
+
+
+OCR_ENGINES = ("local_tesseract", "local_rapidocr")
 
 
 def _group_words(words: list[dict]) -> list[dict]:
@@ -150,6 +153,7 @@ def build_text_links(extraction: dict, symbols: dict, ocr: dict) -> dict:
         if not _valid_box(bbox) or shape.get("status") != "PROPOSED_UNVERIFIED":
             raise ValueError("Malformed or reviewed symbol proposal supplied")
         # OCR words may originate in a scan that has no native text at all.
+        ocr_method = "OCR_RAPIDOCR" if str(ocr.get("algorithm", "")).startswith("rapidocr") else "OCR_TESSERACT"
         relevant = [w for w in by_page[shape["page"]] if _contained(w["bbox"], bbox)]
         variants = {}
         unparsed_ocr = []
@@ -166,7 +170,7 @@ def build_text_links(extraction: dict, symbols: dict, ocr: dict) -> dict:
         for part in _group_words(relevant):
             key = part["text"].upper().replace(" ", "")
             if TAG_STYLE.fullmatch(key):
-                variants.setdefault(key, []).append({"method": "OCR_TESSERACT", "word_ids": part["source_ids"], "bbox": part["bbox"]})
+                variants.setdefault(key, []).append({"method": ocr_method, "word_ids": part["source_ids"], "bbox": part["bbox"]})
             else:
                 unparsed_ocr.append({"text": part["text"], "word_ids": part["source_ids"], "bbox": part["bbox"]})
         options = []

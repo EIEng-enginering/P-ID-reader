@@ -23,6 +23,7 @@ def main(argv: list[str] | None = None) -> int:
     exp=sub.add_parser("export");exp.add_argument("database");exp.add_argument("extraction_id");exp.add_argument("destination")
     dxf=sub.add_parser("inspect-dxf"); dxf.add_argument("dxf"); dxf.add_argument("--output-json")
     ocr=sub.add_parser("ocr-preview"); ocr.add_argument("pdf"); ocr.add_argument("--output-json")
+    ocr.add_argument("--engine",choices=("auto","tesseract","rapidocr"),default="auto",help="Offline OCR engine (auto: Tesseract if installed else RapidOCR)")
     topo=sub.add_parser("analyze-topology");topo.add_argument("database");topo.add_argument("extraction_id");topo.add_argument("--output-json")
     cand=sub.add_parser("topology-candidates");cand.add_argument("database");cand.add_argument("analysis_id");cand.add_argument("--kind",default="");cand.add_argument("--limit",type=int,default=100)
     trev=sub.add_parser("review-topology");trev.add_argument("database");trev.add_argument("candidate_id")
@@ -50,6 +51,7 @@ def main(argv: list[str] | None = None) -> int:
     oi=sub.add_parser("import-ocr");oi.add_argument("database");oi.add_argument("extraction_id")
     oi.add_argument("--ocr-json",help="Existing standalone OCR result; otherwise run local Tesseract on embedded source")
     oi.add_argument("--output-json")
+    oi.add_argument("--engine",choices=("auto","tesseract","rapidocr"),default="auto")
     ol=sub.add_parser("ocr-words");ol.add_argument("database");ol.add_argument("analysis_id")
     ol.add_argument("--text",default="");ol.add_argument("--limit",type=int,default=200)
     tl=sub.add_parser("analyze-text-links");tl.add_argument("database");tl.add_argument("extraction_id")
@@ -149,7 +151,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.cmd=="ocr-preview":
             from .formats.ocr_source import ocr_pdf_preview
-            result=ocr_pdf_preview(Path(args.pdf).read_bytes())
+            result=ocr_pdf_preview(Path(args.pdf).read_bytes(),engine=args.engine)
             text=canonical_json(result)
             if args.output_json:
                 Path(args.output_json).write_text(text,encoding="utf-8")
@@ -216,7 +218,7 @@ def main(argv: list[str] | None = None) -> int:
                 else:
                     source=db.get_source_pdf(extraction["document"]["sha256"])
                     if source is None:raise ValueError("Embedded PDF source bytes are required")
-                    result=ocr_pdf_preview(source,pages=tuple(x["page"] for x in extraction["pages"]))
+                    result=ocr_pdf_preview(source,pages=tuple(x["page"] for x in extraction["pages"]),engine=args.engine)
                 aid=db.add_ocr_analysis(args.extraction_id,result)
                 if args.output_json:Path(args.output_json).write_text(canonical_json(result),encoding="utf-8")
                 print(canonical_json({"analysis_id":aid,"words":sum(len(p["words"]) for p in result["pages"])}))
