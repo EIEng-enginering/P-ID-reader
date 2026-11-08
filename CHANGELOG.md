@@ -20,3 +20,8 @@
 - Added: teach-by-example symbol finder (additive tables, audited review, Findings layer, viewer teach mode), sheet-information extractor, reading checks and loop groups, Excel export, canonical graph JSON (validated against the spec schema) and GraphML, Sheet info tab, report sections, CLI commands.
 - Fixed: raster-layer row-limit crash in report/workbook/GUI; console encoding crash on OCR characters.
 - Tests: 327 passing, 6 skipped (Tesseract binary absent, symlink privilege).
+
+## Fix: scanned sheet failed with "PID_WORKER_FAILED (exit 4)" (9 Nov 2026)
+- Cause: the saved OCR engine was Tesseract, which is not installed; scanned sheets need OCR so the reader process crashed, and the message hid the reason.
+- Now: an uninstalled engine is refused with a clear message (`PID_OCR_ENGINE_UNAVAILABLE`); the app falls back to Automatic when the saved engine is missing and greys out missing engines in Tools → OCR engine; unexpected reader errors report the exception type (`PID_MEMORY` for out-of-memory).
+- Verified: full suite 331 passed / 6 skipped; S333 imports in the app with the Tesseract setting saved (18 readings).
