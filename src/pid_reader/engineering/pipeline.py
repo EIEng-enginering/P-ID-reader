@@ -488,6 +488,14 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
     except Exception as exc:
         recorder.end("doc_text", "FAILED", f"{type(exc).__name__}: {exc}")
     run_id = None
+    r5: dict = {}
+    from . import r5_features
+    if r5_features.mode("PAGE_FRAME") != r5_features.OFF:
+        try:                                    # provenance only: reads page metadata, never rescales or re-reads any geometry
+            from ..formats.page_provenance import read_pdf_provenance
+            r5["page_provenance"] = read_pdf_provenance(source)
+        except Exception as exc:                # a metadata failure must never hide the analysis
+            r5["page_provenance"] = {"status": "FAILED", "error": f"{type(exc).__name__}: {exc}", "pages": []}
     progress("record", _W_START["record"], "Saving the analysis run")
     if record:
         try:
@@ -497,7 +505,9 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                                 outcomes=recorder.ordered(), regions=regions, items=items,
                                 summary={"health": health, "counts": counts, "pages": [
                                     {k: p[k] for k in ("page", "classification", "reason", "ocr_policy", "counts", "frame")}
-                                    for p in page_analysis]},
+                                    for p in page_analysis],
+                                    # R5: stored with the run only when PID_R5_PAGE_FRAME=on; SHADOW returns it in the result, never in the record
+                                    **({"page_provenance": r5["page_provenance"]} if r5 and r5_features.mode("PAGE_FRAME") == r5_features.ON else {})},
                                 config=recorder.config)
         except Exception as exc:  # recording must never hide the analysis result
             health["record_error"] = f"{type(exc).__name__}: {exc}"
@@ -505,6 +515,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
     return {"extraction_id": extraction_id, "analyses": ids, "counts": counts, "stages": stages,
             "outcomes": recorder.ordered(), "health": health, "page_analysis": page_analysis, "run_id": run_id,
             "items": items, "graphs": graphs, "loops": loops_result,
+            **({"r5_shadow": r5} if r5 and r5_features.mode("PAGE_FRAME") == r5_features.SHADOW else {}),
             "notice": "All results are unreviewed proposals read from the drawing; none verifies the plant."}
 
 

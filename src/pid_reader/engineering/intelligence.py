@@ -450,6 +450,7 @@ def export_package(db, extraction_id: str, folder: str | Path, *, run_id: str | 
                                      "note": "low-context first pass; every claim lists evidence ids"}, indent=1, sort_keys=True))
     put("drawing_summary.md", _summary_md(snap))
     put("AI_INTERPRETATION_PROMPT.md", PROMPT)
+    shadow_files = _r5_extras(db, extraction_id, snap, put, files)
     manifest = {"schema_version": SCHEMA_ID, "package_version": VERSION, "engine_version": engine_version(), "run_id": snap["package"]["run_id"],
                 "status": snap["package"]["status"], "drawing_sha256": snap["drawings"][0]["sha256"], "pages": [p + 1 for p in pages],
                 "registers": sorted(k for k in files if k.startswith("registers/")), "graph_files": sorted(k for k in files if k.startswith("graph/")),
@@ -458,12 +459,56 @@ def export_package(db, extraction_id: str, folder: str | Path, *, run_id: str | 
                 "files": {k: {"sha256": hashlib.sha256(v).hexdigest(), "bytes": len(v)} for k, v in sorted(files.items())},
                 "disclaimer": "Interpretation of a drawing revision, not verification of the constructed plant or safety systems. Keep this package local.",
                 "upload": "NONE: the program never uploads this package; any sharing is the user's own action."}
+    if _r5_any_on():
+        manifest["r5_update"] = _r5_manifest(files)
     put("manifest.json", json.dumps(manifest, indent=1, sort_keys=True))
     for rel, data in files.items():
         target = out / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
+    if shadow_files:                       # SHADOW: candidate diagnostics live in a SEPARATE folder and are not part of the package or its manifest
+        sd = out.parent / (out.name + "__r5_shadow")
+        sd.mkdir(exist_ok=True)
+        for rel, data in shadow_files.items():
+            (sd / rel).parent.mkdir(parents=True, exist_ok=True)
+            (sd / rel).write_bytes(data)
     return out
+
+
+def _r5_any_on() -> bool:
+    from . import r5_features as f
+    return any(f.mode(n) == f.ON for n in ("REVIEW_LEDGER", "PAGE_FRAME"))
+
+
+def _r5_manifest(files: dict) -> dict:
+    from . import r5_features as f
+    return {"features": {n: f.mode(n) for n in ("REVIEW_LEDGER", "PAGE_FRAME")},
+            "files": sorted(k for k in files if k.startswith("review/") or k == "page_provenance.json"),
+            "note": "review ledger entries are candidates only, never topology; page provenance records PDF page metadata and does not rescale or measure anything"}
+
+
+def _r5_extras(db, extraction_id: str, snap: dict, put, files: dict) -> dict[str, bytes]:
+    """R5 optional additions. OFF adds nothing. ON adds files to the package. SHADOW returns them for a separate folder."""
+    from . import r5_features as f
+    shadow: dict[str, bytes] = {}
+
+    def emit(mode_value: str, rel: str, obj) -> None:
+        text = json.dumps(obj, indent=1, sort_keys=True, ensure_ascii=False)
+        if mode_value == f.ON:
+            put(rel, text)
+        elif mode_value == f.SHADOW:
+            shadow[rel] = text.encode("utf-8")
+    m = f.mode("REVIEW_LEDGER")
+    if m != f.OFF:
+        from .connection_review import ledger_for_run
+        emit(m, "review/connection_review_ledger.json", ledger_for_run(db, extraction_id, snap["package"]["run_id"]))
+    m = f.mode("PAGE_FRAME")
+    if m != f.OFF:
+        row = db.db.execute("SELECT summary_json FROM intelligence_run WHERE run_id=?", (snap["package"]["run_id"],)).fetchone()
+        prov = (json.loads(row[0]).get("page_provenance") if row else None) or {"status": "NOT_RECORDED_FOR_THIS_RUN",
+                                                                             "note": "analyse the drawing with PID_R5_PAGE_FRAME=on to record page metadata"}
+        emit(m, "page_provenance.json", prov)
+    return shadow
 
 
 def _counts(snap: dict) -> dict:

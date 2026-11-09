@@ -488,6 +488,19 @@ class MainWindow(QMainWindow):
             dgrp.addAction(a)
             dm.addAction(a)
         act(m, "&Verify audit chain", lambda: (self.tabs.setCurrentWidget(self.audit_tab), self.audit_tab.verify()))
+        m = self.menuBar().addMenu("&R5 update (proposed)")
+        from ..engineering import r5_features
+        self._r5_actions = {}
+        for key, label in (("DEXPI", "Proposed DEXPI export (off by default)"), ("PAGE_FRAME", "Record PDF page metadata and block unverified lengths"),
+                           ("REVIEW_LEDGER", "Connection review ledger (ambiguous / blocked candidates)")):
+            a = QAction(label, self, checkable=True)
+            a.setChecked(r5_features.mode(key) == r5_features.ON)
+            a.triggered.connect(lambda checked=False, k=key: self.toggle_r5(k, checked))
+            m.addAction(a)
+            self._r5_actions[key] = a
+        m.addSeparator()
+        act(m, "Export open drawing as proposed &DEXPI…", self.export_dexpi_gui)
+        act(m, "Show connection review &ledger…", self.show_review_ledger)
         m = self.menuBar().addMenu("&Help")
         act(m, "What this software does and does not do", self.show_limits, "F1")
         act(m, "&About", self.show_about)
@@ -895,6 +908,78 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "AI package saved", f"{out}\n\nNothing was uploaded. It describes a drawing revision, not the constructed plant.")
         except Exception as exc:
             QMessageBox.warning(self, "AI package not saved", f"{type(exc).__name__}: {exc}")
+
+    def toggle_r5(self, key: str, on: bool) -> None:
+        from ..engineering import r5_features
+        import os
+        try:
+            r5_features.set_mode(key, "ON" if on else "OFF")
+        except Exception as exc:
+            QMessageBox.warning(self, "Setting not saved", f"{type(exc).__name__}: {exc}")
+            return
+        if os.environ.get("PID_R5_" + key):
+            QMessageBox.information(self, "Environment overrides", f"PID_R5_{key} is set in the environment and wins over this setting.")
+        self.info(f"R5 {key}: {r5_features.mode(key)} (applies to the next analysis / export; recorded analyses are not changed)")
+
+    def export_dexpi_gui(self) -> None:
+        """Proposed DEXPI export of the open drawing (off unless switched on). Class mapping comes from human-reviewed readings only."""
+        from ..engineering import r5_features
+        eid = self.current_extraction_id
+        if not eid or not self.db:
+            QMessageBox.information(self, "No drawing open", "Open and analyse a drawing first.")
+            return
+        if r5_features.mode("DEXPI") == r5_features.OFF:
+            QMessageBox.information(self, "Switched off", "The proposed DEXPI export is switched off. Tick it in the R5 update menu first.")
+            return
+        start = self.settings.value("export_folder", "", str) or ""
+        folder = QFileDialog.getExistingDirectory(self, "Choose the folder for the proposed DEXPI files", start)
+        if not folder:
+            return
+        self.settings_set("export_folder", folder)
+        try:
+            from ..engineering.dexpi_proposed import export_dexpi_proposed
+            from ..engineering.intelligence import build_snapshot
+            res = export_dexpi_proposed(build_snapshot(self.db, eid), folder)
+            counts = ", ".join(f"{k}: {v}" for k, v in sorted(res["fate_counts"].items()))
+            chk = ", ".join(f"{k}: {v}" for k, v in res["checks"].items() if k != "conformance")
+            self.info(f"Proposed DEXPI saved: {res['xml']}")
+            QMessageBox.information(self, "Proposed DEXPI saved", f"{res['xml']}\n\nWhat happened to each drawing object: {counts}\nChecks (separate): {chk}\n\n"
+                                    "This is a proposal from unverified drawing readings. It is NOT a DEXPI conformance claim; unreviewed classes stay in the sidecar file.")
+        except Exception as exc:
+            QMessageBox.warning(self, "DEXPI not saved", f"{type(exc).__name__}: {exc}")
+
+    def show_review_ledger(self) -> None:
+        from ..engineering import r5_features
+        eid = self.current_extraction_id
+        if not eid or not self.db:
+            QMessageBox.information(self, "No drawing open", "Open and analyse a drawing first.")
+            return
+        if r5_features.mode("REVIEW_LEDGER") == r5_features.OFF:
+            QMessageBox.information(self, "Switched off", "The connection review ledger is switched off. Tick it in the R5 update menu first.")
+            return
+        try:
+            from ..engineering.connection_review import ledger_for_run
+            led = ledger_for_run(self.db, eid)
+        except Exception as exc:
+            QMessageBox.warning(self, "No ledger", f"{type(exc).__name__}: {exc}")
+            return
+        from PySide6.QtWidgets import QPlainTextEdit
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Connection review ledger (candidates only)")
+        lay = QVBoxLayout(dlg)
+        note = QLabel(led["note"])
+        note.setWordWrap(True)
+        lay.addWidget(note)
+        box = QPlainTextEdit()
+        box.setReadOnly(True)
+        box.setPlainText("\n\n".join(f"{e['review_id']}  [{e['state']}]  {e['candidate_kind']}  page {e.get('page')}\n  ports: {', '.join(e['ports'])}\n  strokes: {', '.join(e['stroke_ids'][:8])}\n  why: {'; '.join(e['reasons'])}"
+                                       for e in led["entries"]) or "No ambiguous or blocked candidates were found in the latest run.")
+        lay.addWidget(box)
+        bb = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        bb.rejected.connect(dlg.reject)
+        lay.addWidget(bb)
+        dlg.resize(760, 520)
+        dlg.exec()
 
     def register_drawing(self) -> None:
         eid = self.current_extraction_id

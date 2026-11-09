@@ -1,0 +1,26 @@
+{
+  "command": "C:\\PIDWork\\venv312\\Scripts\\python.exe -m pytest -q tests",
+  "duration_ms": 1370,
+  "env": {
+    "cpu_count": 8,
+    "machine": "AMD64",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10",
+    "pythonpath": "src"
+  },
+  "exit_code": 0,
+  "expected_failures": 0,
+  "failed": 0,
+  "frozen_r1_sha256": "09174700ff54cdf3bd899d952951d8969041f1a094cbe8cefff9bd714cbd25e2",
+  "git_head": "4cefc35",
+  "input_fixture_sha256": {
+    "PID_READER_MODULE_REQUIREMENTS_R1_UNMODIFIED.zip": "09174700ff54cdf3bd899d952951d8969041f1a094cbe8cefff9bd714cbd25e2"
+  },
+  "name": "r1_checker",
+  "passed": 16,
+  "result_sha256": "975430e74a098ed2deac78d04b608414bd2de2373affea71c98d60c15fe5b115",
+  "run_utc": "2026-11-09T09:59:29+00:00",
+  "skipped": 0,
+  "stderr_excerpt_redacted": "",
+  "stdout_tail_redacted": "................                                                         [100%]\n16 passed in 0.19s\n"
+}

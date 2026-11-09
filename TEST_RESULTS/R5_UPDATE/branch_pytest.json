@@ -1,0 +1,25 @@
+{
+  "command": "C:/PIDWork/venv312/Scripts/python.exe -m pytest -q tests -p no:cacheprovider",
+  "duration_ms": 627431,
+  "env": {
+    "cpu_count": 8,
+    "machine": "AMD64",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10",
+    "pythonpath": "C:\\Users\\Admin\\OneDrive - Enhance Integration Engineering\\Company\\006 Calculation Methods\\26 P&ID reader\\src"
+  },
+  "exit_code": 0,
+  "expected_failures": 0,
+  "failed": 0,
+  "git_head": "4cefc35",
+  "input_fixture_sha256": {
+    "PID_READER_MODULE_REQUIREMENTS_R1_UNMODIFIED.zip": "09174700ff54cdf3bd899d952951d8969041f1a094cbe8cefff9bd714cbd25e2"
+  },
+  "name": "branch_pytest",
+  "passed": 806,
+  "result_sha256": "3e480a0fdfd0c7c9ba619ad208fa46988e2c557b0d6805b327dcccb2179e5d46",
+  "run_utc": "2026-11-09T10:09:02+00:00",
+  "skipped": 6,
+  "stderr_excerpt_redacted": "",
+  "stdout_tail_redacted": "............................. [ 26%]\ns....................................................................... [ 35%]\n............................s........................................... [ 44%]\n........................................................................ [ 53%]\n........................................................................ [ 62%]\n........................................................................ [ 70%]\n........................................................................ [ 79%]\n........................................................................ [ 88%]\n..........................s............................................. [ 97%]\n....................                                                     [100%]\n806 passed, 6 skipped in 626.01s (0:10:26)\n"
+}
