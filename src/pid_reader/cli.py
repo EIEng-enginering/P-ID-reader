@@ -195,6 +195,8 @@ def main(argv: list[str] | None = None) -> int:
     aa.add_argument("--depth",choices=("quick","standard","deep"),default="standard",help="CPU time budget of the analysis")
     aa.add_argument("--no-library-symbols",action="store_true",help="skip library symbol detection, typed graph and loops")
     aa.add_argument("--full",action="store_true",help="print every item and graph instead of counts")
+    rs=sub.add_parser("reconcile-sheets",help="Off-page matches and same-tag identity proposals across the drawings of a project (proposals only)")
+    rs.add_argument("database");rs.add_argument("--extraction-id",action="append",default=None)
     ei=sub.add_parser("export-intelligence",help="Write the engineering-intelligence-v1 JSON of the latest run (schema-validated)")
     ei.add_argument("database");ei.add_argument("extraction_id");ei.add_argument("destination")
     ap2=sub.add_parser("export-ai-package",help="Write the AI-ready package (manifest, registers, graphs, evidence, prompt) into a new sub-folder")
@@ -356,6 +358,12 @@ def main(argv: list[str] | None = None) -> int:
                         out[heavy]=f"{len(out[heavy])} (use --full to print)" if heavy!="page_analysis" else [{k:p[k] for k in ("page","classification","reason")} for p in out[heavy]]
                     out["loops"]={"loops":len(out["loops"].get("loops",[])),"relations":len(out["loops"].get("relations",[]))}
                 print(canonical_json(out))
+            elif args.cmd=="reconcile-sheets":
+                from .engineering.crosssheet import reconcile_project
+                res=reconcile_project(db,args.extraction_id)
+                print(canonical_json({"sheets":[{"sheet":s["sheet_id"],"drawing_ref":s["drawing_ref"]} for s in res["sheets"]],"connectors":len(res["connectors"]),
+                                      "candidates":res["candidates"],"conflicts":res["conflicts"],"insufficient":res["insufficient"],
+                                      "identity":res["identity"],"run_id":res["run_id"]}))
             elif args.cmd=="export-intelligence":
                 from .engineering.intelligence import build_snapshot,validate_snapshot
                 snap=build_snapshot(db,args.extraction_id)

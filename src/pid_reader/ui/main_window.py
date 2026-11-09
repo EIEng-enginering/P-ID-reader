@@ -473,6 +473,7 @@ class MainWindow(QMainWindow):
             a.triggered.connect(lambda _=False, v=val: self.settings.setValue("ocr_engine", v))
             grp.addAction(a)
             om.addAction(a)
+        act(m, "&Reconcile sheets (off-page matches, same-tag proposals)…", self.reconcile_sheets)
         dm = m.addMenu("Analysis &depth (CPU time)")
         dgrp = QActionGroup(self)
         for label, val in (("Quick: valves only, coarse size search, no re-reads", "quick"), ("Standard: valves, actuators, instruments, one re-read", "standard"),
@@ -846,6 +847,27 @@ class MainWindow(QMainWindow):
             self.open_drawing(eid, self.page)
 
         self.run_task("Analysing drawing", job, done)
+
+    def reconcile_sheets(self) -> None:
+        if not self.db:
+            return
+        db_path = self.db_path
+
+        def job(report, cancelled):
+            from ..engineering.crosssheet import reconcile_project
+            with ProjectStore(db_path) as db:
+                return reconcile_project(db)
+
+        def done(res):
+            lines = [f"Sheets compared: {len(res['sheets'])}; off-page connectors read: {len(res['connectors'])}",
+                     f"Match candidates (two independent observations each): {len(res['candidates'])}",
+                     f"Conflicts: {len(res['conflicts'])}; insufficient evidence: {len(res['insufficient'])}",
+                     f"Same-tag identity proposals: {len(res['identity']['proposals'])}; tag-only, NOT merged: {len(res['identity']['tag_only_not_merged'])}",
+                     "Everything here is a proposal for review; a shared tag or line name alone never merges anything."]
+            self.details.setPlainText("\n".join(lines))
+            self.info("Sheet reconciliation finished (proposals only).")
+
+        self.run_task("Reconciling sheets", job, done)
 
     def analysis_depth(self) -> str:
         v = self.settings.value("analysis_depth", "standard", str)

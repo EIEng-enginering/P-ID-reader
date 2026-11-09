@@ -192,6 +192,67 @@ def flag_stale_reviews(db, extraction_id: str, current_model_generation: str | N
     return out
 
 
+def reconcile_project(db, extraction_ids: list[str] | None = None, *, record: bool = True) -> dict:
+    """Project-level pass over the stored drawings: off-page connectors, matches, identity proposals. Proposals only.
+
+    Reads each drawing's source text again (no stage needed), uses its registered or printed drawing number, and the tagged occurrences of its latest
+    analysis run. Two sheets joined by an off-page match candidate give their same-tag occurrences one weak corroboration
+    (``SHARED_OFFPAGE_CONTEXT``); a tag alone never merges anything.
+    """
+    from .doc_text import _lines
+    from .page_regions import profile_pages
+    ids = extraction_ids if extraction_ids is not None else [r[0] for r in db.db.execute("SELECT extraction_id FROM extraction ORDER BY imported_utc, extraction_id")]
+    if len(ids) < 1:
+        raise ValueError("No drawings in the project")
+    sheets, connectors, occ = [], [], []
+    for eid in ids:
+        ex = db.export_extraction(eid)
+        src = db.get_source_pdf(ex["document"]["sha256"])
+        if src is None:
+            continue
+        reg = db.db.execute("SELECT drawing_no FROM drawing_registration WHERE extraction_id=? ORDER BY rowid DESC LIMIT 1", (eid,)).fetchone()
+        lines = []
+        ref = reg["drawing_no"] if reg and reg["drawing_no"] else None
+        for prof in profile_pages(src):
+            words = [{"id": f"nat-{prof['page']}-{i}", "text": w["text"], "bbox": w["bbox"]} for i, w in enumerate(prof["words"])]
+            for ln in _lines(words):
+                lines.append({"text": ln["text"], "bbox": ln["bbox"], "page": prof["page"], "word_ids": ln["word_ids"]})
+                if ref is None and re.search(r"DRAWING\s*NO", ln["text"], re.I):
+                    cls = classify_text(ln["text"])
+                    if any(m["kind"] == "DRAWING_REFERENCE" for m in cls["matches"]):
+                        ref = re.search(r"\d{3,5}-\d{2}-[A-Z]{2}-\d{2}-\d{3}", ln["text"]).group(0)
+        sheets.append({"sheet_id": eid, "drawing_ref": ref, "source_name": ex["document"]["filename"]})
+        connectors += find_offpage_connectors(lines, eid, ref)
+        from . import intelligence_store as istore
+        run = istore.latest_run(db, eid)
+        if run:
+            kinds = {i["item_id"]: i for i in istore.list_items(db, run["run_id"], "OCCURRENCE")}
+            for it in istore.list_items(db, run["run_id"], "ATTRIBUTE"):
+                a = it.get("attribute", {})
+                if a.get("field_name") == "TAG_ASSOCIATION" and a.get("occurrence_id") in kinds:
+                    oc = kinds[a["occurrence_id"]]["occurrence"]
+                    occ.append({"occurrence_id": a["occurrence_id"], "sheet_id": eid, "tag": a["verbatim"],
+                                "entity_kind": {"VALVE": "VALVE", "INSTRUMENT": "INSTRUMENT", "EQUIPMENT": "EQUIPMENT"}.get(oc["graphical_family"], "OTHER"), "corroboration": []})
+    result = match_connectors(sheets, connectors)
+    joined = {frozenset(c["sheets"]) for c in result["candidates"]}
+    for o in occ:
+        if any(o["sheet_id"] in pair for pair in joined):
+            o["corroboration"].append("SHARED_OFFPAGE_CONTEXT")
+    by_pair_ok = {}
+    for o in occ:                                                    # corroboration only counts when every copy of the tag sits on a joined sheet pair
+        by_pair_ok.setdefault(re.sub(r"[^A-Z0-9]", "", o["tag"].upper()), []).append(o)
+    for group in by_pair_ok.values():
+        sheets_of = {o["sheet_id"] for o in group}
+        if len(sheets_of) > 1 and not any(frozenset(p) <= sheets_of or (len(sheets_of) == 2 and frozenset(p) == frozenset(sheets_of)) for p in joined):
+            for o in group:
+                o["corroboration"] = []
+    result["identity"] = propose_asset_identities(occ)
+    result["sheets"] = sheets
+    result["connectors"] = connectors
+    result["run_id"] = record_crosssheet(db, ids[0], result) if record and (connectors or result["identity"]["proposals"] or result["identity"]["tag_only_not_merged"]) else None
+    return result
+
+
 def record_crosssheet(db, extraction_id: str, result: dict, *, config: dict | None = None) -> str:
     """Store cross-sheet proposals as a ``crosssheet`` run attached to one extraction (append-only; idempotent)."""
     from .intelligence_store import record_run

@@ -20,7 +20,7 @@ def _lines(c, count: int) -> None:
 
 def sheet_pdf(*, dense: int = 0, title: bool = True, notes: bool = False, table: bool = False, border: bool = False,
               raster: bool = False, body_words: int = 0, rotate: int = 0, crop: tuple | None = None,
-              revision: bool = False) -> bytes:
+              revision: bool = False, drawing_no: str = "0209-01-ML-02-001", texts=()) -> bytes:
     buf = BytesIO()
     c = canvas.Canvas(buf, pagesize=(W, H), pageCompression=0, invariant=1)
     if border:
@@ -47,7 +47,7 @@ def sheet_pdf(*, dense: int = 0, title: bool = True, notes: bool = False, table:
         c.rect(x0, y0, 300, 120)
         c.line(x0, y0 + 60, x0 + 300, y0 + 60)
         c.setFont("Helvetica", 8)
-        for i, t in enumerate(["DRAWING NO: 0209-01-ML-02-001", "TITLE: STATION PIPING AND INSTRUMENT",
+        for i, t in enumerate([f"DRAWING NO: {drawing_no}", "TITLE: STATION PIPING AND INSTRUMENT",
                                "SCALE: NONE   SHEET 1 OF 2", "DATE: 2015-02-11   APPROVED: AB", "REV C   STATUS: PRELIMINARY"]):
             c.drawString(x0 + 8, y0 + 100 - i * 12, t)
     if revision:
@@ -82,6 +82,9 @@ def sheet_pdf(*, dense: int = 0, title: bool = True, notes: bool = False, table:
         for r, row in enumerate([("ITEM", "DESIGN", "OPERATING"), ("PRESSURE", "6895", "3450"), ("TEMP", "60", "15")]):
             for k, cell in enumerate(row):
                 c.drawString(x0 + 4 + k * 73, y0 + 62 - r * 20, cell)
+    c.setFont("Helvetica", 8)
+    for tx, ty, tt in texts:
+        c.drawString(tx, ty, tt)
     c.showPage()
     c.save()
     data = buf.getvalue()

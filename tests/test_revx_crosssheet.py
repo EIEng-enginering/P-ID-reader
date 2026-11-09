@@ -186,3 +186,40 @@ def test_crosssheet_results_are_stored_append_only_and_idempotent(tmp_path):
         items = istore.list_items(db, rid)
         assert {i["item_kind"] for i in items} == {"RELATION", "ASSET_HYPOTHESIS"} and all(i["review_state"] != "ACCEPTED_AS_READING" for i in items)
         assert db.verify_audit_chain()
+
+
+# ---------------------------------------------------------------- project-level reconciliation (real PDFs, real text)
+def _two_sheets(tmp_path, *, partner_ref="0209-01-ML-02-001", size2=None):
+    p1 = sheet_pdf(drawing_no="0209-01-ML-02-001", texts=[(40, 500, "TO DWG 0209-01-ML-02-002 LINE 200-2")])
+    p2 = sheet_pdf(drawing_no="0209-01-ML-02-002", texts=[(40, 500, f"FROM DWG {partner_ref} LINE 200-2")])
+    db = ProjectStore(tmp_path / "p.sqlite")
+    e1 = db.add_extraction(read_pid(p1, ReadParams(), filename="one.pdf"), source_pdf_bytes=p1)
+    e2 = db.add_extraction(read_pid(p2, ReadParams(), filename="two.pdf"), source_pdf_bytes=p2)
+    return db, e1, e2
+
+
+def test_reconcile_project_matches_two_real_sheets_on_independent_text(tmp_path):
+    db, e1, e2 = _two_sheets(tmp_path)
+    with db:
+        res = xs.reconcile_project(db)
+        assert {s["drawing_ref"] for s in res["sheets"]} == {"0209-01-ML-02-001", "0209-01-ML-02-002"}
+        assert len(res["connectors"]) == 2 and len(res["candidates"]) == 1 and res["candidates"][0]["status"] == "OFFPAGE_MATCH_CANDIDATE"
+        assert res["run_id"] and db.verify_audit_chain()
+        assert any(i["item_kind"] == "RELATION" for i in istore.list_items(db, res["run_id"]))
+
+
+def test_reconcile_project_does_not_match_when_the_other_sheet_does_not_name_back(tmp_path):
+    db, e1, e2 = _two_sheets(tmp_path, partner_ref="0209-01-ML-02-777")
+    with db:
+        res = xs.reconcile_project(db)
+        assert res["candidates"] == [] and res["insufficient"]
+
+
+def test_reconcile_cli(tmp_path, capsys):
+    import json as _json
+    from pid_reader.cli import main
+    db, e1, e2 = _two_sheets(tmp_path)
+    db.close()
+    assert main(["reconcile-sheets", str(tmp_path / "p.sqlite")]) == 0
+    out = _json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert len(out["candidates"]) == 1 and out["connectors"] == 2
