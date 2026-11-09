@@ -361,7 +361,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                 words = [{"id": f"nat-{pg['page']}-{i}", "text": w["text"], "bbox": w["bbox"], "source": "NATIVE"}
                          for i, w in enumerate((profiles.get(pg["page"]) or {}).get("words", []))]
                 words += [{"id": w["id"], "text": w["text"], "bbox": w["bbox"], "source": "OCR"} for w in ocr_words_by_page.get(pg["page"], [])]
-                graph = build_graph(page=pg["page"], page_size_pt=tuple(vec["page_size_pt"]), occurrences=sym_by_page[pg["page"]], vector=vec,
+                graph = build_graph(page=pg["page"], page_size_pt=tuple(vec["page_size_pt"]), occurrences=[c for c in sym_by_page[pg["page"]] if c["confidence_status"] != "WEAK_CLASS_WITHHELD"], vector=vec,
                                     words=words, source_sha256=source_sha)
                 graphs.append(graph)
                 g_stats["pages"] += 1

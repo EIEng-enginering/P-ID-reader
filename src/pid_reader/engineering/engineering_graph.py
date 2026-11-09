@@ -272,6 +272,12 @@ def _direction(path_strokes: list[str], arrows: list[dict], strokes: dict, p_fro
     ux, uy = tx - fx, ty - fy
     for a in arrows:
         if a["stroke_id"] in path_strokes and a["vector"]:
+            # a long stroke can carry several edges: the arrow only speaks for the part of the path it sits on
+            mx, my = (a["bbox"][0] + a["bbox"][2]) / 2, (a["bbox"][1] + a["bbox"][3]) / 2
+            span = ux * ux + uy * uy
+            t = ((mx - fx) * ux + (my - fy) * uy) / span if span else -1.0
+            if not 0.0 <= t <= 1.0:
+                continue
             norm = hypot(ux, uy)
             dot = a["vector"][0] * ux + a["vector"][1] * uy
             if norm > 0 and abs(dot) / norm >= 0.85:        # the chord must run along the arrow's stroke; bends -> no vote
