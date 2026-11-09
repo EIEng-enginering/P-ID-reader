@@ -24,7 +24,16 @@ from .stage_telemetry import engine_version
 
 VERSION = "intelligence-export-v1"
 SCHEMA_ID = "engineering-intelligence-v1"
-SCHEMA_PATH = Path(__file__).resolve().parents[3] / "contracts" / "engineering_intelligence_v1.schema.json"
+def _contract_path(name: str) -> Path:
+    """Schema file in the source tree, or in the bundle of a frozen (PyInstaller) build."""
+    import sys
+    for base in (Path(getattr(sys, "_MEIPASS", "")) if getattr(sys, "_MEIPASS", None) else None, Path(__file__).resolve().parents[3]):
+        if base is not None and (base / "contracts" / name).is_file():
+            return base / "contracts" / name
+    return Path(__file__).resolve().parents[3] / "contracts" / name
+
+
+SCHEMA_PATH = _contract_path("engineering_intelligence_v1.schema.json")
 MAX_EVIDENCE_PER_FILE = 4000
 FULL = {"x0": 0.0, "y0": 0.0, "x1": 1.0, "y1": 1.0}
 _ENTITY_BY_FAMILY = {"VALVE": "VALVE", "ACTUATOR": "VALVE_ACTUATOR", "INSTRUMENT": "INSTRUMENT", "EQUIPMENT": "EQUIPMENT"}

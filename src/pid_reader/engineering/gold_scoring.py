@@ -19,7 +19,15 @@ from math import sqrt
 from pathlib import Path
 
 VERSION = "gold-scoring-v1"
-SCHEMA_PATH = Path(__file__).resolve().parents[3] / "contracts" / "benchmark_gold_v1.schema.json"
+def _contract_path(name: str) -> Path:
+    import sys
+    for base in (Path(sys._MEIPASS) if getattr(sys, "_MEIPASS", None) else None, Path(__file__).resolve().parents[3]):
+        if base is not None and (base / "contracts" / name).is_file():
+            return base / "contracts" / name
+    return Path(__file__).resolve().parents[3] / "contracts" / name
+
+
+SCHEMA_PATH = _contract_path("benchmark_gold_v1.schema.json")
 CRITICAL_KINDS = ("VALVE", "INSTRUMENT", "EQUIPMENT")
 CONNECT_TYPES = ("DRAWN_CONNECTS", "SIGNAL_CONNECTS")
 
