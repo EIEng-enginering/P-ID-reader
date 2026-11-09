@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — save each drawing as its own files
+### Added
+- File ▸ "Export open drawing as files…" (Ctrl+E), "Export all drawings as files…" (Ctrl+Shift+E) and a button on the Report tab. A folder picker opens on every export; nothing is written on import.
+- Per drawing, named after the original PDF: `NAME.json` (full readings report), `NAME.html` (annotated report), `NAME.graph.json` and `NAME.graphml`. A multi-page PDF is one set. Existing files are never overwritten: a clash saves the whole set as `NAME (2)`, `NAME (3)`…
+- CLI `export-drawings DATABASE FOLDER [--extraction-id ID]`; module `engineering/drawing_export.py`.
+- Output is unverified proposals, as for all other exports; frozen R1 contract unchanged.
+
 ## WIN-R01 — 2026-11-07 (Claude Code on top of ChatGPT Rev Q 0.11.0-dev0)
 ### Fixed
 - Batch input rejects any Windows reparse point (symlink/junction), not just POSIX symlinks; symlink test skips without privilege and a simulated-reparse test was added.

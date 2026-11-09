@@ -240,3 +240,23 @@ def test_saved_but_missing_ocr_engine_falls_back_to_automatic(qapp, tmp_path):
     s.setValue('ocr_engine', 'off')
     assert w.ocr_engine() == 'off'
     w.close()
+
+
+def test_export_drawing_files_asks_for_folder_every_time(window, qapp, tmp_path, monkeypatch):
+    from pid_reader.ui import main_window as mw
+    _import_fixture(window, qapp, "synthetic_catalog_symbols.pdf")
+    asked = []
+    out = tmp_path / "saved"
+    out.mkdir()
+    monkeypatch.setattr(mw.QFileDialog, "getExistingDirectory", lambda *a, **k: (asked.append(1), str(out))[1])
+    window.export_drawing_files(False)
+    wait_idle(window, qapp)
+    window.export_drawing_files(True)
+    wait_idle(window, qapp)
+    assert len(asked) == 2                                              # folder requested on every export
+    names = sorted(p.name for p in out.iterdir())
+    assert "synthetic_catalog_symbols.json" in names and "synthetic_catalog_symbols (2).html" in names
+    assert len(names) == 8
+    monkeypatch.setattr(mw.QFileDialog, "getExistingDirectory", lambda *a, **k: "")
+    window.export_drawing_files(True)                                   # cancelled picker writes nothing
+    assert len(list(out.iterdir())) == 8

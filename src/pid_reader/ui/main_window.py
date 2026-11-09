@@ -183,6 +183,42 @@ class MainWindow(QMainWindow):
             except Exception as exc:
                 QMessageBox.warning(self, "Backup failed", str(exc))
 
+    def export_drawing_files(self, all_drawings: bool) -> None:
+        """Save each drawing as its own JSON, HTML and graph files, named after the original PDF."""
+        if not self.db:
+            QMessageBox.information(self, "No project", "Open or create a project first.")
+            return
+        ids = None
+        if not all_drawings:
+            if not self.current_extraction_id:
+                QMessageBox.information(self, "No drawing open", "Open a drawing first, or export all drawings.")
+                return
+            ids = [self.current_extraction_id]
+        start = self.settings.value("export_folder", "", str) or ""
+        folder = QFileDialog.getExistingDirectory(self, "Choose the folder to save the drawing files in", start)
+        if not folder:
+            return
+        self.settings_set("export_folder", folder)  # only the picker's starting point; it is asked again every time
+        db_path = self.db_path
+
+        def job(report, cancelled):
+            from ..engineering.drawing_export import export_drawings
+            with ProjectStore(db_path) as db:
+                return export_drawings(db, ids, folder, progress=lambda i, n, name: report(i / n, f"Saving {name} ({i}/{n})"),
+                                       should_stop=cancelled)
+
+        def done(res):
+            saved, failed = res["saved"], res["failed"]
+            lines = [f"Saved {len(saved)} drawing(s) to {res['folder']}"]
+            lines += [f"  {name}: " + ", ".join(p.name for p in paths) for name, paths in saved]
+            lines += [f"FAILED {name}: {reason}" for name, reason in failed]
+            self.details.setPlainText("\n".join(lines + ["", "These files are unverified readings, not engineering approvals."]))
+            self.info(f"Saved {len(saved)} drawing(s) to {res['folder']}" + (f"; {len(failed)} failed" if failed else ""))
+            if failed:
+                QMessageBox.warning(self, "Some drawings were not saved", "\n".join(f"{n}: {r}" for n, r in failed[:10]))
+
+        self.run_task("Saving drawing files", job, done)
+
     def run_task(self, title: str, fn, on_done) -> None:
         if self.task is not None:
             QMessageBox.information(self, "Busy", f"“{self.task.title}” is still running.")
@@ -405,6 +441,9 @@ class MainWindow(QMainWindow):
         m.addSeparator()
         self.import_act = act(m, "&Import PDF(s)…", self.import_pdfs, "Ctrl+I")
         self.import_dir_act = act(m, "Import &folder…", self.import_folder, "Ctrl+Shift+I")
+        m.addSeparator()
+        act(m, "&Export open drawing as files…", lambda: self.export_drawing_files(False), "Ctrl+E")
+        act(m, "Export &all drawings as files…", lambda: self.export_drawing_files(True), "Ctrl+Shift+E")
         m.addSeparator()
         act(m, "&Back up project…", self.backup_project, "Ctrl+B")
         act(m, "E&xit", self.close, "Ctrl+Q")

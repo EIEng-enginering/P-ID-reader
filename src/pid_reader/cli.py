@@ -197,6 +197,8 @@ def main(argv: list[str] | None = None) -> int:
     gx=sub.add_parser("graph-export",help="Canonical proposed-connectivity graph of one drawing (JSON or GraphML)")
     gx.add_argument("database");gx.add_argument("extraction_id");gx.add_argument("destination")
     gx.add_argument("--format",choices=("json","graphml"),default="json")
+    ed=sub.add_parser("export-drawings",help="Save each drawing as its own files (JSON, HTML, graph) named after the original PDF")
+    ed.add_argument("database");ed.add_argument("folder");ed.add_argument("--extraction-id",action="append",default=None)
     ts=sub.add_parser("teach-symbol",help="Box one symbol and find look-alikes on the page (no training)")
     ts.add_argument("database");ts.add_argument("extraction_id");ts.add_argument("--page",type=int,required=True)
     ts.add_argument("--box",type=float,nargs=4,metavar=("X0","Y0","X1","Y1"),required=True,help="normalised, top-left origin")
@@ -308,6 +310,11 @@ def main(argv: list[str] | None = None) -> int:
                 from .engineering.xlsx_export import export_xlsx
                 out=export_xlsx(db,args.destination,extraction_ids=args.extraction_id)
                 print(canonical_json({"workbook":str(out)}))
+            elif args.cmd=="export-drawings":
+                from .engineering.drawing_export import export_drawings
+                res=export_drawings(db,args.extraction_id,args.folder)
+                print(canonical_json({"folder":res["folder"],"saved":[{"drawing":n,"files":[str(p) for p in ps]} for n,ps in res["saved"]],
+                                      "failed":[{"drawing":n,"reason":r} for n,r in res["failed"]]}))
             elif args.cmd=="graph-export":
                 from .engineering.graph_export import canonical_graph,to_graphml
                 graph=canonical_graph(db,args.extraction_id)

@@ -746,3 +746,53 @@ def test_vector_sheet_needs_no_ocr_engine_even_if_unavailable_one_is_selected():
     from pid_reader.engineering.standalone_read import read_pid_standalone
     result = read_pid_standalone((FIX / 'synthetic_pid_vector.pdf').read_bytes(), ReadParams(), filename='v.pdf', ocr_engine='tesseract')
     assert result['pages'][0]['read_status'] == 'READ'
+
+
+def test_export_drawings_one_set_per_pdf_named_after_original_and_never_overwrites(tmp_path):
+    import json
+    from pid_reader.engineering.drawing_export import export_drawing, export_drawings, safe_stem
+    from pid_reader.engineering.pipeline import analyze_drawing
+    pdf = (FIX / 'synthetic_catalog_symbols.pdf').read_bytes()
+    other = (FIX / 'synthetic_pid_vector.pdf').read_bytes()
+    out = tmp_path / 'out'
+    out.mkdir()
+    with ProjectStore(tmp_path / 'p.sqlite') as db:
+        e1 = db.add_extraction(read_pid(pdf, ReadParams(), filename='S333 pump:sheet.pdf'), source_pdf_bytes=pdf)
+        e2 = db.add_extraction(read_pid(other, ReadParams(), filename='Other drawing.PDF'), source_pdf_bytes=other)
+        analyze_drawing(db, e1, ocr_engine=None)
+        res = export_drawings(db, None, out)
+        assert not res['failed'] and len(res['saved']) == 2
+        names = sorted(p.name for p in out.iterdir())
+        assert names == sorted(f'{s}{x}' for s in ('S333 pump_sheet', 'Other drawing')
+                               for x in ('.json', '.html', '.graph.json', '.graphml'))
+        report = json.loads((out / 'S333 pump_sheet.json').read_text(encoding='utf-8'))
+        assert report['analysis'] and report['selection']['source_count'] == 1      # only this drawing inside
+        html = (out / 'S333 pump_sheet.html').read_text(encoding='utf-8')
+        assert 'data:image/png;base64' in html and 'S333 pump:sheet.pdf' in html
+        assert json.loads((out / 'S333 pump_sheet.graph.json').read_text(encoding='utf-8'))['nodes']
+        before = {p.name: p.read_bytes() for p in out.iterdir()}
+        again = export_drawing(db, e1, out)                                          # same drawing again
+        assert [p.name for p in again] == ['S333 pump_sheet (2).json', 'S333 pump_sheet (2).html',
+                                           'S333 pump_sheet (2).graph.json', 'S333 pump_sheet (2).graphml']
+        assert all((out / n).read_bytes() == b for n, b in before.items())          # originals untouched
+        assert not list(out.glob('.pid-*'))
+        with pytest.raises(FileNotFoundError):
+            export_drawing(db, e1, tmp_path / 'missing')
+    assert safe_stem(r'a/b\CON.pdf') == '_CON' and safe_stem('...pdf') == 'drawing'
+
+
+def test_cli_export_drawings(tmp_path, capsys):
+    import json
+    from pid_reader.cli import main
+    pdf = tmp_path / 'valves.pdf'
+    pdf.write_bytes(_valve_sheet())
+    db = str(tmp_path / 'p.sqlite')
+    assert main(['init-project', db]) == 0
+    assert main(['import-pdf', db, str(pdf)]) == 0
+    capsys.readouterr()
+    out = tmp_path / 'files'
+    out.mkdir()
+    assert main(['export-drawings', db, str(out)]) == 0
+    res = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert len(res['saved']) == 1 and not res['failed']
+    assert sorted(p.name for p in out.iterdir()) == ['valves.graph.json', 'valves.graphml', 'valves.html', 'valves.json']

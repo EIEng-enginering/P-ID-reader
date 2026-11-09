@@ -78,3 +78,12 @@ Worksheet worker: `python -m pid_reader.worker run --input … --params … --ou
 * **Reports tab:** Excel workbook (registers, valves incl. taught look-alikes, instruments, loops, lines, sheet info, findings, connections, checks, notes, OCR words),
   canonical connectivity graph (JSON, GraphML), and the HTML report now contains an annotated drawing, sheet information, loops, checks, layers, findings and all OCR words.
 * **Command line:** `export-xlsx`, `graph-export`, `teach-symbol`, `sheet-info`.
+
+## 7. Saving each drawing as its own files
+
+Use **File ▸ Export open drawing as files…** (Ctrl+E) or **Export all drawings as files…** (Ctrl+Shift+E), or the button at the top of the **Report** tab. The program asks for a folder every time; nothing is saved automatically when you import.
+
+For a drawing `S333_cer_2935633_p004.pdf` the folder receives `S333_cer_2935633_p004.json` (everything found: readings, sheet information, loops, checks, layers, OCR words), `.html` (printable, with annotated drawing images), `.graph.json` and `.graphml` (proposed connectivity). A multi-page PDF is one set of files. If the files already exist, the new set is saved as `NAME (2)`, `NAME (3)` and so on; nothing is overwritten. Command line: `pid-reader-cli export-drawings project.sqlite C:older`.
+
+These files are unverified readings from the drawing, not engineering approvals.
+

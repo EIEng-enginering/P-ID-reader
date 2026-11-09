@@ -360,6 +360,11 @@ class ReportTab(QWidget):
         self.scope.addItems(["Entire project", "Current drawing only"])
         lay.addWidget(QLabel("Scope"))
         lay.addWidget(self.scope)
+        each = QPushButton("Save each drawing as its own files (named after the PDF)…")
+        each.setToolTip("Per drawing: NAME.json, NAME.html, NAME.graph.json, NAME.graphml in a folder you choose. "
+                        "Uses the scope above; existing files are never overwritten.")
+        each.clicked.connect(lambda: self.ctx.export_drawing_files(self.scope.currentIndex() == 0))
+        lay.addWidget(each)
         for fmt, text in (("html", "Export readings report (HTML, printable)"), ("csv", "Export readings register (CSV)"),
                           ("json", "Export readings report (JSON)")):
             b = QPushButton(text)
