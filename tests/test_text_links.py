@@ -187,7 +187,7 @@ def test_migration_v4_retains_old_records_and_produces_preupgrade_backup(tmp_pat
         assert project.migration_backup is not None
         assert project.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert project.db.execute("SELECT name FROM sqlite_master WHERE name='text_link_decision'").fetchone()
-    with sqlite3.connect(next(tmp_path.glob('old.sqlite.pre-v12-*.sqlite'))) as backup:
+    with sqlite3.connect(next(tmp_path.glob('old.sqlite.pre-v13-*.sqlite'))) as backup:
         assert backup.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='4'
 
 

@@ -115,7 +115,7 @@ def test_upgrade_v1_creates_backup_and_preserves_data(tmp_path):
         assert project.migration_backup.exists()
         assert project.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert project.db.execute("SELECT name FROM sqlite_master WHERE name='geometry_candidate'").fetchone()
-    with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))) as original:
+    with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v13-*.sqlite'))) as original:
         assert original.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='1'
         assert not original.execute("SELECT name FROM sqlite_master WHERE name='geometry_candidate'").fetchone()
 
