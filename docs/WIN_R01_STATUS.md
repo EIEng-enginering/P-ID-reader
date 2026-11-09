@@ -67,3 +67,7 @@ engineering-validated. Gate vocabulary: `PASS` (executed, evidence kept), `FAIL`
 | Excel / GraphML / canonical JSON exports | PASS (schema-validated graph) | tests + packaged CLI |
 | Real-sheet recognition overall | **still weak**: no valve *class* recognition without teaching; line sizes noisy; most real sheets yield no tags | W-001..W-004 |
 | WP-10 DEXPI, WP-11 independent benchmark, WP-12 legal/host | NOT_RUN / BLOCKED (need owner, reviewer, legal, host) | |
+
+## 6. Update: Rev X upgrade (2026-11-09, 0.18.0-dev0)
+Full account in `docs/rev_x/WPU_STATUS.md` and `docs/rev_x/REQUIREMENTS_TRACEABILITY_REV_X.csv`. Software gate (tests on synthetic fixtures) PASS; **G-EXT accuracy NOT_RUN, G-HOST NOT_RUN, G-ENG NOT_RUN**. DEXPI remains disabled (BLOCKED). The frozen R1 contract, API and worker are unchanged.
+

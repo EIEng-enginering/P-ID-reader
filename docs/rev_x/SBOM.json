@@ -1,0 +1,482 @@
+{
+ "bomFormat": "pid-reader-sbom",
+ "specVersion": "1",
+ "application": {
+  "name": "P&ID Reader",
+  "version": "0.18.0-dev0"
+ },
+ "components": [
+  {
+   "type": "library",
+   "name": "altgraph",
+   "version": "0.17.5",
+   "installed_version": "0.17.5",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "https://altgraph.readthedocs.io"
+  },
+  {
+   "type": "library",
+   "name": "attrs",
+   "version": "26.1.0",
+   "installed_version": "26.1.0",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Documentation, https://www.attrs.org/"
+  },
+  {
+   "type": "library",
+   "name": "cffi",
+   "version": "2.1.1",
+   "installed_version": "2.1.1",
+   "declared_license": "MIT-0",
+   "attention": "",
+   "homepage": "Documentation, https://cffi.readthedocs.io/"
+  },
+  {
+   "type": "library",
+   "name": "charset-normalizer",
+   "version": "3.5.2",
+   "installed_version": "3.5.2",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Changelog, https://github.com/jawah/charset_normalizer/blob/master/CHANGELOG.md"
+  },
+  {
+   "type": "library",
+   "name": "colorama",
+   "version": "0.4.6",
+   "installed_version": "0.4.6",
+   "declared_license": "BSD License",
+   "attention": "",
+   "homepage": "Homepage, https://github.com/tartley/colorama"
+  },
+  {
+   "type": "library",
+   "name": "cryptography",
+   "version": "50.0.2",
+   "installed_version": "50.0.2",
+   "declared_license": "Apache-2.0 OR BSD-3-Clause",
+   "attention": "",
+   "homepage": "changelog, https://cryptography.io/en/latest/changelog/"
+  },
+  {
+   "type": "library",
+   "name": "ezdxf",
+   "version": "1.4.5",
+   "installed_version": "1.4.5",
+   "declared_license": "MIT License",
+   "attention": "",
+   "homepage": "Repository, https://github.com/mozman/ezdxf"
+  },
+  {
+   "type": "library",
+   "name": "flatbuffers",
+   "version": "25.12.19",
+   "installed_version": "25.12.19",
+   "declared_license": "Apache 2.0",
+   "attention": "",
+   "homepage": "https://google.github.io/flatbuffers/"
+  },
+  {
+   "type": "library",
+   "name": "fonttools",
+   "version": "4.68.0",
+   "installed_version": "4.68.0",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "http://github.com/fonttools/fonttools"
+  },
+  {
+   "type": "library",
+   "name": "iniconfig",
+   "version": "2.3.1",
+   "installed_version": "2.3.1",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Homepage, https://github.com/pytest-dev/iniconfig"
+  },
+  {
+   "type": "library",
+   "name": "jsonschema",
+   "version": "4.26.0",
+   "installed_version": "4.26.0",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Homepage, https://github.com/python-jsonschema/jsonschema"
+  },
+  {
+   "type": "library",
+   "name": "jsonschema-specifications",
+   "version": "2025.9.1",
+   "installed_version": "2025.9.1",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Documentation, https://jsonschema-specifications.readthedocs.io/"
+  },
+  {
+   "type": "library",
+   "name": "numpy",
+   "version": "2.5.4",
+   "installed_version": "2.5.4",
+   "declared_license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+   "attention": "",
+   "homepage": "homepage, https://numpy.org"
+  },
+  {
+   "type": "library",
+   "name": "onnxruntime",
+   "version": "1.31.1",
+   "installed_version": "1.31.1",
+   "declared_license": "MIT License",
+   "attention": "",
+   "homepage": "https://onnxruntime.ai"
+  },
+  {
+   "type": "library",
+   "name": "opencv-python",
+   "version": "5.0.0.93",
+   "installed_version": "5.0.0.93",
+   "declared_license": "Apache 2.0",
+   "attention": "Apache-2.0 wrapper; wheels bundle FFmpeg (LGPL): confirm if redistributing",
+   "homepage": "https://github.com/opencv/opencv-python"
+  },
+  {
+   "type": "library",
+   "name": "packaging",
+   "version": "26.3",
+   "installed_version": "26.3",
+   "declared_license": "Apache-2.0 OR BSD-2-Clause",
+   "attention": "",
+   "homepage": "Documentation, https://packaging.pypa.io/"
+  },
+  {
+   "type": "library",
+   "name": "pdfminer.six",
+   "version": "20260107",
+   "installed_version": "20260107",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Homepage, https://github.com/pdfminer/pdfminer.six"
+  },
+  {
+   "type": "library",
+   "name": "pdfplumber",
+   "version": "0.11.10",
+   "installed_version": "0.11.10",
+   "declared_license": "MIT License",
+   "attention": "",
+   "homepage": "https://github.com/jsvine/pdfplumber"
+  },
+  {
+   "type": "library",
+   "name": "pefile",
+   "version": "2024.8.26",
+   "installed_version": "2024.8.26",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "https://github.com/erocarrera/pefile"
+  },
+  {
+   "type": "library",
+   "name": "pillow",
+   "version": "12.3.0",
+   "installed_version": "12.3.0",
+   "declared_license": "MIT-CMU",
+   "attention": "",
+   "homepage": "Release notes, https://pillow.readthedocs.io/en/stable/releasenotes/index.html"
+  },
+  {
+   "type": "library",
+   "name": "pluggy",
+   "version": "1.7.0",
+   "installed_version": "1.7.0",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Homepage, https://github.com/pytest-dev/pluggy"
+  },
+  {
+   "type": "library",
+   "name": "protobuf",
+   "version": "7.36.2",
+   "installed_version": "7.36.2",
+   "declared_license": "3-Clause BSD License",
+   "attention": "",
+   "homepage": "https://developers.google.com/protocol-buffers/"
+  },
+  {
+   "type": "library",
+   "name": "pyclipper",
+   "version": "1.4.0",
+   "installed_version": "1.4.0",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "https://github.com/fonttools/pyclipper"
+  },
+  {
+   "type": "library",
+   "name": "pycparser",
+   "version": "3.12",
+   "installed_version": "3.12",
+   "declared_license": "BSD-3-Clause",
+   "attention": "",
+   "homepage": "Homepage, https://github.com/eliben/pycparser"
+  },
+  {
+   "type": "library",
+   "name": "Pygments",
+   "version": "2.21.0",
+   "installed_version": "2.21.0",
+   "declared_license": "BSD-2-Clause",
+   "attention": "",
+   "homepage": "Homepage, https://pygments.org"
+  },
+  {
+   "type": "library",
+   "name": "pyinstaller",
+   "version": "6.22.3",
+   "installed_version": "6.22.3",
+   "declared_license": "GNU General Public License v2 (GPLv2)",
+   "attention": "GPL-2.0 with bootloader exception: frozen apps may be distributed; confirm the exception covers your use",
+   "homepage": "Homepage, https://pyinstaller.org"
+  },
+  {
+   "type": "library",
+   "name": "pyinstaller-hooks-contrib",
+   "version": "2026.9",
+   "installed_version": "2026.9",
+   "declared_license": "Apache Software License; GNU General Public License v2 (GPLv2)",
+   "attention": "GPL-2.0 / Apache-2.0 hooks: build-time only",
+   "homepage": "https://github.com/pyinstaller/pyinstaller-hooks-contrib"
+  },
+  {
+   "type": "library",
+   "name": "pyparsing",
+   "version": "3.3.3",
+   "installed_version": "3.3.3",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Documentation, https://pyparsing-docs.readthedocs.io/en/latest/"
+  },
+  {
+   "type": "library",
+   "name": "pypdf",
+   "version": "6.21.4",
+   "installed_version": "6.21.4",
+   "declared_license": "BSD-3-Clause",
+   "attention": "",
+   "homepage": "Bug Reports, https://github.com/py-pdf/pypdf/issues"
+  },
+  {
+   "type": "library",
+   "name": "pypdfium2",
+   "version": "5.15.0",
+   "installed_version": "5.15.0",
+   "declared_license": "BSD-3-Clause, Apache-2.0, dependency licenses",
+   "attention": "",
+   "homepage": "https://github.com/pypdfium2-team/pypdfium2"
+  },
+  {
+   "type": "library",
+   "name": "PySide6",
+   "version": "6.12.0",
+   "installed_version": "6.12.0",
+   "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+   "attention": "LGPL-3.0 / commercial (Qt for Python): dynamic linking and notices needed; confirm distribution terms",
+   "homepage": "Homepage, https://pyside.org"
+  },
+  {
+   "type": "library",
+   "name": "PySide6_Addons",
+   "version": "6.12.0",
+   "installed_version": "6.12.0",
+   "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+   "attention": "",
+   "homepage": "Homepage, https://pyside.org"
+  },
+  {
+   "type": "library",
+   "name": "PySide6_Essentials",
+   "version": "6.12.0",
+   "installed_version": "6.12.0",
+   "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+   "attention": "",
+   "homepage": "Homepage, https://pyside.org"
+  },
+  {
+   "type": "library",
+   "name": "PySide6_Pdf",
+   "version": "6.12.0.140",
+   "installed_version": "6.12.0.140",
+   "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+   "attention": "",
+   "homepage": "Homepage, https://pyside.org"
+  },
+  {
+   "type": "library",
+   "name": "PySide6_WebEngine",
+   "version": "6.12.0.140",
+   "installed_version": "6.12.0.140",
+   "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+   "attention": "",
+   "homepage": "Homepage, https://pyside.org"
+  },
+  {
+   "type": "library",
+   "name": "pytesseract",
+   "version": "0.3.13",
+   "installed_version": "0.3.13",
+   "declared_license": "Apache License 2.0",
+   "attention": "",
+   "homepage": "https://github.com/madmaze/pytesseract"
+  },
+  {
+   "type": "library",
+   "name": "pytest",
+   "version": "9.2.0",
+   "installed_version": "9.2.0",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Changelog, https://docs.pytest.org/en/stable/changelog.html"
+  },
+  {
+   "type": "library",
+   "name": "pywin32-ctypes",
+   "version": "0.2.3",
+   "installed_version": "0.2.3",
+   "declared_license": "BSD-3-Clause",
+   "attention": "",
+   "homepage": "https://github.com/enthought/pywin32-ctypes"
+  },
+  {
+   "type": "library",
+   "name": "PyYAML",
+   "version": "6.0.3",
+   "installed_version": "6.0.3",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "https://pyyaml.org/"
+  },
+  {
+   "type": "library",
+   "name": "rapidocr-onnxruntime",
+   "version": "1.4.4",
+   "installed_version": "1.4.4",
+   "declared_license": "Apache-2.0",
+   "attention": "",
+   "homepage": "https://github.com/RapidAI/RapidOCR"
+  },
+  {
+   "type": "library",
+   "name": "referencing",
+   "version": "0.37.0",
+   "installed_version": "0.37.0",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Documentation, https://referencing.readthedocs.io/"
+  },
+  {
+   "type": "library",
+   "name": "reportlab",
+   "version": "4.5.1",
+   "installed_version": "4.5.1",
+   "declared_license": "BSD License",
+   "attention": "BSD-3-Clause: used to generate test fixtures",
+   "homepage": "https://www.reportlab.com/"
+  },
+  {
+   "type": "library",
+   "name": "rpds-py",
+   "version": "2026.9.1",
+   "installed_version": "2026.9.1",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Documentation, https://rpds.readthedocs.io/"
+  },
+  {
+   "type": "library",
+   "name": "setuptools",
+   "version": "84.2.1",
+   "installed_version": "84.2.1",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "Source, https://github.com/pypa/setuptools"
+  },
+  {
+   "type": "library",
+   "name": "shapely",
+   "version": "2.2.0",
+   "installed_version": "2.2.0",
+   "declared_license": "BSD-3-Clause",
+   "attention": "",
+   "homepage": "Documentation, https://shapely.readthedocs.io/"
+  },
+  {
+   "type": "library",
+   "name": "shiboken6",
+   "version": "6.12.0",
+   "installed_version": "6.12.0",
+   "declared_license": "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only",
+   "attention": "LGPL-3.0 / commercial (Qt for Python): as PySide6",
+   "homepage": "Homepage, https://pyside.org"
+  },
+  {
+   "type": "library",
+   "name": "six",
+   "version": "1.17.0",
+   "installed_version": "1.17.0",
+   "declared_license": "MIT",
+   "attention": "",
+   "homepage": "https://github.com/benjaminp/six"
+  },
+  {
+   "type": "library",
+   "name": "tqdm",
+   "version": "4.70.1",
+   "installed_version": "4.70.1",
+   "declared_license": "MPL-2.0 AND MIT",
+   "attention": "",
+   "homepage": "homepage, https://tqdm.github.io"
+  },
+  {
+   "type": "library",
+   "name": "typing_extensions",
+   "version": "4.16.0",
+   "installed_version": "4.16.0",
+   "declared_license": "PSF-2.0",
+   "attention": "",
+   "homepage": "Bug Tracker, https://github.com/python/typing_extensions/issues"
+  }
+ ],
+ "models": [
+  {
+   "file": "ch_PP-OCRv4_det_infer.onnx",
+   "sha256": "d2a7720d45a54257208b1e13e36a8479894cb74155a5efe29462512d42f49da9",
+   "bytes": 4745517,
+   "source": "bundled in the rapidocr-onnxruntime wheel (PP-OCR family); licence to be confirmed from the wheel (declared Apache-2.0)",
+   "task": "text detection / classification / recognition",
+   "network_at_runtime": false
+  },
+  {
+   "file": "ch_PP-OCRv4_rec_infer.onnx",
+   "sha256": "48fc40f24f6d2a207a2b1091d3437eb3cc3eb6b676dc3ef9c37384005483683b",
+   "bytes": 10857958,
+   "source": "bundled in the rapidocr-onnxruntime wheel (PP-OCR family); licence to be confirmed from the wheel (declared Apache-2.0)",
+   "task": "text detection / classification / recognition",
+   "network_at_runtime": false
+  },
+  {
+   "file": "ch_ppocr_mobile_v2.0_cls_infer.onnx",
+   "sha256": "e47acedf663230f8863ff1ab0e64dd2d82b838fceb5957146dab185a89d6215c",
+   "bytes": 585532,
+   "source": "bundled in the rapidocr-onnxruntime wheel (PP-OCR family); licence to be confirmed from the wheel (declared Apache-2.0)",
+   "task": "text detection / classification / recognition",
+   "network_at_runtime": false
+  }
+ ],
+ "notes": [
+  "Generated from requirements-lock-win312.txt and installed metadata; declared licences are not a legal review.",
+  "No model weight is downloaded at run time; all models ship inside wheels.",
+  "Standards (ISA 5.1, ISO 10628) and vendor symbol catalogues are not bundled; symbols are original geometry."
+ ]
+}

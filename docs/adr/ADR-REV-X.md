@@ -1,0 +1,16 @@
+# ADR — Rev X upgrade decisions (2026-11-09)
+
+Status: accepted for the development candidate. All design scope Q1–Q100 is owner-approved; these records explain *implementation* choices made inside that scope.
+
+1. **Additive schema v13, not a new store.** New tables (`intelligence_run`, `stage_outcome`, `page_region`, `engineering_item`, `intelligence_snapshot`, `intelligence_decision`) are append-only with triggers. A v12 reader opens the file; downgrade is by the automatic pre-migration backup. `engineering_item` stores typed JSON per kind rather than one table per entity class, to keep the migration reversible and the review model uniform.
+2. **Runs are content-keyed.** `run_hash` ignores wall-clock time, so a rerun on the same bytes and configuration returns the same `run_id`. Cancelled runs record nothing.
+3. **Status vocabulary separates "did not run", "failed", "ran and found nothing".** `drawing_status` never says success for an empty result on a page with drawn content. Coverage is reported but never converted to accuracy.
+4. **Symbol detection is correlation against original-geometry templates, tiled, coarse-to-fine.** A single-stage multi-size search was too slow and too brittle (score drops sharply beyond ±5 % size). The final score is raw NCC (labelled UNCALIBRATED); a precision term re-ranks look-alikes (a T-bar inside a diaphragm head) without replacing the reported score. Classes below 0.72 are withheld. Valve class and actuation are separate evidence.
+5. **No ONNX detector and no OCR engine migration.** No licensed model with known provenance was available, and the unified RapidOCR package needs comparative tests and hash pinning first. Both remain open.
+6. **Instrument ports are generic.** A bubble's signal side is arbitrary on drawings, so bubbles expose four `INSTRUMENT_PORT`s; the drawn line style and the other end decide process impulse vs signal connection. A dashed signal line to a process port is refused.
+7. **Graph edges stop at the first foreign port** and never pass through another occurrence, so a valve on a pipe is not traversed as if it were pipe. Arrows direct only the part of a long stroke they sit on and only when aligned (`cos ≥ 0.85` with the path chord).
+8. **Weak (class-withheld) detections stay out of the graph** (they remain occurrences with ports in the evidence list), to avoid creating connections through guesses.
+9. **Cross-sheet matches need two independent observations on both sheets**; a tag or line string alone is `INSUFFICIENT`, equal strings with different size/service are `CONFLICTING`. Same-tag identity proposals need corroboration beyond the tag.
+10. **DEXPI stays disabled.** The XSD cannot be obtained or validated offline within licence limits; a mapping report with per-kind status replaces an export.
+11. **AI package, not an AI model.** The package is schema-valid, evidence-linked, partitioned and formula-safe; a prompt forbids unsupported claims. No LLM is bundled or called.
+12. **Safety stance is enforced in code,** not only in text: `assert_no_safety_claims` rejects SIL/IPL/credit fields; every loop, relation and protective mention says `safety_credit: NOT_ASSESSED` and `logic: NOT_SHOWN_ON_DRAWING`.

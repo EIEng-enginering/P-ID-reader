@@ -1,3 +1,9 @@
+# CURRENT INSTRUCTIONS — REV X (supersedes WIN-R01 where they conflict)
+
+Rev X is implemented on branch `claude/rev-x-upgrade` (0.18.0-dev0, standalone DB v13). Read `docs/rev_x/HANDOFF_STATE.md`, `docs/rev_x/WPU_STATUS.md`, `docs/rev_x/OWNER_REVIEW_CHECKLIST.md`. Rules that still hold: frozen R1 contract/API/worker/schema v1; all readings are unverified proposals; no HAZOP/LOPA/SIL/IPL conclusions; stage Git paths explicitly (never `git add -A`); no pushes without the owner; never use the reserved final split; Python edits use `newline=''`; run tests with `PYTHONPATH=src`.
+
+---
+
 # CURRENT INSTRUCTIONS — WIN-R01 (supersedes Rev Q notes below where they conflict)
 
 Rev Q was imported unmodified (commit b147c4f) and extended on Windows Python 3.12. Read `docs/WIN_R01_STATUS.md` (gates, limits), `docs/OPEN_ISSUES.md` (W-001…W-012), `docs/adr/ADR-WIN-R01.md`, `docs/USER_GUIDE.md`.

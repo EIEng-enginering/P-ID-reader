@@ -130,3 +130,21 @@ Original Worksheet R1 worker and host G4-G7 remain unchanged and NOT_RUN.
 | W-010 | P1 | Backup is manual (GUI/CLI); no scheduled backup or WAL-aware crash test on Windows beyond unit tests. | Crash-injection test; optional auto-backup on close. |
 | W-011 | P2 | Exports: no PDF/DOCX/XLSX; DEXPI disabled by design. | Add XLSX (permissive licence) when requested; DEXPI only after typed connectivity + validator. |
 | W-012 | P2 | Upside-down text is re-ordered per *page*; individual rotated words on otherwise upright pages (e.g. vertical labels) are not re-oriented. | Per-word orientation from character matrices. |
+
+## Rev X (Claude, 2026-11-09) — new and updated issues
+
+| ID | Priority | Issue | Next action |
+|---|---|---|---|
+| X-001 | P0 | No independently annotated real drawings, no second annotator: accuracy of every Rev X detector is unmeasured (supersedes W-001/W-004 for the new library). | Owner supplies cleared drawings and two annotators; run `tools/gold_tool.py` per `docs/rev_x/GOLD_ANNOTATION_GUIDE.md`. |
+| X-002 | P0 | Symbol library matches original shapes at matching scale; real filled/curved valve glyphs, different conventions and dense overlap may be missed or class-withheld. | Measure on gold; extend templates; consider a licensed detector (needs provenance and hashes). |
+| X-003 | P0 | Raster pages: symbols, dots and arrows only; no stroke path graph, no raster hops, so no raster edges. | Feed raster centrelines into the typed graph with the same port rules. |
+| X-004 | P1 | Equipment ports are template ports, not verified nozzles; no nozzle schedules or fittings. | Equipment templates with nozzle semantics; table-to-nozzle binding. |
+| X-005 | P1 | Line numbers and specs are not yet structured records linked to lines. | Associate `LINE_REFERENCE`/spec text to path strokes with evidence. |
+| X-006 | P1 | DEXPI export BLOCKED (no XSD, no validator). | Owner supplies XSD; add validator; validate mapping; round-trip a sample. |
+| X-007 | P1 | Viewer has no relation (edge) overlay or graph-neighbourhood expansion; tables are not virtualised. | UI work package; manual 175 % DPI and keyboard review. |
+| X-008 | P1 | Hostile-PDF fuzz corpus, AppContainer, memory/CPU measurements on a second machine NOT_RUN. | Fuzz harness; Windows sandbox; recorded perf logs. |
+| X-009 | P1 | Quick preset detects valves only at a coarse size ladder; deep is slow on A0 sheets (tile count × templates). | Profile on real sheets; cache renders; limit by region class. |
+| X-010 | P1 | Cross-sheet matching needs printed drawing numbers and TO/FROM text on both sheets; many real sheets use pennant symbols. | Pennant symbol detection; line-number-based pairing. |
+| X-011 | P1 | Alternative OCR engine / unified RapidOCR package not evaluated; only the existing RapidOCR 1.4.4 and optional Tesseract. | Comparative benchmark with pinned hashes and licence audit. |
+| X-012 | P2 | Dependency licence review (Qt LGPL, PyInstaller, OpenCV/FFmpeg) and code signing outstanding. | Owner/legal decision. |
+
