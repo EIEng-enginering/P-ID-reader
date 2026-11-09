@@ -192,6 +192,13 @@ def main(argv: list[str] | None = None) -> int:
     aa.add_argument("database");aa.add_argument("extraction_id")
     aa.add_argument("--ocr",choices=("auto","tesseract","rapidocr","off"),default="auto")
     aa.add_argument("--catalogue-id",default=None)
+    aa.add_argument("--depth",choices=("quick","standard","deep"),default="standard",help="CPU time budget of the analysis")
+    aa.add_argument("--no-library-symbols",action="store_true",help="skip library symbol detection, typed graph and loops")
+    aa.add_argument("--full",action="store_true",help="print every item and graph instead of counts")
+    ei=sub.add_parser("export-intelligence",help="Write the engineering-intelligence-v1 JSON of the latest run (schema-validated)")
+    ei.add_argument("database");ei.add_argument("extraction_id");ei.add_argument("destination")
+    ap2=sub.add_parser("export-ai-package",help="Write the AI-ready package (manifest, registers, graphs, evidence, prompt) into a new sub-folder")
+    ap2.add_argument("database");ap2.add_argument("extraction_id");ap2.add_argument("folder")
     xp=sub.add_parser("export-xlsx",help="Excel workbook of registers, loops, lines, findings and checks (unverified readings)")
     xp.add_argument("database");xp.add_argument("destination");xp.add_argument("--extraction-id",action="append",default=None)
     gx=sub.add_parser("graph-export",help="Canonical proposed-connectivity graph of one drawing (JSON or GraphML)")
@@ -341,9 +348,28 @@ def main(argv: list[str] | None = None) -> int:
             elif args.cmd=="analyze-all":
                 from .engineering.pipeline import analyze_drawing
                 out=analyze_drawing(db,args.extraction_id,ocr_engine=None if args.ocr=="off" else args.ocr,
-                                    catalogue_id=args.catalogue_id,
+                                    catalogue_id=args.catalogue_id,preset=args.depth,library_symbols=not args.no_library_symbols,
                                     progress=lambda st,fr,msg:print(f"[{fr:4.0%}] {msg}",file=sys.stderr))
+                if not args.full:
+                    out=dict(out)
+                    for heavy in ("items","graphs","page_analysis"):
+                        out[heavy]=f"{len(out[heavy])} (use --full to print)" if heavy!="page_analysis" else [{k:p[k] for k in ("page","classification","reason")} for p in out[heavy]]
+                    out["loops"]={"loops":len(out["loops"].get("loops",[])),"relations":len(out["loops"].get("relations",[]))}
                 print(canonical_json(out))
+            elif args.cmd=="export-intelligence":
+                from .engineering.intelligence import build_snapshot,validate_snapshot
+                snap=build_snapshot(db,args.extraction_id)
+                problems=validate_snapshot(snap)
+                if problems:
+                    raise ValueError("Snapshot failed validation: "+"; ".join(problems[:5]))
+                target=Path(args.destination)
+                if target.exists():
+                    raise FileExistsError("Refusing to overwrite an existing file")
+                target.write_text(json.dumps(snap,indent=1,sort_keys=True),encoding="utf-8")
+                print(canonical_json({"written":str(target),"status":snap["package"]["status"],"entities":len(snap["entities"]),"relationships":len(snap["relationships"])}))
+            elif args.cmd=="export-ai-package":
+                from .engineering.intelligence import export_package
+                print(canonical_json({"package":str(export_package(db,args.extraction_id,args.folder))}))
             elif args.cmd=="list":
                 print(json.dumps(db.list_objects(text=args.text,limit=args.limit),indent=2))
             elif args.cmd=="show":

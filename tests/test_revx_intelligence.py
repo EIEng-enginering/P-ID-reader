@@ -205,3 +205,30 @@ def test_analyze_pdf_end_to_end_through_the_sdk(tmp_path):
     assert sdk.list_runs(tmp_path / "p.sqlite", res["extraction_id"])[0]["run_id"] == res["run_id"]
     snap = sdk.get_snapshot(tmp_path / "p.sqlite", res["extraction_id"])
     assert [e["tag"] for e in snap["entities"] if e["kind"] == "VALVE"] == ["XV-201"]
+
+
+def test_cli_analyze_export_intelligence_and_package(tmp_path, capsys):
+    import json as _json
+    from pid_reader.cli import main
+    pdf = tmp_path / "Sheet C.pdf"
+    pdf.write_bytes(symbol_sheet_pdf([{"kind": "ball", "x": 300, "y": 200, "s": 22, "tag": "XV-9"}]))
+    db = str(tmp_path / "p.sqlite")
+    assert main(["init-project", db]) == 0
+    assert main(["import-pdf", db, str(pdf)]) == 0
+    capsys.readouterr()
+    with ProjectStore(db) as store:
+        eid = store.db.execute("SELECT extraction_id FROM extraction").fetchone()[0]
+    assert main(["analyze-all", db, eid, "--ocr", "off", "--depth", "quick"]) == 0
+    out = capsys.readouterr().out.strip().splitlines()[-1]
+    res = _json.loads(out)
+    assert res["health"]["drawing_status"] in ("COMPLETE_CANDIDATES", "PARTIAL", "INCOMPLETE") and "use --full" in res["items"]
+    dest = tmp_path / "snap.json"
+    assert main(["export-intelligence", db, eid, str(dest)]) == 0
+    capsys.readouterr()
+    assert sdk.validate_snapshot(_json.loads(dest.read_text(encoding="utf-8"))) == []
+    assert main(["export-intelligence", db, eid, str(dest)]) != 0                    # never overwrites
+    capsys.readouterr()
+    folder = tmp_path / "pk"
+    folder.mkdir()
+    assert main(["export-ai-package", db, eid, str(folder)]) == 0
+    assert (next(folder.iterdir()) / "manifest.json").exists()

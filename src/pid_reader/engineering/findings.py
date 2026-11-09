@@ -11,7 +11,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
-LAYERS = ("symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster", "raster_network", "raster_centrelines", "examples")
+LAYERS = ("symbols", "linework", "catalogue", "text_links", "geometry", "signals", "raster", "raster_network", "raster_centrelines", "examples",
+          "intelligence")
 
 LAYER_TITLES = {
     "symbols": "Outline symbols", "linework": "Valves / line styles",
@@ -21,6 +22,7 @@ LAYER_TITLES = {
     "raster_network": "Raster contacts (unresolved until drawing review)",
     "raster_centrelines": "Raster centreline gap proposals",
     "examples": "Taught-symbol matches (look-alikes)",
+    "intelligence": "Library symbols (valves, instruments, equipment)",
 }
 
 # Decisions each store method accepts.
@@ -35,6 +37,7 @@ DECISIONS = {
     "raster_network": ("CONTACT_AS_DRAWN", "NOT_CONTACT_AS_DRAWN", "UNRESOLVED", "REJECTED"),
     "raster_centrelines": ("CONTINUOUS_AS_DRAWN", "SEPARATE_AS_DRAWN", "UNRESOLVED", "REJECTED"),
     "examples": ("ACCEPTED_AS_READING", "REJECTED", "UNRESOLVED"),
+    "intelligence": ("ACCEPTED_AS_READING", "REJECTED", "IGNORED", "NEEDS_REVIEW"),
 }
 
 
@@ -79,6 +82,8 @@ def list_findings(db, extraction_id: str, layer: str, *, limit: int = 500) -> li
     if layer not in LAYERS:
         raise ValueError("Unknown analysis layer")
     limit = min(limit, MAX_ROWS.get(layer, 2000))
+    if layer == "intelligence":
+        return _intelligence_findings(db, extraction_id, limit)
     if layer == "examples":
         from .examples import latest_example_review, list_example_candidates
         return [{"layer": layer, "id": c["candidate_id"], "page": c["page"], "bbox": c["bbox"], "kind": c["class_hint"],
@@ -159,6 +164,26 @@ def list_findings(db, extraction_id: str, layer: str, *, limit: int = 500) -> li
     return out
 
 
+def _intelligence_findings(db, extraction_id: str, limit: int) -> list[dict]:
+    from . import intelligence_store as istore
+    run = istore.latest_run(db, extraction_id)
+    if run is None:
+        return []
+    out = []
+    for it in istore.list_items(db, run["run_id"], "OCCURRENCE")[:limit]:
+        oc = it["occurrence"]
+        last = None
+        for d in istore.decisions_for(db, it["item_id"]):
+            last = d
+        state = last["decision"] if last else "PROPOSED"
+        out.append({"layer": "intelligence", "id": it["item_id"], "page": it["page"], "bbox": it["bbox"],
+                    "kind": oc["engineering_class"] if oc["engineering_class"] != "UNKNOWN" else oc["graphical_family"],
+                    "label": f"{oc['graphical_family'].title()} \u00b7 {oc['engineering_class'].replace('_', ' ').title()} "
+                             f"(similarity {oc['raw_score']:.2f}, {oc['confidence_status'].replace('_', ' ').lower()})",
+                    "state": state, "detail": it})
+    return out
+
+
 def review_finding(db, layer: str, finding_id: str, *, actor: str, decision: str, reason: str,
                    selected_text: str | None = None) -> str:
     """Dispatch to the audited review method for the layer (named reviewer, reason)."""
@@ -166,6 +191,12 @@ def review_finding(db, layer: str, finding_id: str, *, actor: str, decision: str
         raise ValueError("Unknown analysis layer")
     if decision not in DECISIONS[layer]:
         raise ValueError(f"Decision {decision} is not valid for {layer}")
+    if layer == "intelligence":
+        from . import intelligence_store as istore
+        row = db.db.execute("SELECT extraction_id FROM engineering_item WHERE item_id LIKE ? LIMIT 1", (finding_id + ":%",)).fetchone()
+        if row is None:
+            raise KeyError("Unknown library-symbol finding")
+        return istore.add_decision(db, row[0], finding_id, actor=actor, decision=decision, reason=reason)
     if layer == "symbols":
         return db.review_symbol(finding_id, actor=actor, decision=decision, reason=reason)
     if layer == "linework":

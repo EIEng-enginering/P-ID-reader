@@ -24,7 +24,7 @@ from ..engineering.connectivity import drawing_connectivity
 from ..engineering.project import ProjectStore
 from ..engineering.workspace import register_page
 from .graphview import GraphView
-from .tabs import AuditTab, BatchTab, LibraryTab, ReportTab, RevisionTab, SheetInfoTab, _fill, _table
+from .tabs import AuditTab, BatchTab, LibraryTab, QualityTab, ReportTab, RevisionTab, SheetInfoTab, _fill, _table
 from .tasks import CallbackCancelToken, Task
 from .viewer import LAYER_COLOURS, LAYER_LABELS, DrawingView
 
@@ -383,6 +383,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(gw, "Graph")
 
         self.sheet_tab = SheetInfoTab(self); self.tabs.addTab(self.sheet_tab, "Sheet info")
+        self.quality_tab = QualityTab(self); self.tabs.addTab(self.quality_tab, "Quality")
         self.revision_tab = RevisionTab(self); self.tabs.addTab(self.revision_tab, "Revisions")
         self.batch_tab = BatchTab(self); self.tabs.addTab(self.batch_tab, "Batch import")
         self.library_tab = LibraryTab(self); self.tabs.addTab(self.library_tab, "Libraries")
@@ -442,6 +443,7 @@ class MainWindow(QMainWindow):
         self.import_act = act(m, "&Import PDF(s)…", self.import_pdfs, "Ctrl+I")
         self.import_dir_act = act(m, "Import &folder…", self.import_folder, "Ctrl+Shift+I")
         m.addSeparator()
+        act(m, "Export open drawing as &AI package…", self.export_ai_package, "Ctrl+Alt+E")
         act(m, "&Export open drawing as files…", lambda: self.export_drawing_files(False), "Ctrl+E")
         act(m, "Export &all drawings as files…", lambda: self.export_drawing_files(True), "Ctrl+Shift+E")
         m.addSeparator()
@@ -471,6 +473,15 @@ class MainWindow(QMainWindow):
             a.triggered.connect(lambda _=False, v=val: self.settings.setValue("ocr_engine", v))
             grp.addAction(a)
             om.addAction(a)
+        dm = m.addMenu("Analysis &depth (CPU time)")
+        dgrp = QActionGroup(self)
+        for label, val in (("Quick: valves only, coarse size search, no re-reads", "quick"), ("Standard: valves, actuators, instruments, one re-read", "standard"),
+                           ("Deep: adds equipment, finer size search, more re-reads (slowest)", "deep")):
+            a = QAction(label, self, checkable=True)
+            a.setChecked(self.analysis_depth() == val)
+            a.triggered.connect(lambda _=False, v=val: self.settings.setValue("analysis_depth", v))
+            dgrp.addAction(a)
+            dm.addAction(a)
         act(m, "&Verify audit chain", lambda: (self.tabs.setCurrentWidget(self.audit_tab), self.audit_tab.verify()))
         m = self.menuBar().addMenu("&Help")
         act(m, "What this software does and does not do", self.show_limits, "F1")
@@ -604,6 +615,10 @@ class MainWindow(QMainWindow):
         self.show_findings()
         self.refresh_graph()
         self.refresh_sheet_info()
+        try:
+            self.quality_tab.refresh()
+        except Exception as exc:
+            self.info(f"Quality view unavailable: {type(exc).__name__}: {exc}")
         unread = [p["page"] for p in result["pages"] if p["read_status"] != "READ"]
         msg = f"Opened {self.drawing_items.get(extraction_id, '')}: {result['summary']['object_count']} readings."
         if unread:
@@ -813,19 +828,47 @@ class MainWindow(QMainWindow):
             return
         db_path, ocr = self.db_path, self.ocr_engine()
         catalogue = self.settings.value("catalogue_id", None, str) or None
+        depth = self.analysis_depth()
 
         def job(report, cancelled):
             from ..engineering.pipeline import analyze_drawing
             with ProjectStore(db_path) as db:
-                return analyze_drawing(db, eid, ocr_engine=None if ocr == "off" else ocr, catalogue_id=catalogue,
-                                       progress=lambda s, f, m: report(f, m), cancel=CallbackCancelToken(cancelled))
+                return analyze_drawing(db, eid, ocr_engine=None if ocr == "off" else ocr, catalogue_id=catalogue, preset=depth,
+                                       library_symbols=True, progress=lambda s, f, m: report(f, m), cancel=CallbackCancelToken(cancelled))
 
         def done(out):
             lines = [f"{k}: {v['status']} {v['detail']}" for k, v in out["stages"].items()]
-            self.details.setPlainText("Analysis finished (all results are unreviewed proposals):\n" + "\n".join(lines))
+            h = out["health"]
+            head = f"Drawing status: {h['drawing_status']}" + (f" (first blocker: {h['primary_blocker']})" if h["primary_blocker"] else "")
+            extra = [f"{o['stage_id']}: {o['status']} {o['error_summary'] or o['diagnostics'].get('detail', '')}".strip()
+                     for o in out["outcomes"] if o["stage_id"] in ("classify", "symbol_library", "engineering_graph", "control_loops", "doc_text")]
+            self.details.setPlainText(head + "\nAnalysis finished (all results are unreviewed proposals):\n" + "\n".join(lines + extra))
             self.open_drawing(eid, self.page)
 
         self.run_task("Analysing drawing", job, done)
+
+    def analysis_depth(self) -> str:
+        v = self.settings.value("analysis_depth", "standard", str)
+        return v if v in ("quick", "standard", "deep") else "standard"
+
+    def export_ai_package(self) -> None:
+        """AI-ready engineering package for the open drawing, into a sub-folder of a folder chosen now (never automatic)."""
+        eid = self.current_extraction_id
+        if not eid or not self.db:
+            QMessageBox.information(self, "No drawing open", "Open and analyse a drawing first.")
+            return
+        start = self.settings.value("export_folder", "", str) or ""
+        folder = QFileDialog.getExistingDirectory(self, "Choose the folder for the AI-ready package", start)
+        if not folder:
+            return
+        self.settings_set("export_folder", folder)
+        try:
+            from ..engineering.intelligence import export_package
+            out = export_package(self.db, eid, folder)
+            self.info(f"AI package saved: {out}")
+            QMessageBox.information(self, "AI package saved", f"{out}\n\nNothing was uploaded. It describes a drawing revision, not the constructed plant.")
+        except Exception as exc:
+            QMessageBox.warning(self, "AI package not saved", f"{type(exc).__name__}: {exc}")
 
     def register_drawing(self) -> None:
         eid = self.current_extraction_id

@@ -351,6 +351,52 @@ class SheetInfoTab(QWidget):
             self.ctx.show_position(page, x, y)
 
 
+class QualityTab(QWidget):
+    """Run health of the open drawing: status, per-stage outcomes, page text status and unresolved issues. Never a success claim."""
+
+    COLOURS = {"COMPLETE_CANDIDATES": "#2e7d32", "PARTIAL": "#ef6c00", "INCOMPLETE": "#c62828", "FAILED": "#c62828", "NOT_RUN": "#616161"}
+
+    def __init__(self, ctx):
+        super().__init__()
+        self.ctx = ctx
+        lay = QVBoxLayout(self)
+        self.banner = QLabel("Analyse a drawing to see its run health.")
+        self.banner.setWordWrap(True)
+        lay.addWidget(self.banner)
+        self.stages = _table(["Stage", "Status", "Candidates", "ms", "Detail"])
+        lay.addWidget(QLabel("Stages: \u201cdid not run\u201d, \u201cfailed\u201d and \u201cran and found nothing\u201d are different results"))
+        lay.addWidget(self.stages, 3)
+        self.pages = _table(["Page", "Encoding", "Text status", "Native words", "OCR words", "Blocker"])
+        lay.addWidget(QLabel("Pages: an empty result on a page with drawn content is never read as an empty drawing"))
+        lay.addWidget(self.pages, 2)
+        self.note = QLabel("")
+        self.note.setWordWrap(True)
+        lay.addWidget(self.note)
+
+    def refresh(self) -> None:
+        eid = getattr(self.ctx, "current_extraction_id", None)
+        if not eid or not self.ctx.db:
+            return
+        from ..engineering import intelligence_store as istore
+        run = istore.latest_run(self.ctx.db, eid)
+        if run is None:
+            self.banner.setText("No analysis has been run for this drawing yet (Drawing \u25b8 Analyse).")
+            self.banner.setStyleSheet("")
+            _fill(self.stages, [])
+            _fill(self.pages, [])
+            return
+        health = run["summary"].get("health", {})
+        status = run["status"]
+        self.banner.setText(f"Status: {status}" + (f"  \u2014 first blocker: {health.get('primary_blocker')}" if health.get("primary_blocker") else "") +
+                            f"   ({run['preset']} depth, {run['engine_version']})")
+        self.banner.setStyleSheet(f"color: {self.COLOURS.get(status, '#000')}; font-weight: bold")
+        _fill(self.stages, [[o["stage_id"], o["status"], o.get("candidates", 0), o.get("runtime_ms", 0),
+                             (o.get("error_summary") or o.get("diagnostics", {}).get("detail", ""))[:160]] for o in run["outcomes"]])
+        _fill(self.pages, [[p["page"], p["classification"], p["text_status"], p["words_native"], p["words_ocr"], p["primary_blocker"]]
+                           for p in health.get("pages", [])])
+        self.note.setText(health.get("notice", ""))
+
+
 class ReportTab(QWidget):
     def __init__(self, ctx):
         super().__init__()
@@ -365,6 +411,10 @@ class ReportTab(QWidget):
                         "Uses the scope above; existing files are never overwritten.")
         each.clicked.connect(lambda: self.ctx.export_drawing_files(self.scope.currentIndex() == 0))
         lay.addWidget(each)
+        pkg = QPushButton("Export AI-ready engineering package (JSON, registers, evidence, prompt)\u2026")
+        pkg.setToolTip("Writes a new sub-folder in a folder you choose, for the open drawing. Nothing is uploaded; existing folders are never overwritten.")
+        pkg.clicked.connect(lambda: self.ctx.export_ai_package())
+        lay.addWidget(pkg)
         for fmt, text in (("html", "Export readings report (HTML, printable)"), ("csv", "Export readings register (CSV)"),
                           ("json", "Export readings report (JSON)")):
             b = QPushButton(text)

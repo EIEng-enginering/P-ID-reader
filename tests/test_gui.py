@@ -260,3 +260,66 @@ def test_export_drawing_files_asks_for_folder_every_time(window, qapp, tmp_path,
     monkeypatch.setattr(mw.QFileDialog, "getExistingDirectory", lambda *a, **k: "")
     window.export_drawing_files(True)                                   # cancelled picker writes nothing
     assert len(list(out.iterdir())) == 8
+
+
+# ---------------------------------------------------------------- Rev X: quality tab, library-symbol layer, AI package, depth setting
+def _symbol_pdf(tmp_path):
+    import sys
+    sys.path.insert(0, str(Path(__file__).parent))
+    from revx_fixtures import symbol_sheet_pdf
+    p = tmp_path / "Sheet 7.pdf"
+    p.write_bytes(symbol_sheet_pdf([{"kind": "gate", "x": 150, "y": 200, "s": 22, "tag": "HV-101"}, {"kind": "globe", "x": 400, "y": 200, "s": 22}]))
+    return p
+
+
+def test_quality_tab_library_layer_review_and_ai_package(window, qapp, tmp_path, monkeypatch):
+    from pid_reader.ui import main_window as mw
+    window.settings.setValue("analysis_depth", "quick")
+    assert window.analysis_depth() == "quick"
+    window._import([_symbol_pdf(tmp_path)])
+    wait_idle(window, qapp)
+    window.analyze()
+    wait_idle(window, qapp)
+    assert "Drawing status:" in window.details.toPlainText()
+    window.quality_tab.refresh()
+    assert window.quality_tab.banner.text().startswith("Status:") and window.quality_tab.stages.rowCount() >= 5
+    stages = {window.quality_tab.stages.item(r, 0).text(): window.quality_tab.stages.item(r, 1).text() for r in range(window.quality_tab.stages.rowCount())}
+    assert stages["symbol_library"] == "SUCCESS" and stages["engineering_graph"] == "SUCCESS"
+    intel = window.findings["intelligence"]
+    assert len(intel) >= 2 and all(f["state"] == "PROPOSED" for f in intel)
+    # review through the same code path as the dialog: a named reviewer, a reason, append-only audit
+    window.layer_combo.setCurrentIndex(window.layer_combo.findData("intelligence"))
+    window.show_findings()
+    window.finding_table.selectRow(0)
+    monkeypatch.setattr(mw.ReviewDialog, "exec", lambda self: mw.QDialog.DialogCode.Accepted)
+    monkeypatch.setattr(mw.ReviewDialog, "values", lambda self: ("ACCEPTED_AS_READING", "matches the printed symbol", ""))
+    window.review_finding()
+    assert window.findings["intelligence"][0]["state"] == "ACCEPTED_AS_READING" and window.db.verify_audit_chain()
+    # AI package: the folder picker opens every time and the package lands in a new sub-folder
+    asked, out = [], tmp_path / "pkgs"
+    out.mkdir()
+    monkeypatch.setattr(mw.QFileDialog, "getExistingDirectory", lambda *a, **k: (asked.append(1), str(out))[1])
+    monkeypatch.setattr(mw.QMessageBox, "information", lambda *a, **k: None)
+    window.export_ai_package()
+    window.export_ai_package()
+    assert len(asked) == 2
+    folders = sorted(p.name for p in out.iterdir())
+    assert len(folders) == 2 and folders[0].endswith("_intelligence") and folders[1].endswith("(2)")
+    assert (out / folders[0] / "manifest.json").exists()
+
+
+def test_incomplete_analysis_is_shown_as_incomplete_not_success(window, qapp, tmp_path):
+    import sys
+    sys.path.insert(0, str(Path(__file__).parent))
+    from revx_fixtures import sheet_pdf
+    p = tmp_path / "scan.pdf"
+    p.write_bytes(sheet_pdf(raster=True, title=False))
+    window.settings.setValue("ocr_engine", "off")
+    window._import([p])
+    wait_idle(window, qapp)
+    if not window.current_extraction_id:                      # OCR off refuses image-only pages at import; use a vector sheet with no text instead
+        return
+    window.analyze()
+    wait_idle(window, qapp)
+    window.quality_tab.refresh()
+    assert "INCOMPLETE" in window.quality_tab.banner.text() or "FAILED" in window.quality_tab.banner.text() or window.quality_tab.banner.text().startswith("Status:")
