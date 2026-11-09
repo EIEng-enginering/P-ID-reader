@@ -408,6 +408,39 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             raise
         except Exception as exc:
             recorder.end("engineering_graph", "FAILED", f"{type(exc).__name__}: {exc}")
+    loops_result: dict = {}
+    recorder.begin("control_loops")
+    if not graphs:
+        recorder.end("control_loops", "SKIPPED", "needs the typed graph")
+    else:
+        try:
+            check()
+            from .control_loops import build_loops
+            loop_words = {}
+            for pg in page_analysis:
+                loop_words[pg["page"]] = [{"id": f"nat-{pg['page']}-{i}", "text": w["text"], "bbox": w["bbox"]}
+                                          for i, w in enumerate((profiles.get(pg["page"]) or {}).get("words", []))] + \
+                                         [{"id": w["id"], "text": w["text"], "bbox": w["bbox"]} for w in ocr_words_by_page.get(pg["page"], [])]
+            loops_result = build_loops(graphs, loop_words)
+            loop_items = []
+            for lp in loops_result["loops"]:
+                loop_items.append({"item_id": lp["loop_id"], "item_kind": "LOOP", "tag_normalized": lp["loop_number"], "page": lp["page"], "loop": lp,
+                                   "truth_class": lp["truth_class"], "review_state": lp["review_state"], "evidence": lp["evidence"]})
+            for rel in loops_result["relations"]:
+                loop_items.append({"item_id": rel["relation_id"], "item_kind": "RELATION", "tag_normalized": None, "page": rel["page"], "relation": rel,
+                                   "truth_class": rel["truth_class"], "review_state": rel["review_state"], "evidence": rel["evidence"]})
+            for pm in loops_result["protective_device_mentions"] + loops_result["text_mentions"]:
+                loop_items.append({"item_id": pm["item_id"], "item_kind": "ATTRIBUTE", "tag_normalized": (pm.get("tag") or "").upper() or None, "page": pm["page"],
+                                   "attribute": {"field_name": pm.get("kind", "PROTECTIVE_DEVICE_MENTION"), **{k: v for k, v in pm.items() if k not in ("evidence",)}},
+                                   "truth_class": "CONTEXTUAL_INFERENCE", "review_state": pm["review_state"], "evidence": pm["evidence"]})
+            items += loop_items
+            counts["loops"] = len(loops_result["loops"])
+            recorder.end("control_loops", "DONE", f"{len(loops_result['loops'])} loop record(s), {len(loops_result['relations'])} control relation(s)",
+                         candidates=len(loop_items), diagnostics={"linked": sum(1 for x in loops_result["loops"] if x["status"] == "LINKED_BY_DRAWN_SIGNAL")})
+        except Cancelled:
+            raise
+        except Exception as exc:
+            recorder.end("control_loops", "FAILED", f"{type(exc).__name__}: {exc}")
     recorder.begin("doc_text")
     try:
         check()
@@ -437,7 +470,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             health["record_error"] = f"{type(exc).__name__}: {exc}"
     return {"extraction_id": extraction_id, "analyses": ids, "counts": counts, "stages": stages,
             "outcomes": recorder.ordered(), "health": health, "page_analysis": page_analysis, "run_id": run_id,
-            "items": items, "graphs": graphs,
+            "items": items, "graphs": graphs, "loops": loops_result,
             "notice": "All results are unreviewed proposals read from the drawing; none verifies the plant."}
 
 
