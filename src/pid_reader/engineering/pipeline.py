@@ -314,6 +314,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             check()
             from .symbol_detect import detect_symbols
             sym_items, sym_stats = [], {"pages": 0, "candidates": 0, "partial_pages": 0, "tiles": 0, "weak_class_withheld": 0}
+            sym_by_page: dict[int, list[dict]] = {}
             for pg in page_analysis:
                 if not (pg["counts"]["graphics_count"] or pg["counts"]["image_count"]):
                     continue                      # no ink at all; a sparse page with a few symbols is still searched
@@ -323,6 +324,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                 sym_stats["candidates"] += len(found["candidates"])
                 sym_stats["tiles"] += found["tiles_processed"]
                 sym_stats["partial_pages"] += found["status"] == "PARTIAL"
+                sym_by_page[pg["page"]] = found["candidates"]
                 for c in found["candidates"]:
                     sym_stats["weak_class_withheld"] += c["confidence_status"] == "WEAK_CLASS_WITHHELD"
                     sym_items.append({"item_id": c["id"], "item_kind": "OCCURRENCE", "tag_normalized": None, "page": c["page"],
@@ -341,6 +343,71 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             raise
         except Exception as exc:
             recorder.end("symbol_library", "FAILED", f"{type(exc).__name__}: {exc}")
+    graphs: list[dict] = []
+    recorder.begin("engineering_graph")
+    if not (library_symbols and recorder.outcomes.get("symbol_library", {}).get("status") in ("SUCCESS", "PARTIAL")):
+        recorder.end("engineering_graph", "SKIPPED", "needs library symbol detection")
+    else:
+        try:
+            from .vector_network import analyze_vector_network
+            from .engineering_graph import build_graph
+            g_stats = {"pages": 0, "edges": 0, "conflicts": 0, "junctions": 0, "partial_pages": 0, "unattached_ports": 0, "arrows": 0}
+            graph_items: list[dict] = []
+            for pg in page_analysis:
+                if pg["page"] not in sym_by_page:
+                    continue
+                check()
+                vec = analyze_vector_network(source, pg["page"], cancel=cancel)
+                words = [{"id": f"nat-{pg['page']}-{i}", "text": w["text"], "bbox": w["bbox"], "source": "NATIVE"}
+                         for i, w in enumerate((profiles.get(pg["page"]) or {}).get("words", []))]
+                words += [{"id": w["id"], "text": w["text"], "bbox": w["bbox"], "source": "OCR"} for w in ocr_words_by_page.get(pg["page"], [])]
+                graph = build_graph(page=pg["page"], page_size_pt=tuple(vec["page_size_pt"]), occurrences=sym_by_page[pg["page"]], vector=vec,
+                                    words=words, source_sha256=source_sha)
+                graphs.append(graph)
+                g_stats["pages"] += 1
+                g_stats["edges"] += len(graph["edges"])
+                g_stats["conflicts"] += len(graph["conflicts"])
+                g_stats["junctions"] += vec["counts"]["junctions"]
+                g_stats["arrows"] += vec["counts"]["arrows"]
+                g_stats["partial_pages"] += vec["status"] == "PARTIAL"
+                g_stats["unattached_ports"] += graph["quality"]["unattached_ports"]
+                for n in graph["nodes"]:
+                    if n["node_kind"] == "PORT":
+                        graph_items.append({"item_id": n["node_id"], "item_kind": "PORT", "tag_normalized": None, "page": n["page"], "port": n,
+                                            "evidence": [{"page": n["page"], "x": n["x"], "y": n["y"], "source_sha256": source_sha}],
+                                            "review_state": "PROPOSED_UNVERIFIED", "producer": "engineering-graph-v2"})
+                    elif n["tag"]:
+                        graph_items.append({"item_id": "tag-" + n["node_id"], "item_kind": "ATTRIBUTE", "tag_normalized": n["tag"]["text"].upper(),
+                                            "page": n["page"], "truth_class": "CONTEXTUAL_INFERENCE", "review_state": "PROPOSED_UNVERIFIED",
+                                            "attribute": {"field_name": "TAG_ASSOCIATION", "verbatim": n["tag"]["text"], "occurrence_id": n["node_id"],
+                                                          "status": n["tag"]["assignment"], "alternatives": n["tag"]["alternatives"]},
+                                            "evidence": [{"page": n["page"], "bbox": n["tag"]["bbox"], "word_ids": [n["tag"]["word_id"]]},
+                                                         {"page": n["page"], "bbox": n["bbox"], "occurrence_id": n["node_id"]}]})
+                for e in graph["edges"]:
+                    graph_items.append({"item_id": e["edge_id"], "item_kind": "RELATION", "tag_normalized": None, "page": e["page"], "relation": e,
+                                        "truth_class": "STRUCTURALLY_DERIVED", "review_state": "PROPOSED_UNVERIFIED", "producer": "engineering-graph-v2",
+                                        "evidence": [{"page": e["page"], **e["evidence"]}]})
+                for cf in graph["conflicts"]:
+                    graph_items.append({"item_id": cf["conflict_id"], "item_kind": "CONFLICT", "tag_normalized": None, "page": pg["page"], "conflict": cf,
+                                        "truth_class": "CONFLICTING", "review_state": "NEEDS_REVIEW", "evidence": [{"page": pg["page"], **cf}]})
+                for a in graph["asset_hypotheses"]:
+                    graph_items.append({"item_id": a["asset_id"], "item_kind": "ASSET_HYPOTHESIS", "tag_normalized": (a["tag_text"] or "").upper() or None,
+                                        "page": pg["page"], "asset": a, "truth_class": "CONTEXTUAL_INFERENCE", "review_state": "PROPOSED_UNVERIFIED",
+                                        "evidence": [{"page": pg["page"], "occurrences": a["occurrences"]}]})
+                for j in vec["junctions"]:
+                    if j["status"] in ("UNKNOWN_CROSSING", "SEPARATED_FAVOURED", "JOINED_FAVOURED", "JOINED_SUPPORTED", "SEPARATED_SUPPORTED"):
+                        graph_items.append({"item_id": j["id"], "item_kind": "EVIDENCE", "tag_normalized": None, "page": pg["page"], "junction": j,
+                                            "truth_class": "DIRECT_OBSERVATION", "review_state": "PROPOSED_UNVERIFIED",
+                                            "evidence": [{"page": pg["page"], "point_norm": j["point_norm"]}]})
+            items += graph_items
+            counts["graph_edges"] = g_stats["edges"]
+            recorder.end("engineering_graph", "DONE", f"{g_stats['edges']} drawn-connection proposals, {g_stats['conflicts']} conflicts on {g_stats['pages']} page(s)",
+                         candidates=g_stats["edges"], pages_processed=g_stats["pages"], cap_truncations=g_stats["partial_pages"],
+                         diagnostics={"stats": g_stats})
+        except Cancelled:
+            raise
+        except Exception as exc:
+            recorder.end("engineering_graph", "FAILED", f"{type(exc).__name__}: {exc}")
     recorder.begin("doc_text")
     try:
         check()
@@ -370,7 +437,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             health["record_error"] = f"{type(exc).__name__}: {exc}"
     return {"extraction_id": extraction_id, "analyses": ids, "counts": counts, "stages": stages,
             "outcomes": recorder.ordered(), "health": health, "page_analysis": page_analysis, "run_id": run_id,
-            "items": items,
+            "items": items, "graphs": graphs,
             "notice": "All results are unreviewed proposals read from the drawing; none verifies the plant."}
 
 

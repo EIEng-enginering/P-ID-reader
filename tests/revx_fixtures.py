@@ -189,7 +189,8 @@ def draw_actuator(c, kind: str, cx: float, cy: float, s: float, *, lw: float = 0
     c.restoreState()
 
 
-def symbol_sheet_pdf(items: list[dict], *, size=(600.0, 420.0), pipe: bool = True, raster: bool = False, noise: int = 0) -> bytes:
+def symbol_sheet_pdf(items: list[dict], *, size=(600.0, 420.0), pipe: bool = True, raster: bool = False, noise: int = 0,
+                     lines=(), dashed=(), dots=(), arrows=()) -> bytes:
     """items: ``{"kind", "x", "y", "s", "rot"?, "actuator"?}`` in points (origin bottom-left)."""
     buf = BytesIO()
     pw, ph = size
@@ -199,10 +200,34 @@ def symbol_sheet_pdf(items: list[dict], *, size=(600.0, 420.0), pipe: bool = Tru
         ys = sorted({it["y"] for it in items if it.get("pipe", not it["kind"].startswith(("inst", "vessel")))})
         for y in ys:
             c.line(10, y, pw - 10, y)
+    for x0, y0, x1, y1 in lines:
+        c.setLineWidth(0.8)
+        c.line(x0, y0, x1, y1)
+    for x0, y0, x1, y1 in dashed:
+        c.setLineWidth(0.8)
+        c.setDash(3, 2)
+        c.line(x0, y0, x1, y1)
+        c.setDash()
+    for x, y in dots:
+        c.circle(x, y, 2.2, stroke=0, fill=1)
+    for x, y, ang in arrows:
+        import math
+        a = math.radians(ang)
+        ux, uy = math.cos(a), math.sin(a)
+        nx, ny = -uy, ux
+        p = c.beginPath()
+        p.moveTo(x + ux * 6, y + uy * 6)
+        p.lineTo(x - ux * 3 + nx * 3.2, y - uy * 3 + ny * 3.2)
+        p.lineTo(x - ux * 3 - nx * 3.2, y - uy * 3 - ny * 3.2)
+        p.close()
+        c.drawPath(p, stroke=0, fill=1)
     for it in items:
         draw_symbol(c, it["kind"], it["x"], it["y"], it["s"], it.get("rot", 0))
         if it.get("actuator"):
             draw_actuator(c, it["actuator"], it["x"], it["y"], it["s"])
+        if it.get("tag"):
+            c.setFont("Helvetica", 6.5)
+            c.drawString(it["x"] - 8, it["y"] + it["s"] * 0.9 + 4, it["tag"])
     c.setLineWidth(0.4)
     for i in range(noise):
         c.line(5 + (i * 37) % int(pw - 20), 5 + (i * 53) % int(ph - 20), 9 + (i * 37) % int(pw - 20), 9 + (i * 53) % int(ph - 20))

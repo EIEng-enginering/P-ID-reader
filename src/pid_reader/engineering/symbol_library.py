@@ -153,6 +153,8 @@ def _d_filter(img, w, h, pad, t):
     _line(img, (0.0, 1.0), (1.0, 0.0), w, h, pad, t)
 
 
+_ROUND_PORTS = [{"kind": "INSTRUMENT_PORT", "x": 0.5, "y": 0.0, "angle": 270}, {"kind": "INSTRUMENT_PORT", "x": 0.5, "y": 1.0, "angle": 90},
+                {"kind": "INSTRUMENT_PORT", "x": 0.0, "y": 0.5, "angle": 180}, {"kind": "INSTRUMENT_PORT", "x": 1.0, "y": 0.5, "angle": 0}]
 _END_PORTS = [{"kind": "PROCESS_UNKNOWN", "x": 0.0, "y": 0.5, "angle": 180}, {"kind": "PROCESS_UNKNOWN", "x": 1.0, "y": 0.5, "angle": 0}]
 
 
@@ -182,11 +184,11 @@ LIBRARY: dict[str, dict] = {s["template_id"]: s for s in [
     _spec("ACT_MOTOR", "ACTUATOR", "STEM_RING", "MOTOR_ACTUATOR", "MOTOR", "ACTUATION", 0.9, 1, _d_act_motor,
           [{"kind": "ACTUATOR_SIGNAL", "x": 0.5, "y": 1.0, "angle": 90}], (8, 12, 17)),
     _spec("INST_FIELD", "INSTRUMENT", "BUBBLE_PLAIN", "INSTRUMENT_FIELD_MOUNTED", None, "INDICATION", 1.0, 1, _d_inst_field,
-          [{"kind": "INSTRUMENT_TAP", "x": 0.5, "y": 1.0, "angle": 90}, {"kind": "SIGNAL_OUT", "x": 0.5, "y": 0.0, "angle": 270}], (14, 20, 28)),
+          _ROUND_PORTS, (14, 20, 28)),
     _spec("INST_PANEL", "INSTRUMENT", "BUBBLE_BAR", "INSTRUMENT_PANEL_MOUNTED", None, "INDICATION", 1.0, 1, _d_inst_panel,
-          [{"kind": "SIGNAL_IN", "x": 0.5, "y": 1.0, "angle": 90}, {"kind": "SIGNAL_OUT", "x": 0.5, "y": 0.0, "angle": 270}], (14, 20, 28)),
+          _ROUND_PORTS, (14, 20, 28)),
     _spec("INST_SHARED", "INSTRUMENT", "BUBBLE_IN_SQUARE", "INSTRUMENT_SHARED_DISPLAY_CONTROL", None, "CONTROL_SYSTEM_INTERFACE", 1.0, 1, _d_inst_shared,
-          [{"kind": "SIGNAL_IN", "x": 0.5, "y": 1.0, "angle": 90}, {"kind": "SIGNAL_OUT", "x": 0.5, "y": 0.0, "angle": 270}], (16, 24, 32)),
+          _ROUND_PORTS, (16, 24, 32)),
     _spec("EQ_VESSEL_V", "EQUIPMENT", "CAPSULE_VERTICAL", "PRESSURE_VESSEL", None, "CONTAINMENT", 2.2, 2, _d_vessel_v,
           [{"kind": "NOZZLE", "x": 0.5, "y": 0.0, "angle": 270}, {"kind": "NOZZLE", "x": 0.5, "y": 1.0, "angle": 90}], (45, 75, 110),
           class_alternatives=["SEPARATOR", "FILTER_HOUSING", "COLUMN", "UNKNOWN"]),

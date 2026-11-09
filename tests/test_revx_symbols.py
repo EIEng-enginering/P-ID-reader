@@ -53,7 +53,7 @@ def test_library_hierarchy_and_typed_ports():
             assert spec[key]
         for p in spec["ports"]:
             assert 0 <= p["x"] <= 1 and 0 <= p["y"] <= 1 and p["kind"] in (
-                "PROCESS_UNKNOWN", "ACTUATOR_SIGNAL", "SIGNAL_IN", "SIGNAL_OUT", "INSTRUMENT_TAP", "NOZZLE")
+                "PROCESS_UNKNOWN", "ACTUATOR_SIGNAL", "SIGNAL_IN", "SIGNAL_OUT", "INSTRUMENT_TAP", "INSTRUMENT_PORT", "NOZZLE")
     assert all(p["kind"] == "PROCESS_UNKNOWN" for p in lib.LIBRARY["VALVE_CHECK"]["ports"])      # direction is never assumed
 
 
