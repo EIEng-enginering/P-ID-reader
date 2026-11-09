@@ -52,9 +52,20 @@ def sheet_pdf(*, dense: int = 0, title: bool = True, notes: bool = False, table:
             c.drawString(x0 + 8, y0 + 100 - i * 12, t)
     if revision:
         c.setFont("Helvetica", 7)
-        for i, t in enumerate(["REV DATE DESCRIPTION BY CHK APPR", "A 2014-01-01 ISSUED FOR REVIEW AB CD EF",
-                               "B 2014-06-01 REVISED PER COMMENTS AB CD EF"]):
-            c.drawString(W - 330, H - 60 - i * 10, t)
+        x0, ytop = W - 330, H - 50
+        widths = [30, 62, 128, 26, 26, 28]
+        edges = [x0]
+        for wd in widths:
+            edges.append(edges[-1] + wd)
+        for r in range(4):
+            c.line(x0, ytop - r * 14, edges[-1], ytop - r * 14)
+        for e in edges:
+            c.line(e, ytop, e, ytop - 42)
+        rows = [["REV", "DATE", "DESCRIPTION", "BY", "CHK", "APPR"], ["A", "2014-01-01", "ISSUED FOR REVIEW", "AB", "CD", "EF"],
+                ["B", "2014-06-01", "REVISED PER COMMENTS", "AB", "CD", "EF"]]
+        for r, row in enumerate(rows):
+            for k, cell in enumerate(row):
+                c.drawString(edges[k] + 2, ytop - r * 14 - 10, cell)
     if notes:
         c.setFont("Helvetica", 7)
         for i, t in enumerate(["NOTES:", "1. ALL DIMENSIONS IN MM", "2. HOLD 1 TIE-IN POINT TO BE CONFIRMED",

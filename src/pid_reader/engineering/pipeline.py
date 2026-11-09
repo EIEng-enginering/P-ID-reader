@@ -78,10 +78,11 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                                           "catalogue_id": catalogue_id, "pages": list(pages)})
 
     page_analysis: list[dict] = []
+    profiles: dict = {}
     recorder.begin("classify")
     try:
         check()
-        page_analysis = analyse_pages(source, pages, source_sha256=source_sha)
+        page_analysis = analyse_pages(source, pages, source_sha256=source_sha, profiles_out=profiles)
         recorder.end("classify", "DONE", f"{len(page_analysis)} page(s) classified",
                      pages_processed=len(page_analysis), regions_processed=sum(len(p["regions"]) for p in page_analysis),
                      candidates=sum(len(p["regions"]) for p in page_analysis))
@@ -303,13 +304,27 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         ocr_words_by_page=ocr_words_by_page,
         symbol_stage_status=recorder.outcomes.get("symbols", {}).get("status", "NOT_RUN"),
         graph_nodes=counts.get("symbols", 0))
+    items: list[dict] = []
+    recorder.begin("doc_text")
+    try:
+        check()
+        from .doc_text import extract_document_text
+        items, text_stats = extract_document_text(page_analysis, profiles, ocr_words_by_page, source_sha)
+        counts["doc_text_items"] = len(items)
+        recorder.end("doc_text", "DONE", f"{text_stats['tables']} tables, {text_stats['table_values']} values, {text_stats['notes']} notes",
+                     candidates=len(items), pages_processed=text_stats["pages"], cap_truncations=text_stats["capped_pages"],
+                     diagnostics={"stats": text_stats})
+    except Cancelled:
+        raise
+    except Exception as exc:
+        recorder.end("doc_text", "FAILED", f"{type(exc).__name__}: {exc}")
     run_id = None
     if record:
         try:
             from .intelligence_store import record_run
             regions = [r for p in page_analysis for r in p["regions"]]
             run_id = record_run(db, extraction_id, preset=preset, status=health["drawing_status"],
-                                outcomes=recorder.ordered(), regions=regions,
+                                outcomes=recorder.ordered(), regions=regions, items=items,
                                 summary={"health": health, "counts": counts, "pages": [
                                     {k: p[k] for k in ("page", "classification", "reason", "ocr_policy", "counts", "frame")}
                                     for p in page_analysis]},
@@ -318,6 +333,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             health["record_error"] = f"{type(exc).__name__}: {exc}"
     return {"extraction_id": extraction_id, "analyses": ids, "counts": counts, "stages": stages,
             "outcomes": recorder.ordered(), "health": health, "page_analysis": page_analysis, "run_id": run_id,
+            "items": items,
             "notice": "All results are unreviewed proposals read from the drawing; none verifies the plant."}
 
 

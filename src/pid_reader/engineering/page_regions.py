@@ -276,6 +276,7 @@ def segment_regions(profile: dict, source_sha: str = "") -> list[dict]:
         if LEGEND_WORDS & head:
             add("LEGEND", bb, {"keywords": sorted(LEGEND_WORDS & head)}, label)
         elif len(REVISION_WORDS & ws) >= 3 and {"REV", "REVISION", "REVISIONS"} & ws:
+            bb = ext if (hrules >= 3 and vrules >= 2) else bb          # a ruled table is as big as its rules, not its words
             add("REVISION_TABLE", bb, {"keywords": sorted(REVISION_WORDS & ws), "rules": [hrules, vrules]}, "revision table")
         elif NOTE_WORDS & head:
             add("NOTES", bb, {"keywords": sorted(NOTE_WORDS & head)}, label)
@@ -294,8 +295,13 @@ def segment_regions(profile: dict, source_sha: str = "") -> list[dict]:
         label_words = sorted(above or inside[:3], key=lambda w: (round(w["bbox"]["y0"], 3), w["bbox"]["x0"]))
         box = _union(gb, {"x0": min([w["bbox"]["x0"] for w in above] + [gb["x0"]]), "y0": min([w["bbox"]["y0"] for w in above] + [gb["y0"]]),
                           "x1": gb["x1"], "y1": gb["y1"]})
-        add("TABLE", box, {"horizontal_rules": g["h"], "vertical_rules": g["v"], "words": len(inside) + len(above),
-                           "grid_box": gb}, " ".join(w["text"] for w in label_words[:4]).title())
+        upper = {w["text"].upper() for w in inside}
+        if len(REVISION_WORDS & upper) >= 3 and {"REV", "REVISION"} & upper:
+            add("REVISION_TABLE", box, {"horizontal_rules": g["h"], "vertical_rules": g["v"], "keywords": sorted(REVISION_WORDS & upper),
+                                        "grid_box": gb}, "revision table")
+        else:
+            add("TABLE", box, {"horizontal_rules": g["h"], "vertical_rules": g["v"], "words": len(inside) + len(above),
+                               "grid_box": gb}, " ".join(w["text"] for w in label_words[:4]).title())
         claimed.append(box)
 
     add("DRAWING_AREA", inner,
@@ -320,11 +326,17 @@ def ocr_policy(classification: dict) -> dict:
     return {"mode": mode, "ocr_required": needs, "note": note}
 
 
-def analyse_pages(pdf_bytes: bytes, pages: tuple[int, ...] | None = None, *, source_sha256: str = "") -> list[dict]:
-    """Profile, classify and segment pages. Result is deterministic for identical bytes."""
+def analyse_pages(pdf_bytes: bytes, pages: tuple[int, ...] | None = None, *, source_sha256: str = "",
+                  profiles_out: dict | None = None) -> list[dict]:
+    """Profile, classify and segment pages. Result is deterministic for identical bytes.
+
+    ``profiles_out``: optional dict that receives ``{page: profile}`` (words and rules) for downstream stages.
+    """
     source_sha256 = source_sha256 or hashlib.sha256(pdf_bytes).hexdigest()
     out = []
     for prof in profile_pages(pdf_bytes, pages):
+        if profiles_out is not None:
+            profiles_out[prof["page"]] = prof
         cls = classify_page(prof)
         out.append({"page": prof["page"], "frame": prof["frame"], "classification": cls["kind"], "reason": cls["reason"],
                     "evidence": cls["evidence"], "ocr_policy": ocr_policy(cls),
