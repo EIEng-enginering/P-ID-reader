@@ -58,7 +58,7 @@ def _complementary(a: str, b: str) -> bool:
 
 def match_connectors(sheets: list[dict], connectors: list[dict]) -> dict:
     """Candidate matches between connectors of different sheets. ``sheets``: ``{sheet_id, drawing_ref}``."""
-    connectors = sorted(connectors, key=lambda c: c["connector_id"])            # canonical pair order: input order never matters
+    connectors = sorted(connectors, key=lambda c: (c["sheet_id"], c["connector_id"]))            # canonical pair order: input order never matters
     ref_of = {s["sheet_id"]: _norm_drawing(s.get("drawing_ref")) for s in sheets}
     candidates, conflicts, insufficient = [], [], []
     for i, a in enumerate(connectors):
