@@ -104,6 +104,11 @@ def _validator_name() -> str | None:
 
 
 def export_dexpi_xml(snapshot: dict, destination: str | Path, *, xsd_path: str | Path | None = None) -> Path:
-    """Always refuses today. The exception carries the specific status; no file is written."""
+    """Refuses unless the R5 proposed export is switched on (``PID_R5_DEXPI=on``/``shadow``); then it delegates to
+    ``dexpi_proposed.export_dexpi_proposed`` (which writes ``destination`` as a *folder*). OFF is the Rev X refusal, unchanged."""
+    from . import r5_features
+    if r5_features.mode("DEXPI") != r5_features.OFF:
+        from .dexpi_proposed import export_dexpi_proposed
+        return Path(export_dexpi_proposed(snapshot, destination, xsd_path=xsd_path)["xml"])
     st = status(xsd_path)
     raise DexpiNotAvailable(f"{st['status']}: {st['reason']}. Use mapping_report() for what a validated export would need.")

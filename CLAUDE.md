@@ -1,3 +1,9 @@
+# CURRENT INSTRUCTIONS — R5 UPDATE (adds to Rev X; supersedes nothing)
+
+R5 update is on branch `claude/r5-program-update` (0.19.0-dev0, standalone DB still v13). Read `docs/r5_update/R5_UPDATE_STATUS.md`. Three new switches (`PID_R5_DEXPI`, `PID_R5_PAGE_FRAME`, `PID_R5_REVIEW_LEDGER`) are OFF by default; failed R5 research items (crowded matching, optical stacked OCR, general port/signal recognition) stay disabled; the DEXPI export is a proposal and never a conformance claim. All Rev X rules still hold.
+
+---
+
 # CURRENT INSTRUCTIONS — REV X (supersedes WIN-R01 where they conflict)
 
 Rev X is implemented on branch `claude/rev-x-upgrade` (0.18.0-dev0, standalone DB v13). Read `docs/rev_x/HANDOFF_STATE.md`, `docs/rev_x/WPU_STATUS.md`, `docs/rev_x/OWNER_REVIEW_CHECKLIST.md`. Rules that still hold: frozen R1 contract/API/worker/schema v1; all readings are unverified proposals; no HAZOP/LOPA/SIL/IPL conclusions; stage Git paths explicitly (never `git add -A`); no pushes without the owner; never use the reserved final split; Python edits use `newline=''`; run tests with `PYTHONPATH=src`.

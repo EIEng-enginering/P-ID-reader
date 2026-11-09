@@ -2,6 +2,13 @@ from __future__ import annotations
 from io import BytesIO
 import pytest
 
+
+@pytest.fixture(autouse=True)
+def _r5_settings_isolated(tmp_path_factory, monkeypatch):
+    """The R5 switches may be stored per user; tests must never read or write the real settings file."""
+    monkeypatch.setenv("PID_R5_SETTINGS", str(tmp_path_factory.mktemp("r5set") / "r5_features.json"))
+
+
 @pytest.fixture
 def synthetic_pdf():
     from reportlab.pdfgen.canvas import Canvas

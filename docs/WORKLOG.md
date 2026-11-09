@@ -22,3 +22,6 @@
 # Progress fix (2026-11-09, later)
 Reported: the program said the analysis was still running when saving reports, at 100 %, and sometimes sat at 60 %. Cause: `analyze_drawing` announced "done" (100 %) before the new slow stages, and the OCR, symbol and graph stages had no progress or cancel hooks. Measured on S023 with a per-stage timer before and after the change; regression tests in `tests/test_revx_progress.py`.
 
+# R5 program update (2026-11-09)
+Package `PID_READER_CLAUDE_PROGRAM_UPDATE_R5_COMPLETE.zip` (outer manifest and the nested R5 archive verified: 5,260 files, sha256 0934d71e...). Baseline: main 4cefc35 (0.18.1-dev0), run from a pristine `git archive` export. Branch `claude/r5-program-update`. Result and evidence: `docs/r5_update/`.
+

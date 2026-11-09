@@ -201,6 +201,12 @@ def main(argv: list[str] | None = None) -> int:
     ei.add_argument("database");ei.add_argument("extraction_id");ei.add_argument("destination")
     ap2=sub.add_parser("export-ai-package",help="Write the AI-ready package (manifest, registers, graphs, evidence, prompt) into a new sub-folder")
     ap2.add_argument("database");ap2.add_argument("extraction_id");ap2.add_argument("folder")
+    rl=sub.add_parser("review-ledger",help="R5: list ambiguous/blocked connection candidates (never topology); --record adds a named human decision. Needs PID_R5_REVIEW_LEDGER=on or shadow")
+    rl.add_argument("database");rl.add_argument("extraction_id");rl.add_argument("--record");rl.add_argument("--actor");rl.add_argument("--decision");rl.add_argument("--reason")
+    dx=sub.add_parser("export-dexpi",help="R5: PROPOSED DEXPI 2.0.1 export + sidecar + separate checks into FOLDER. Off unless PID_R5_DEXPI=on or shadow. Not a conformance claim")
+    dx.add_argument("database");dx.add_argument("extraction_id");dx.add_argument("folder");dx.add_argument("--include-unreviewed",action="store_true")
+    dx.add_argument("--dexpi-files",help="folder with the official Core.xml and Plant.xml (structure check) and DEXPI_XML_Schema.xsd (needs lxml)")
+    sub.add_parser("r5-features",help="Show every R5 switch (OFF/SHADOW/ON) and the features kept disabled")
     xp=sub.add_parser("export-xlsx",help="Excel workbook of registers, loops, lines, findings and checks (unverified readings)")
     xp.add_argument("database");xp.add_argument("destination");xp.add_argument("--extraction-id",action="append",default=None)
     gx=sub.add_parser("graph-export",help="Canonical proposed-connectivity graph of one drawing (JSON or GraphML)")
@@ -244,6 +250,10 @@ def main(argv: list[str] | None = None) -> int:
                 Path(args.output_json).write_text(text,encoding="utf-8")
             else:
                 print(text)
+            return 0
+        if args.cmd=="r5-features":
+            from .engineering import r5_features
+            print(canonical_json(r5_features.inventory()))
             return 0
         if args.cmd=="gui":
             from .ui.app import run_app
@@ -378,6 +388,22 @@ def main(argv: list[str] | None = None) -> int:
             elif args.cmd=="export-ai-package":
                 from .engineering.intelligence import export_package
                 print(canonical_json({"package":str(export_package(db,args.extraction_id,args.folder))}))
+            elif args.cmd=="review-ledger":
+                from .engineering import r5_features
+                from .engineering.connection_review import ledger_for_run,record_review
+                if r5_features.mode("REVIEW_LEDGER")==r5_features.OFF:
+                    raise ValueError("REVIEW_LEDGER_OFF: set PID_R5_REVIEW_LEDGER=on (or shadow) to use the review ledger")
+                if args.record:
+                    print(canonical_json({"decision_id":record_review(db,args.extraction_id,args.record,actor=args.actor or "",decision=args.decision or "",reason=args.reason or "")}))
+                else:
+                    print(canonical_json(ledger_for_run(db,args.extraction_id)))
+            elif args.cmd=="export-dexpi":
+                from .engineering.dexpi_proposed import export_dexpi_proposed
+                from .engineering.intelligence import build_snapshot
+                files=Path(args.dexpi_files) if args.dexpi_files else None
+                reg=tuple(str(files/n) for n in ("Core.xml","Plant.xml") if files and (files/n).is_file()) if files else ()
+                xsd=files/"DEXPI_XML_Schema.xsd" if files and (files/"DEXPI_XML_Schema.xsd").is_file() else None
+                print(canonical_json(export_dexpi_proposed(build_snapshot(db,args.extraction_id),args.folder,include_unreviewed=args.include_unreviewed,registry_files=reg,xsd_path=xsd)))
             elif args.cmd=="list":
                 print(json.dumps(db.list_objects(text=args.text,limit=args.limit),indent=2))
             elif args.cmd=="show":

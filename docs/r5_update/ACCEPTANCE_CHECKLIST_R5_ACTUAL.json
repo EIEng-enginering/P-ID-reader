@@ -1,0 +1,91 @@
+{
+ "schema": "claude-pid-r5-implementation-checklist/1",
+ "filled_from": "actual execution on this machine, 2026-11-09",
+ "items": [
+  {
+   "id": "BASELINE",
+   "status": "PASS",
+   "actual_result": "pristine main 4cefc35: pytest exit 0, 0 failed, 6 skipped; R1 checker 16/16; ZIP sha unchanged"
+  },
+  {
+   "id": "OFF_IDENTITY",
+   "status": "PASS",
+   "actual_result": "22/22 legacy export files identical to baseline with all switches OFF; schema 13; 58 tables"
+  },
+  {
+   "id": "DEXPI_CLASSES",
+   "status": "PASS_SYNTHETIC",
+   "actual_result": "five classes map to the DEXPI 2.0.1 names; generic valve keeps unresolved-subtype note; end-to-end test from a detected, human-accepted reading"
+  },
+  {
+   "id": "DEXPI_VALIDATION",
+   "status": "PARTIAL_BLOCKED",
+   "actual_result": "registry structure PASS against official Plant/Core files; source read-back PASS; XSD BLOCKED (no validator installed)"
+  },
+  {
+   "id": "FATE_AND_IDS",
+   "status": "PASS",
+   "actual_result": "exactly one fate per source object/port/edge on synthetic, S025 and S056 live output; ids injective and reversible; commas, collisions, duplicates, repeated tags tested"
+  },
+  {
+   "id": "COORDINATES",
+   "status": "PASS_GUARD_ONLY",
+   "actual_result": "UserUnit 1/2/5/10, invalid units, rotation, crop offsets, corrupt metadata flagged; lengths always refused; no qualified physical scaling exists or is claimed"
+  },
+  {
+   "id": "GRAPH_REVIEW",
+   "status": "PASS",
+   "actual_result": "ledger separate from topology; stable ids; decisions via existing append-only table; never in relationships"
+  },
+  {
+   "id": "SHADOW_WRITES",
+   "status": "PASS",
+   "actual_result": "SHADOW package byte-identical to OFF; candidates only in a separate folder; no database or manifest writes"
+  },
+  {
+   "id": "C12_SPEED",
+   "status": "SKIPPED_NOT_APPLICABLE",
+   "actual_result": "live program has no dash-run reconstruction stage; see C12_EVALUATION.md"
+  },
+  {
+   "id": "RUNTIME",
+   "status": "PASS_PARTIAL",
+   "actual_result": "Windows 11, Python 3.12.10, PySide6 6.12.0, RapidOCR 1.4.4 unchanged; no downloads; antivirus context not recorded"
+  },
+  {
+   "id": "UI_WORKER",
+   "status": "PASS_OFFSCREEN",
+   "actual_result": "R5 menu/export/ledger in the offscreen window; existing GUI/worker/cancel/progress tests pass; Windows DPI manual review NOT_RUN"
+  },
+  {
+   "id": "WORKSHEET_R1",
+   "status": "PASS_CHECKER_ONLY",
+   "actual_result": "frozen R1 checker 16/16; real Worksheet host G4-G7 NOT_RUN"
+  },
+  {
+   "id": "OFFLINE",
+   "status": "PARTIAL",
+   "actual_result": "in-process socket guard passes; OS-level isolation NOT_RUN"
+  },
+  {
+   "id": "PACKAGING",
+   "status": "PASS",
+   "actual_result": "PyInstaller build succeeded; frozen CLI runs with switches OFF; installer/antivirus context not tested"
+  },
+  {
+   "id": "S025_S056",
+   "status": "PARTIAL",
+   "actual_result": "S025 and S056 originals present and replayed; S056 OCR stage FAILED (R5-007); the R4-era 25 proposals are not available"
+  },
+  {
+   "id": "TIMING",
+   "status": "NOT_RUN",
+   "actual_result": "no optimisation integrated; cold+7 warm not run"
+  },
+  {
+   "id": "ROLLBACK",
+   "status": "PASS",
+   "actual_result": "OFF identity vs baseline demonstrated; branch not merged"
+  }
+ ]
+}
