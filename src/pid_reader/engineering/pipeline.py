@@ -24,17 +24,25 @@ def _noop(_stage: str, _fraction: float, _message: str) -> None:
     return None
 
 
+PIPELINE_VERSION = "pipeline-rev-x-1"
+
+
 def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                     catalogue_id: str | None = None, use_example_catalogue: bool = True,
                     progress: Callable[[str, float, str], None] = _noop,
-                    cancel: CancelToken | None = None) -> dict:
+                    cancel: CancelToken | None = None, preset: str = "standard", record: bool = True) -> dict:
     """Run every available layer for ``extraction_id``.
 
     ``ocr_engine``: ``None`` skips OCR; ``'auto'`` uses Tesseract if installed,
     else RapidOCR if installed, else records OCR as ``SKIPPED``.
     Returns ``{"extraction_id", "analyses": {stage: id}, "counts": {...},
-    "stages": {stage: {"status", "detail"}}}``.
+    "stages": {stage: {"status", "detail"}}, "outcomes": [StageOutcome...], "health": {...}, "run_id"}``.
+    ``stages`` keeps the legacy DONE/SKIPPED/FAILED/NOT_RUN vocabulary; ``outcomes`` and ``health`` (Rev X) separate
+    "did not run", "failed" and "ran and found nothing", and ``health['drawing_status']`` is never a success claim for
+    an empty result. With ``record=True`` the run is stored in the additive v13 tables.
     """
+    from .stage_telemetry import StageRecorder, ocr_diagnostics, evaluate_health
+    from .page_regions import analyse_pages
     from .topology import analyze_pdf_topology
     from .symbols import build_symbol_proposals
     from .linework import build_linework_proposals
@@ -50,10 +58,12 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         if cancel is not None:
             cancel.check()
 
-    def mark(stage: str, status: str, detail: str = "") -> None:
+    def mark(stage: str, status: str, detail: str = "", **fields) -> None:
         stages[stage] = {"status": status, "detail": detail}
+        recorder.end(stage, status, detail, **fields)
 
     def step(stage: str, message: str) -> None:
+        recorder.begin(stage)
         progress(stage, STAGES.index(stage) / total, message)
 
     extraction = db.export_extraction(extraction_id)
@@ -63,6 +73,22 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
     pages = tuple(x["page"] for x in extraction["pages"] if x.get("read_status") == "READ")
     if not pages:
         pages = tuple(x["page"] for x in extraction["pages"])
+    source_sha = extraction["document"]["sha256"]
+    recorder = StageRecorder(source_sha, {"pipeline": PIPELINE_VERSION, "ocr_engine": ocr_engine, "preset": preset,
+                                          "catalogue_id": catalogue_id, "pages": list(pages)})
+
+    page_analysis: list[dict] = []
+    recorder.begin("classify")
+    try:
+        check()
+        page_analysis = analyse_pages(source, pages, source_sha256=source_sha)
+        recorder.end("classify", "DONE", f"{len(page_analysis)} page(s) classified",
+                     pages_processed=len(page_analysis), regions_processed=sum(len(p["regions"]) for p in page_analysis),
+                     candidates=sum(len(p["regions"]) for p in page_analysis))
+    except Cancelled:
+        raise
+    except Exception as exc:
+        recorder.end("classify", "FAILED", f"{type(exc).__name__}: {exc}")
 
     topology = None
     try:
@@ -169,22 +195,34 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         mark("signals", "SKIPPED", "needs linework")
 
     ocr = None
+    ocr_exception = ""
+    ocr_counters: dict = {}
+    from ..formats.ocr_source import available_engines, last_diagnostics
+    engines_now = available_engines()
     if ocr_engine is None:
         mark("ocr", "SKIPPED", "OCR disabled")
     else:
         try:
             check(); step("ocr", "Reading text with offline OCR")
-            from ..formats.ocr_source import ocr_pdf_preview, available_engines
-            if ocr_engine == "auto" and not available_engines():
+            from ..formats.ocr_source import ocr_pdf_preview
+            if ocr_engine == "auto" and not engines_now:
                 mark("ocr", "SKIPPED", "no offline OCR engine installed (Tesseract or RapidOCR)")
             else:
                 ocr = ocr_pdf_preview(source, pages=pages, engine=ocr_engine)
+                ocr_counters = last_diagnostics()
                 ids["ocr"] = db.add_ocr_analysis(extraction_id, ocr)
                 counts["ocr_words"] = sum(len(p["words"]) for p in ocr["pages"])
-                mark("ocr", "DONE", f"{counts['ocr_words']} words ({ocr['algorithm']})")
+                mark("ocr", "DONE", f"{counts['ocr_words']} words ({ocr['algorithm']})",
+                     tile_count=ocr_counters.get("tiles_attempted", 0), candidates=counts["ocr_words"],
+                     pages_processed=len(ocr["pages"]), evidence_count=counts["ocr_words"],
+                     output_sha256=ocr["result_sha256"])
         except Cancelled:
             raise
         except Exception as exc:
+            ocr_exception = f"{type(exc).__name__}: {exc}"
+            ocr_counters = last_diagnostics()
+            if str(exc).startswith("OCR_RUNTIME_EXCEPTION"):
+                ocr_exception = str(exc)
             mark("ocr", "FAILED", f"{type(exc).__name__}: {exc}")
 
     if "symbols" in ids and "ocr" in ids:
@@ -239,7 +277,44 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         mark('raster_centrelines','SKIPPED','requires raster network evidence')
 
     progress("done", 1.0, "Analysis finished")
+
+    # ---- Rev X health: separate "did not run", "failed" and "ran and found nothing"
+    ink_pages: set[int] = set()
+    if topology:
+        ink_pages |= {row["page"] for row in topology.get("segments", [])}
+    if "raster" in ids:
+        ink_pages |= {row["page"] for row in db.get_raster_analysis(ids["raster"]).get("stroke_candidates", [])}
+    ocr_words_by_page = {p["page"]: p["words"] for p in (ocr or {}).get("pages", [])}
+    native_words = {p["page"]: p["counts"]["word_count"] for p in page_analysis}
+    ocr_diag = ocr_diagnostics(
+        requested=ocr_engine is not None, engine_choice=ocr_engine or "off", engines_available=engines_now,
+        stage_status=recorder.outcomes.get("ocr", {}).get("status", "NOT_RUN"),
+        pages_selected=[] if ocr_engine is None else list(pages), counters=ocr_counters, native_words=native_words,
+        ocr_words={n: len(w) for n, w in ocr_words_by_page.items()},
+        recognized_tags=sum(1 for o in extraction["objects"] if o.get("attributes", {}).get("source") == "OCR"),
+        exception=ocr_exception)
+    if recorder.outcomes.get("ocr"):
+        recorder.outcomes["ocr"]["diagnostics"]["ocr"] = ocr_diag
+    health = evaluate_health(
+        page_analysis=page_analysis, outcomes=recorder.outcomes, ocr_diag=ocr_diag, ink_pages=ink_pages,
+        ocr_words_by_page=ocr_words_by_page,
+        symbol_stage_status=recorder.outcomes.get("symbols", {}).get("status", "NOT_RUN"),
+        graph_nodes=counts.get("symbols", 0))
+    run_id = None
+    if record:
+        try:
+            from .intelligence_store import record_run
+            regions = [r for p in page_analysis for r in p["regions"]]
+            run_id = record_run(db, extraction_id, preset=preset, status=health["drawing_status"],
+                                outcomes=recorder.ordered(), regions=regions,
+                                summary={"health": health, "counts": counts, "pages": [
+                                    {k: p[k] for k in ("page", "classification", "reason", "ocr_policy", "counts", "frame")}
+                                    for p in page_analysis]},
+                                config=recorder.config)
+        except Exception as exc:  # recording must never hide the analysis result
+            health["record_error"] = f"{type(exc).__name__}: {exc}"
     return {"extraction_id": extraction_id, "analyses": ids, "counts": counts, "stages": stages,
+            "outcomes": recorder.ordered(), "health": health, "page_analysis": page_analysis, "run_id": run_id,
             "notice": "All results are unreviewed proposals read from the drawing; none verifies the plant."}
 
 

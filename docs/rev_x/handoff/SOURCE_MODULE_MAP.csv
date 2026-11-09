@@ -1,0 +1,56 @@
+source_relative_path,bytes,top_level_functions_classes_lines,sha256
+src/pid_reader/__init__.py,124,,42ce248034a2bb740d161d71a718558812ab3a333195c3dc7c5dcbbc025ba36a
+src/pid_reader/api.py,10191,RefusedInput:23; LimitExceeded:31; Cancelled:35; CancelToken:39; ReadParams:54; canonical_json:88; sha256_hex:93; params_sha256:97; result_sha256:101; _round_box:109; stable_id:114; object_id:119; connection_id:123; loop_id:127; shared_id:131; read_pid:136; schema_version:202; module_version:206,8f7f1337e8e33ce8ffb58e8cfe938b68fd5e11f3a16ca2161dd7594bf7c63655
+src/pid_reader/cli.py,45547,main:12,581fe890d55cb8a77fb772681c8ecf45af00a018a1ffbef99b48cdacae43a1aa
+src/pid_reader/engineering/__init__.py,48,,3f28736e04f237f4db05cbaa9db8e52b8d67741edcbdd3a0d73cf8a9f65ff012
+src/pid_reader/engineering/batch.py,6870,_is_link:20; _safe_input:31; collect_files:37; _hash_file:56; start_batch:71; resume_batch:88,0247c7ae16abb0ae72b37888201443c021394a0a9faae39ef3d5d66fb77681f8
+src/pid_reader/engineering/benchmark_registry.py,8277,_stamp:27; new_registry:33; validate_registry:39; add_candidate:90; advance_candidate:105; summary:126; read_registry:135; write_registry:142,950cbc9b3ed45253943b35ee7bb2bbb986008e84a57884e280528fc82eefc51d
+src/pid_reader/engineering/checks.py,5616,instrument_loops:17; _inside:36; consistency_checks:41,997e030f2e847b782c01a80ac01a37dbe15ae42e93d67b56a347ec56c0dd7994
+src/pid_reader/engineering/connectivity.py,9304,_DSU:28; build_connectivity:45; _union_box:164; drawing_connectivity:171,121c39a0c2efc736514ba630c75904f4f2dd547564e3635d6dc2d00aba527e10
+src/pid_reader/engineering/dexpi.py,1096,DexpiNotAvailable:20; export_dexpi:24,130fcbe5597bad5749166f8c31463f19160b6ae2e7f69a48289711ad79bc4337
+src/pid_reader/engineering/drawing_export.py,5284,safe_stem:31; unique_stem:41; _write_new:51; export_drawing:72; export_drawings:100,358e350073848c5d4636e50ad354b5554e4a6bf8541bbf65fc6c84e188efe29f
+src/pid_reader/engineering/drawing_graph.py,4979,trace_drawing_segments:20,6e9b619693fe6aa5e7c56981389729542e45da74f09d54fa61a4999f22a7c83c
+src/pid_reader/engineering/example_matching.py,5808,_iou:27; find_similar:35,ad8bc1484b67dcb5affd37898d3ac2fd23dd7cde4112cc3977df00233d064e01
+src/pid_reader/engineering/examples.py,7650,ensure_schema:49; _check:53; teach_symbol:59; list_example_candidates:93; latest_example_review:110; review_example_match:116,070f670d40a8ff9a07bf57b8c8acaae6bb5f57ddd5f3b65a777d2590b8643853
+src/pid_reader/engineering/findings.py,11210,latest_analysis_ids:45; _decision:63; _box:67; list_findings:77; review_finding:162; finding_counts:192,1e655bc5558fa00d3adcd711cd8a0d9cc4004cd8d4623d16fc682aac5fca6352
+src/pid_reader/engineering/graph_export.py,7556,_id:24; _prov:28; canonical_graph:35; to_graphml:102,e486aca496f22ff81106b607ba95dad52cb7055c1b2ef803119418166abd4b6d
+src/pid_reader/engineering/isolation.py,15660,WorkerTimeout:37; _Job:42; _package_parent:104; _worker_command:108; run_limited:125; read_pid_isolated:202; _explain:315; memory_cap_enforced:319,d40920ce4fa9939e5566446ba4e8c41b5b86a17dc22233786d2f60c896a5e271
+src/pid_reader/engineering/linework.py,13199,_close:28; _segments:32; _find_base:41; _candidate_valves:48; _valve_endpoints:137; build_linework_proposals:173; validate_linework_proposals:228,372bbea45180f45d23fb132678f6d150658cf72d42d47ebe25e27901e73d7ec1
+src/pid_reader/engineering/migrations.py,37377,upgrade:92,0651d59a8a75a4588e609dc3d819da5a5fe399ab5da7323e6a717be270804021
+src/pid_reader/engineering/pipeline.py,12351,_noop:23; analyze_drawing:27; summary_json:246,e4c2f863dd085114731e2b212e8c6da59a908fd1754d3739dc48d54364df71fb
+src/pid_reader/engineering/project.py,92255,_utc:68; _global_id:71; ProjectStore:75,6caddf0ac24a219d633eb404abfcc6b193efc7b3f195d1a423cb29011b670b68
+src/pid_reader/engineering/project_links.py,4941,build_crosssheet_matches:17,1e2cc45691f521a9a7432557669dec7127493fc90a42e8a053fe531cd748e258
+src/pid_reader/engineering/raster_centrelines.py,14009,_median:34; _group_centreline:40; _gap_candidate:60; build_raster_centrelines:81; validate_raster_centrelines:182; trace_reviewed_centrelines:190,76fa169f53a6859db312116bc999a7a217cd0fee5656022e3c7363098a66df52
+src/pid_reader/engineering/raster_geometry.py,25707,_hough_rows:20; _dependencies:42; raster_available:53; _normalised_point:61; _normalised_box:67; _raster_strokes:75; _triangles:141; _filled_bowties:192; analyze_raster_geometry:242; validate_raster_result:366,8ef8f81a31db1aa18a096afb85b7953f5c00349827199c66456fd22aff493df6
+src/pid_reader/engineering/raster_network.py,15006,_frame:32; _pixel:40; _source:45; _expanded_box:51; _bucket_keys:56; _index_regions:63; _sample_coverage:75; _projection:88; _contact:96; _check_ocr:135; build_raster_network:152; validate_raster_network:306,bc6e31eb4f91fc366865f3b43d6cb59ade963c5b857fa2aa497ea1c7cde7f595
+src/pid_reader/engineering/raster_outlines.py,7435,_line_fraction:18; _find_bases:28; _has_central_ring:59; _one_orientation:82; find_outline_valves:141,7fe3931dae9d7b5843410e033663f2a76c8464261f44614897d23f6f4be8ad6a
+src/pid_reader/engineering/reports.py,25608,_analysis_section:30; annotated_pages:81; make_report:131; verify_report:204; _spreadsheet_safe:217; _named:225; report_csv:232; report_html:248; encode_report:398; save_report:412,926888a475eaa7fab4e31b4f14363d68aea8474cf27ccb3ff87937ff22739bc6
+src/pid_reader/engineering/revisions.py,5666,_tag:16; _group:30; compare_extractions:52,51efdbb140db9f1816bff0fc65b877ded078388353ec6fbe04ea7d2fc763de1f
+src/pid_reader/engineering/sheet_fields.py,8290,_item:28; _union:32; _text_lines:37; sheet_fields:67; flatten:135,b533bae21f89fb4e3d6f1f2ac85110a3c9ddfd554da6bf4313815b4924eaf406
+src/pid_reader/engineering/signal_links.py,4905,build_signal_links:22; validate_signal_links:72,4a1652d9f5d5bf75da78b74c13c11859313342758b4eb18f3b0f535d904e5cc2
+src/pid_reader/engineering/signal_paths.py,6983,trace_signal_path:23,cb650957b886ae9bb7fccd369ecb8a475425450b510f7ad932abc367a84a13ba
+src/pid_reader/engineering/standalone_read.py,15405,_rapid_models:25; _sparse_vector_pages:46; _stacked_instrument_tags:63; _valid_function:105; _tag_from_bubble_lines:110; _bubble_pass:125; read_pid_standalone:182,caf1fd7e98fe9fa6ef088ea6280cfd4fb4a787d1f1bf918c0382a32c302d5b69
+src/pid_reader/engineering/standalone_worker.py,881,main:15,1b14719b384827aa89171622ade768431f65f855cafa60c0a8e9a65a18111752
+src/pid_reader/engineering/symbol_catalog.py,13136,example_catalog:36; validate_catalog:66; _near:112; _circle_on_stem:116; build_catalog_analysis:154; validate_catalog_analysis:229,7fb56a2bd7a3c8fd87a2c6870754cbb4687ab7eea31667fbc1fbe638923a68b3
+src/pid_reader/engineering/symbols.py,11524,_middle:20; _inside:24; _at_boundary:28; build_symbol_proposals:50; validate_symbol_proposals:143,b2bfcf410e8cc9980ea666b15a83ce958f396187ea18a4a41e1aea678174af38
+src/pid_reader/engineering/tag_profiles.py,5663,validate_profile:17; example_profile:39; profile_hash:47; parse_tag:52; evaluate_text_links:79; validate_profiled_tags:100,45666d745edbcd4f78cb42b4e9130933d3439133d68a11db59b29e9a57903cdd
+src/pid_reader/engineering/text_links.py,11349,_centre:23; _contained:27; _valid_box:32; validate_ocr_source:38; _group_words:97; build_text_links:136; validate_text_links:203,466613cbcd711f1468160de133bebe4fcb10765bb450ad09f306635b28083327
+src/pid_reader/engineering/topology.py,19920,_point:29; _cross:36; _difference:40; _within_end:44; _segment_contact:48; _bbox_at:96; analyze_pdf_topology:103; verify_topology_result:277; validate_topology_result:288,1e22c82aa3f4349c33d300a42c5af9809e6537f97ad0f54e498ec99669fd576f
+src/pid_reader/engineering/workspace.py,7871,_term:23; _escaped_like:29; register_page:33; drawing_graph_view:91; crosssheet_graph_view:127,be9275b0ce57b8e817fbf4c4665e645db920012442dca08cbf222d7f4e09c6f2
+src/pid_reader/engineering/xlsx_export.py,8937,_readings:24; build_tables:34; export_xlsx:100,c98142cc022931d6240275fd02022958da2d90abfcc94394ed0d0605441ae1bb
+src/pid_reader/entry.py,919,main:11,f14ed6c51151e5926f314ff8252a0ed35c27c07b5d44c513cbaa8ebd5ea45c53
+src/pid_reader/formats/__init__.py,84,,9bc93e13564a1df388400d9be5f31448634320dc18c1d0a23c5c2101e343ac76
+src/pid_reader/formats/dxf_source.py,4499,_point:16; read_dxf:20,560a2cd1f5a6dff6bd589eb30a4ba8416a369ca55ddb164eac2cc93249c0ad0f
+src/pid_reader/formats/ocr_source.py,14985,verify_ocr_preview:18; tesseract_available:31; rapidocr_available:42; available_engines:50; _rapid_engine:60; _rapid_lines:75; _rapid_version:102; _rapid_words:110; _tesseract_words:146; ocr_pdf_preview:165; validate_ocr_frame_for_pdf:278,be27ef1928bb9efea36bd08a082a22b70c91604422e225efa0a18f31be138a01
+src/pid_reader/formats/page_coordinates.py,5212,PageFrame:17; frame_from_pdfplumber:93,7d9cc5ead225bf4f11959e79af2d8123e219dc28533c03f24e4bb843e6c6cb2f
+src/pid_reader/formats/pdf_source.py,17215,_bbox:26; _parse_tag:43; _is_tag_like:66; _split_merged:70; _page_text_reversed:80; _make_obj:91; _segment_endpoints:100; extract_pdf:113,ded680a69639a6ec5dad936f74c7951858d04a6eaffed1bf489e9edb4e9c20cc
+src/pid_reader/release_assurance.py,5660,digest:19; local_runtime_env:23; check_import:31; check_r1:49; smoke_worker:68; preflight:109,dd83cd48632037947021625257bc6dfad0069b6d814480f3bfe38368793b3fd9
+src/pid_reader/ui/__init__.py,76,,2efbe0459c43855e861a5ed13755c8519347f11bc3e4c3df28f804ab7b4aed9e
+src/pid_reader/ui/app.py,2038,make_application:7; fit_window_to_screen:20; run_app:36,36aa0f07be79cf9c0e3d1390e9e81a694b9fd4c850a3584e7843126b02d0cce1
+src/pid_reader/ui/desktop.py,46256,run_ui:11,9166ade8f686c46cf178a97751a950b53ba9131c460ea0559883d3dfdf34fd2c
+src/pid_reader/ui/graphview.py,4804,GraphView:12,9106911d5e10bbd723323a25059248f55f437ce10c2a06cbd1407a204ff8236d
+src/pid_reader/ui/main_window.py,56001,ReviewDialog:60; MainWindow:103,8582195029a43fba0fa80af4e3ebc904aa2043301231d156ef7dacaa7a76b176
+src/pid_reader/ui/tabs.py,22066,_table:20; _fill:31; RevisionTab:39; BatchTab:103; LibraryTab:220; SheetInfoTab:309; ReportTab:354; AuditTab:436,a7e587d6d07459b93bb7b528f02864fa5a894e0ed729badc6867703ae8ae0e78
+src/pid_reader/ui/tasks.py,1660,CallbackCancelToken:14; Task:24,0beacd305bb099097228e98173ffebc9c7ba993c0f719f4d36856da173dd813f
+src/pid_reader/ui/viewer.py,10894,DrawingView:21,933e1a8ff5cd0636dbff9cbb11d80f2b4465678796aec3bf1299fba735aa766e
+src/pid_reader/worker.py,7125,progress:25; atomic_publish:30; main:80,64a718f68fc04aed7e376aea2c5a8a38ab2d755b80834fde819c4aca1c340052

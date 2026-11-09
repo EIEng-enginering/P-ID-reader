@@ -54,6 +54,36 @@ def available_engines() -> list[str]:
 _RAPID = None
 TILE_PX = 1200          # large drawings are read tile by tile so 5-8 pt lettering is not shrunk away
 TILE_OVERLAP_PX = 150
+_STATS: dict = {}
+
+
+def reset_diagnostics() -> None:
+    """Start a fresh per-run counter set (the OCR result dict itself stays unchanged and hash-stable)."""
+    _STATS.clear()
+    _STATS.update({"tiles_attempted": 0, "tiles_successful": 0, "tile_failures": 0, "tile_error_classes": [],
+                   "pages_attempted": 0, "words_per_page": {}})
+
+
+def last_diagnostics() -> dict:
+    """Counters of the most recent ``ocr_pdf_preview`` call in this process (a copy)."""
+    return {k: (list(v) if isinstance(v, list) else dict(v) if isinstance(v, dict) else v) for k, v in _STATS.items()}
+
+
+def _run_tile(engine, array):
+    """One engine call. A failing tile is counted and skipped instead of silently ending the whole drawing."""
+    _STATS["tiles_attempted"] = _STATS.get("tiles_attempted", 0) + 1
+    try:
+        found, _t = engine(array)
+    except MemoryError:
+        raise
+    except Exception as exc:  # noqa: BLE001 - recorded, caller decides whether the page is PARTIAL or FAILED
+        _STATS["tile_failures"] = _STATS.get("tile_failures", 0) + 1
+        name = type(exc).__name__
+        if name not in _STATS.setdefault("tile_error_classes", []):
+            _STATS["tile_error_classes"].append(name)
+        return None
+    _STATS["tiles_successful"] = _STATS.get("tiles_successful", 0) + 1
+    return found or []
 TILE_THRESHOLD_PX = 1500
 
 
@@ -78,16 +108,20 @@ def _rapid_lines(image):
     engine = _rapid_engine()
     width, height = image.size
     if max(width, height) <= TILE_THRESHOLD_PX:
-        found, _t = engine(np.asarray(image))
-        return list(found or [])
+        found = _run_tile(engine, np.asarray(image))
+        if found is None:
+            raise RuntimeError("OCR_RUNTIME_EXCEPTION: the only OCR tile failed (" + ",".join(_STATS.get("tile_error_classes", [])) + ")")
+        return list(found)
     lines = []
     step = TILE_PX - TILE_OVERLAP_PX
     for y in range(0, max(1, height - TILE_OVERLAP_PX), step):
         for x in range(0, max(1, width - TILE_OVERLAP_PX), step):
             crop = image.crop((x, y, min(width, x + TILE_PX), min(height, y + TILE_PX)))
-            found, _t = engine(np.asarray(crop))
+            found = _run_tile(engine, np.asarray(crop))
             for quad, text, conf in (found or []):
                 lines.append(([[p[0] + x, p[1] + y] for p in quad], text, conf))
+    if _STATS.get("tile_failures") and not _STATS.get("tiles_successful"):
+        raise RuntimeError("OCR_RUNTIME_EXCEPTION: every OCR tile failed (" + ",".join(_STATS.get("tile_error_classes", [])) + ")")
     # overlap duplicates: same text with nearly the same box -> keep the higher score
     kept = []
     for quad, text, conf in sorted(lines, key=lambda l: -float(l[2])):
@@ -197,6 +231,7 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
         pytesseract = None
     if engine == 'rapidocr' and not rapidocr_available():
         raise RuntimeError('rapidocr-onnxruntime is not installed')
+    reset_diagnostics()
     pdf=pdfium.PdfDocument(pdf_bytes)
     count=len(pdf)
     if not 1<=count<=MAX_PREVIEW_PAGES:
@@ -262,6 +297,8 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
                 words[-1]['split']='PROPORTIONAL_FROM_LINE'
             if len(words)>MAX_WORDS_PER_PAGE:
                 raise ValueError('OCR word-count budget exceeded')
+        _STATS['pages_attempted']=_STATS.get('pages_attempted',0)+1
+        _STATS.setdefault('words_per_page',{})[page_number]=len(words)
         output.append({'page':page_number,'render_transform':frame.as_metadata(),'words':words,
                        'limitations':'OCR words are unreviewed text proposals; no symbol or plant interpretation follows.'})
     result={'adapter':'standalone_ocr_preview_v3',

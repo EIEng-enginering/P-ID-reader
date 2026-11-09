@@ -1,0 +1,85 @@
+{
+  "schema_version": "engineering-intelligence-v1",
+  "package": {
+    "run_id": "SYNTH-FAIL-ZERO-OCR",
+    "created_utc": "2026-11-09T00:00:00Z",
+    "offline": true,
+    "proposal_only": true,
+    "source_scope": "DRAWING_REVISION_ONLY",
+    "engineering_validation": "NOT_PERFORMED",
+    "status": "INCOMPLETE",
+    "warnings": [
+      "SYNTHETIC health test; no text recovered from nonempty ink regions."
+    ]
+  },
+  "drawings": [
+    {
+      "id": "doc_synth_scan",
+      "source_name": "SYNTHETIC_SCAN_WITH_INK.pdf",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "page_count": 1,
+      "drawing_no": null,
+      "revision": null,
+      "registration_status": "UNREGISTERED"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_ink",
+      "drawing_id": "doc_synth_scan",
+      "page_index": 0,
+      "bbox": {
+        "x0": 0.1,
+        "y0": 0.1,
+        "x1": 0.8,
+        "y1": 0.7
+      },
+      "raw": "raster black pixels exist",
+      "type": "RASTER_SHAPE",
+      "producer": "synthetic_fixture",
+      "producer_version": "1",
+      "semantic_level": "DIRECT_OBSERVATION"
+    }
+  ],
+  "entities": [],
+  "relationships": [],
+  "quality": {
+    "status": "INCOMPLETE",
+    "stage_outcomes": [
+      {
+        "stage": "OCR",
+        "status": "FAILED",
+        "input_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "observed_count": 0,
+        "error_code": "OCR_ENGINE_UNAVAILABLE"
+      }
+    ],
+    "warnings": [
+      "Zero OCR words is not proof of no engineering information."
+    ],
+    "unprocessed_regions": [
+      {
+        "drawing_id": "doc_synth_scan",
+        "page_index": 0,
+        "bbox": {
+          "x0": 0.1,
+          "y0": 0.1,
+          "x1": 0.8,
+          "y1": 0.7
+        },
+        "reason": "OCR_ENGINE_UNAVAILABLE"
+      }
+    ]
+  },
+  "narrative": [],
+  "unresolved": [
+    {
+      "id": "u1",
+      "severity": "CRITICAL",
+      "description": "OCR not available; important drawing contents cannot be interpreted.",
+      "evidence_ids": [
+        "ev_ink"
+      ]
+    }
+  ]
+}

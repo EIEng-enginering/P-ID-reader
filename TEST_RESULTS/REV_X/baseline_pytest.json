@@ -1,0 +1,26 @@
+{
+  "command": "C:\\PIDWork\\venv312\\Scripts\\python.exe -m pytest -q tests",
+  "duration_ms": 208074,
+  "env": {
+    "cpu_count": 8,
+    "machine": "AMD64",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10",
+    "pythonpath": "C:\\PIDWork\\baseline_src\\src"
+  },
+  "exit_code": 0,
+  "expected_failures": 0,
+  "failed": 0,
+  "git_head": "e676ff1 (pristine git-archive export; frozen baseline)",
+  "input_fixture_sha256": {
+    "PID_READER_MODULE_REQUIREMENTS_R1_UNMODIFIED.zip": "09174700ff54cdf3bd899d952951d8969041f1a094cbe8cefff9bd714cbd25e2"
+  },
+  "name": "baseline_pytest",
+  "note": "Run from an export of baseline commit e676ff1 under C:/PIDWork/baseline_src, before any Rev X change.",
+  "passed": 334,
+  "result_sha256": "5e4fbb1ad5bdaa571fd3def87a07d3f55115f7ffc53d70da6d1013d3636e1a9d",
+  "run_utc": "2026-11-09T02:09:56+00:00",
+  "skipped": 6,
+  "stderr_excerpt_redacted": "",
+  "stdout_tail_redacted": ".......................................sss.............................. [ 21%]\n........................................s............................... [ 42%]\n....................................................................s... [ 63%]\n..........................................................s............. [ 84%]\n....................................................                     [100%]\n334 passed, 6 skipped in 206.81s (0:03:26)\n"
+}

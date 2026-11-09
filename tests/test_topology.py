@@ -71,7 +71,7 @@ def test_geometry_persistence_and_immutable_reviews(tmp_path):
     pdf=source_pdf()
     extraction=read_pid(pdf,ReadParams())
     with ProjectStore(tmp_path/'drawing.sqlite') as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         eid=db.add_extraction(extraction,source_pdf_bytes=pdf)
         topology=analyze_pdf_topology(pdf)
         aid=db.add_geometry_analysis(eid,topology)
@@ -113,7 +113,7 @@ def test_upgrade_v1_creates_backup_and_preserves_data(tmp_path):
     with ProjectStore(p) as project:
         assert project.migration_backup is not None
         assert project.migration_backup.exists()
-        assert project.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert project.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert project.db.execute("SELECT name FROM sqlite_master WHERE name='geometry_candidate'").fetchone()
     with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))) as original:
         assert original.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='1'

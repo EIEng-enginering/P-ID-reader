@@ -1,0 +1,12 @@
+component,role,current_or_candidate,license_status,model_or_binaries_check,default_decision,source
+pypdfium2,PDF rendering,BASELINE,Apache-2.0/BSD-3-Clause plus PDFium native,Audit bundled PDFium dependency notices,RETAIN,https://pypi.org/project/pypdfium2/
+rapidocr-onnxruntime 1.4.4,OCR,BASELINE,Apache-2.0 claimed for code and relevant models,Verify actual bundled model hashes and notices,RETAIN UNTIL BENCHMARKED,https://rapidai.github.io/RapidOCRDocs/main/en/model_licenses/
+rapidocr unified,OCR upgrade candidate,OPTIONAL,Apache-2.0 subject to model and package version,Verify Windows wheel versions and model hashes,MEASURE BEFORE REPLACING,https://rapidai.github.io/RapidOCRDocs/main/en/install_usage/rapidocr/install/
+Tesseract,OCR fallback,OPTIONAL,Check exact bundled binary + trained data licences,Check binary/traineddata redistribution,KEEP OPTIONAL,https://github.com/tesseract-ocr/tesseract
+PyMuPDF,PDF alternative,PROPOSED NOT ALLOWED BY DEFAULT,AGPL or commercial,Commercial licence or reciprocal source obligations,REJECT AS DEFAULT,https://pymupdf.io/licensing
+OpenCV,geometry,image preprocessing,BASELINE,Audit exact installed OpenCV 5 package and bundled codecs,Windows wheel/DLL licence and version lock,RETAIN,https://opencv.org/license/
+ONNX Runtime,CPU model execution,BASELINE,Audit exact version and model weight separate licences,Windows CPU runtime and CPU benchmark,RETAIN IF MATCHES,https://onnxruntime.ai/docs/
+NetworkX,optional graph queries,OPTIONAL,BSD-3-Clause,Check new dep necessity compared with existing graph code,OPTIONAL,https://networkx.org/
+DEXPI 2.0.1 XSD,exchange schema,EXTERNAL REFERENCE,CC-BY-4.0 specifications with attribution,Check XSD version and schema validation right,STANDALONE ADAPTER,https://dexpi.org/specifications/
+ISA-5.1-2024,instrument terminology,REFERENCE ONLY,ISA copyright and explicit no AI input without permission,Do not embed copyrighted text or symbol figures,REFERENCE ONLY,https://www.isa.org/products/ansi-isa-5-1-2024-instrumentation-and-control-symb
+ISO 10628-1:2014,diagram classification,REFERENCE ONLY,Copyright restricted by publisher,Do not embed protected figures/text,REFERENCE ONLY,https://www.iso.org/

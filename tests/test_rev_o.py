@@ -225,7 +225,7 @@ def test_migration_from_v8_preserves_prior_extractions_and_backup(tmp_path):
             raw.execute(f'DROP TABLE {t}')
         raw.execute("UPDATE project_meta SET value='8' WHERE key='standalone_schema'")
     with ProjectStore(dbpath) as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.export_extraction(eid)
         assert db.verify_audit_chain()
     backups=list(tmp_path.glob('v8.sqlite.pre-v12-*.sqlite'))

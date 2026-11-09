@@ -119,7 +119,7 @@ def test_sqlite_migration_catalogue_audit_and_backup(inputs,tmp_path):
     raw,e,g,s,l=inputs
     path=tmp_path/'project.sqlite'
     with ProjectStore(path) as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         eid=db.add_extraction(e,raw)
         gid=db.add_geometry_analysis(eid,g)
         sid=db.add_symbol_analysis(eid,gid,s)
@@ -163,7 +163,7 @@ def test_migrate_old_v7_database_preserves_records(tmp_path):
     with sqlite3.connect(old) as conn:
         conn.execute("UPDATE project_meta SET value='7' WHERE key='standalone_schema'")
     with ProjectStore(old) as newer:
-        assert newer.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert newer.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert newer.db.execute("SELECT value FROM project_meta WHERE key='test_marker'").fetchone()[0]=='untouched'
         assert newer.migration_backup is not None
         assert newer.verify_audit_chain()

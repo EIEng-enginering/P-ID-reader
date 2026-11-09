@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pid-reader:benchmark-gold:v1",
+  "title": "Independent source-linked gold annotation schema (starter)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "drawing_sha256",
+    "split",
+    "annotator_ids",
+    "adjudication_status",
+    "objects",
+    "edges",
+    "regions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "benchmark-gold-v1"
+    },
+    "drawing_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "split": {
+      "enum": [
+        "TRAIN",
+        "DEV",
+        "FINAL_RESERVED",
+        "REAL_INDEPENDENT"
+      ]
+    },
+    "annotator_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "adjudication_status": {
+      "enum": [
+        "UNREVIEWED",
+        "IN_PROGRESS",
+        "ADJUDICATED"
+      ]
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "page_index",
+          "kind",
+          "bbox",
+          "tag",
+          "review_state"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "page_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "kind": {
+            "type": "string"
+          },
+          "bbox": {
+            "$ref": "#/$defs/bbox"
+          },
+          "tag": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "review_state": {
+            "enum": [
+              "GOLD_VERIFIED",
+              "GOLD_AMBIGUOUS",
+              "NOT_LEGIBLE"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from_id",
+          "to_id",
+          "kind",
+          "edge_status"
+        ],
+        "properties": {
+          "from_id": {
+            "type": "string"
+          },
+          "to_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "edge_status": {
+            "enum": [
+              "GOLD_CONNECTED",
+              "GOLD_NOT_CONNECTED",
+              "AMBIGUOUS"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "page_index",
+          "bbox",
+          "reading_status"
+        ],
+        "properties": {
+          "page_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "bbox": {
+            "$ref": "#/$defs/bbox"
+          },
+          "reading_status": {
+            "enum": [
+              "ANNOTATED",
+              "UNREADABLE",
+              "OUT_OF_SCOPE",
+              "UNANNOTATED"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "bbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "properties": {
+        "x0": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y0": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "x1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}

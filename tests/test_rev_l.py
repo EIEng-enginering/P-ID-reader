@@ -137,7 +137,7 @@ def test_versioned_profile_immutable_and_audited(tmp_path):
         with pytest.raises(sqlite3.IntegrityError):
             db.db.execute('DELETE FROM tag_profile WHERE profile_id=?',(a,))
         assert db.verify_audit_chain()
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
 
 
 def test_source_tag_profile_evaluation_is_reproducible(tmp_path):
@@ -249,7 +249,7 @@ def test_v5_database_upgrade_creates_backup(tmp_path):
         db.db.commit()
     with ProjectStore(dbfile) as db:
         assert db.migration_backup is not None and db.migration_backup.exists()
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.verify_audit_chain()
     with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))) as old:
         assert old.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='5'

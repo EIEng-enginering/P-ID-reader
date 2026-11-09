@@ -1,0 +1,101 @@
+question_id,approved_option,status,owner_approval_date,normative_requirement,source
+Q001,A,APPROVED,PRIOR_APPROVED,"Standalone Windows application, reusable GUI-free Python core and independent host adapters. Same engine, multiple application surfaces.",Rev X baseline
+Q002,A,APPROVED,PRIOR_APPROVED,"Multi-format architecture: vector/scanned/mixed PDF, images, DXF, DEXPI, and planned/licensed DWG/DGN/intelligent CAD, with format-specific delivery/test status. PDF first for R1 host.",Rev X baseline
+Q003,A,APPROVED,PRIOR_APPROVED,"Extract and categorise as much DRAWING-SUPPORTED engineering information as possible: title blocks, equipment, valves, piping, instruments, controls, shutdown references, notes, line specs, relief items, connections and attributes. Preserve verbatim source, do not invent missing values.",Rev X baseline
+Q004,A,APPROVED,PRIOR_APPROVED,"Typed, port-based engineering connectivity graph: symbols, equipment nozzles, line branches, line crossings, instrument signals, flow arrows and off-page connectors, with explicit ambiguity.",Rev X baseline
+Q005,A,APPROVED,PRIOR_APPROVED,"Hybrid native-document and vector extraction, offline OCR, specialist symbol detection, geometry, engineering rules, optional authorised ML. No reliance on general vision AI as sole authority.",Rev X baseline
+Q006,A,APPROVED,PRIOR_APPROVED,"Versioned symbol/engineering/tag catalogues, lawful starter content, project-specific overrides and source licences; standards-aware where rights permit.",Rev X baseline
+Q007,A,APPROVED,PRIOR_APPROVED,"Source-linked human correction, explicit uncertainty, accepted-as-reading states, revision impact and append-only review decisions.",Rev X baseline
+Q008,A,APPROVED,PRIOR_APPROVED,"Public Python SDK, isolated worker/CLI, JSON schemas, DEXPI where conformant, optional controlled local API; never require downstream clients to read internal SQLite schema.",Rev X baseline
+Q009,A,APPROVED,PRIOR_APPROVED,"Fully functional offline, bounded hostile-input parsing, pinned dependencies, no telemetry, optional external services only by permission.",Rev X baseline
+Q010,A,APPROVED,PRIOR_APPROVED,"Independent benchmark, measured precision/recall/connectivity and silent misses, supported-class declarations, staged validation.",Rev X baseline
+Q011,A,APPROVED,PRIOR_APPROVED,"Usable vertical-slice increments R0.1-R0.9: project shell/PDF, vector extraction, scanned OCR, connectivity, review/export, multi-sheet, DEXPI/DXF, licensed CAD adapters, host rehearsal/validation. Never label aspirational formats implemented.",Rev X baseline
+Q012,A,APPROVED,PRIOR_APPROVED,"Five separate layers: immutable source, observations, interpretations, relationships, review decisions. Stable plant entity IDs distinct from R1 deterministic observation/result IDs.",Rev X baseline
+Q013,A,APPROVED,PRIOR_APPROVED,"Hybrid text/symbol/tag matching, project-specific profile, recognition alternatives and UNKNOWN class; corrections do not automatically become shared training material.",Rev X baseline
+Q014,A,APPROVED,PRIOR_APPROVED,"Strict topology rules for ports, junctions, crossings, signal and process edges, off-page links, and unknown directions, with source evidence.",Rev X baseline
+Q015,A,APPROVED,PRIOR_APPROVED,Plant-wide proposed graph across immutable drawings and revisions; source- and model-change comparison; special stricter R1 host same-run cross-sheet limits.,Rev X baseline
+Q016,A,APPROVED,PRIOR_APPROVED,"Visual review with inspect/edit/accept/reject/ignored/stale, provenance and optional independent sample check. No automatic acceptance.",Rev X baseline
+Q017,A,APPROVED,PRIOR_APPROVED,"R1-safe versioned adapters with no automatic host record writes, complete source evidence and unit-tested handoffs.",Rev X baseline
+Q018,A,APPROVED,PRIOR_APPROVED,"R1 fixed host resource limits; separate configurable standalone processing profiles, secure temporary files and no default online access.",Rev X baseline
+Q019,A,APPROVED,PRIOR_APPROVED,"Lawfully redistributable/versioned starter engineering catalogues and mappings, company-specific overrides, training models with documented licences.",Rev X baseline
+Q020,A,APPROVED,PRIOR_APPROVED,"Gold benchmark >=120 synthetic or cleared drawings, >=30 untouched final test drawings, separate class/format gates, true real-Windows tests and independent sign-off.",Rev X baseline
+Q021,A,APPROVED,PRIOR_APPROVED,"Eight-stage evidence-preserving pipeline: validate, classify, native extraction, OCR, symbol/line, engineering interpretation, uncertainty checks, publication.",Rev X baseline
+Q022,A,APPROVED,PRIOR_APPROVED,"Preserve verbatim OCR/native text, rotation/polygons, candidate association and advisory tag parsing; do not infer safety functionality from tag alone.",Rev X baseline
+Q023,A,APPROVED,PRIOR_APPROVED,"Hierarchical visual/engineering/functional symbol classes, variants, project profiles and versioned model cards; UNKNOWN when unresolved.",Rev X baseline
+Q024,A,APPROVED,PRIOR_APPROVED,"Typed connection endpoints/ports, geometric junction rules, unconfirmed alternatives, line arrows only when explicitly depicted; no unreviewed path as established.",Rev X baseline
+Q025,A,APPROVED,PRIOR_APPROVED,"Normalized entities for project, document, revision, page, observations, engineering objects, attributes, ports, connections, evidence, alternatives, review, graph and export snapshots.",Rev X baseline
+Q026,A,APPROVED,PRIOR_APPROVED,Cross-sheet reconciliation using multiple compatible evidence factors with ambiguity and source-revision binding; model-change differences distinguished from drawing changes.,Rev X baseline
+Q027,A,APPROVED,PRIOR_APPROVED,"Separate raw scores for OCR, symbol, association, geometry, topology, interpretation; calibration only when independently measured; exact R1 decision terminology.",Rev X baseline
+Q028,A,APPROVED,PRIOR_APPROVED,"Versioned offline SQLite, graph queries/indexes/full-text and append-only decision/audit; R1 host uses its own additive tables and audit, not direct standalone schema copy.",Rev X baseline
+Q029,A,APPROVED,PRIOR_APPROVED,"R1 worker signatures and exact JSON, deterministic hash/IDs, refusal semantics; separate richer standalone SDK and schema; backwards compatibility tests.",Rev X baseline
+Q030,A,APPROVED,PRIOR_APPROVED,"Exhaustive unit, geometry, OCR, adversarial, integration, benchmark, Windows, performance and licence evidence; gates not performed remain NOT_RUN.",Rev X baseline
+Q031,A,APPROVED,PRIOR_APPROVED,"Configurable dockable multi-document Qt workspace: Project, Drawings, Data, Graph, Review, Exports; saved layouts and keyboard access.",Rev X baseline
+Q032,A,APPROVED,PRIOR_APPROVED,"Responsive tiled/vector-quality drawing viewer with zoom, pan, search, mini-map, source/overlay distinction, reliable crop/rotation coordinate transforms, revision compare.",Rev X baseline
+Q033,A,APPROVED,PRIOR_APPROVED,"Virtualised spreadsheet-like equipment, piping, valves, instruments, connections and uncertainty registers, with filters, source jump and audited corrections.",Rev X baseline
+Q034,A,APPROVED,PRIOR_APPROVED,Review queue prioritised by uncertainty/dependencies/critical connections; batch preview with R1 restrictions and recorded second checks.,Rev X baseline
+Q035,A,APPROVED,PRIOR_APPROVED,Versioned system/company/project symbol/tag/engineering catalogues with licence records; never silently alter accepted historical readings on library updates.,Rev X baseline
+Q036,A,APPROVED,PRIOR_APPROVED,"Source-linked graph workspace, typed paths, selected-neighbourhood expansion, ambiguity visibility and accepted-only vs include-proposals modes.",Rev X baseline
+Q037,A,APPROVED,PRIOR_APPROVED,"Bounded batch scheduler, source inventory, safe retries, per-document atomicity, job manifests and recoverable standalone project state; host remains one-revision-per-run.",Rev X baseline
+Q038,A,APPROVED,PRIOR_APPROVED,"Full facility/area/drawing explorer, multi-revision/source-vs-model diff, FTS and filters, downstream impact reports without silent source acceptance.",Rev X baseline
+Q039,A,APPROVED,PRIOR_APPROVED,"Purpose-specific adapters for HAZOP, LOPA, QRA/PSS, line/equipment indexes, other engineering clients; no automatic engineering acceptance or private DB writes.",Rev X baseline
+Q040,A,APPROVED,PRIOR_APPROVED,"Professional report/JSON/graph/DEXPI export where valid, offline Windows delivery, SBOM, all-theme/scale GUI checks and independent software/extraction/engineering/integration gates.",Rev X baseline
+Q041,A,APPROVED,2026-11-07,Single modular repository and reproducible source/releases,Rev X baseline
+Q042,A,APPROVED,2026-11-07,"Typed, testable hybrid extraction pipeline",Rev X baseline
+Q043,A,APPROVED,2026-11-07,"PDF first, then individually validated format adapters",Rev X baseline
+Q044,A,APPROVED,2026-11-07,SQLite evidence history and dual identity model,Rev X baseline
+Q045,A,APPROVED,2026-11-07,Typed port-based graph with ambiguity,Rev X baseline
+Q046,A,APPROVED,2026-11-07,Responsive PySide6 UI and bounded workers,Rev X baseline
+Q047,A,APPROVED,2026-11-07,Public SDK and strict Worksheet R1 adapter,Rev X baseline
+Q048,A,APPROVED,2026-11-07,Synthetic gold fixtures and independent benchmarks,Rev X baseline
+Q049,A,APPROVED,2026-11-07,Continuous tested WP-000 to WP-011 releases,Rev X baseline
+Q050,A,APPROVED,2026-11-07,"End-to-end Claude coding, packaging and final-owner review",Rev X baseline
+Q051,A,APPROVED,2026-11-09,"Extract every identifiable engineering element, annotation, symbol, specification, connection, label, drawing reference and metadata field, including non-standard items.",Owner message 2026-11-09
+Q052,A,APPROVED,2026-11-09,Automatically analyse the whole drawing without preselecting equipment or teaching symbols; enable review and correction.,Owner message 2026-11-09
+Q053,A,APPROVED,2026-11-09,"Support native-vector, vector-outlined text, scanned, raster and mixed PDF/image inputs; add individually validated DXF and lawfully available CAD/engineering exchange adapters.",Owner message 2026-11-09
+Q054,A,APPROVED,2026-11-09,"Provide versioned, editable drawing-convention profiles for symbols, tag grammar, title blocks, line numbers, legends and company conventions.",Owner message 2026-11-09
+Q055,A,APPROVED,2026-11-09,"Continue partial extraction, identify missing information and uncertain alternatives, show per-region and category coverage; never silently omit significant information.",Owner message 2026-11-09
+Q056,A,APPROVED,2026-11-09,"Retain and benchmark RapidOCR, and use adaptive, selectively invoked local OCR alternatives where licensed, with native PDF text first.",Owner message 2026-11-09
+Q057,A,APPROVED,2026-11-09,Recognise text converted to vector outlines using selective rasterization and OCR/vector shape analysis.,Owner message 2026-11-09
+Q058,A,APPROVED,2026-11-09,"Handle rotated, stacked, tiny, touching, partly obscured and low-contrast lettering; re-read uncertain crops and retain alternatives.",Owner message 2026-11-09
+Q059,A,APPROVED,2026-11-09,"Extract titles, numbers, revisions, issue status, dates, firms, approvals, reference tables, holds, notes, legends and sheet metadata.",Owner message 2026-11-09
+Q060,A,APPROVED,2026-11-09,Reconstruct technical tables and numeric/unit associations with cell coordinates and exact source values.,Owner message 2026-11-09
+Q061,A,APPROVED,2026-11-09,"Recognise manual, actuated, control, isolation, check, relief, shutdown, bypass and specialty valves, actuators, positioners, solenoids and valve annotations.",Owner message 2026-11-09
+Q062,A,APPROVED,2026-11-09,"Recognise vessels, separators, columns, tanks, pumps, compressors, filters, exchangers, heaters, coolers, reactors, mixers, strainers, skids, packages and equipment boundaries; extensible types.",Owner message 2026-11-09
+Q063,A,APPROVED,2026-11-09,"Recognise pressure, temperature, flow, level, analytical, position, control and safety-related instrument symbols, functions and locations; permit user-defined types.",Owner message 2026-11-09
+Q064,A,APPROVED,2026-11-09,"Recognise standard and project-specific symbol styles via original-geometry libraries, authorised legends, and user teach-by-example without end-user model retraining.",Owner message 2026-11-09
+Q065,A,APPROVED,2026-11-09,"Persist raw graphics, position, candidate classes, reasoning/evidence and uncertainty; human corrections should propagate only after consistency review.",Owner message 2026-11-09
+Q066,A,APPROVED,2026-11-09,"Reconstruct supported process, utility, vent, drain, bypass, tie-in and auxiliary piping routes and their connections.",Owner message 2026-11-09
+Q067,A,APPROVED,2026-11-09,"Explicitly distinguish tees, non-connected crossings, junction dots, bridges, gaps, break lines, overlap and uncertain junctions.",Owner message 2026-11-09
+Q068,A,APPROVED,2026-11-09,"Preserve line numbers, dimensions, services, classes, specs, material, insulation, tracing, fittings, reducers, flanges, pressure classes and source locations.",Owner message 2026-11-09
+Q069,A,APPROVED,2026-11-09,"Build a typed port-based graph for equipment, nozzles, line segments, valves, instruments, connections and boundaries based on drawing topology.",Owner message 2026-11-09
+Q070,A,APPROVED,2026-11-09,Determine flow direction only from drawings or reviewed evidence; combine off-sheet references; retain UNKNOWN directions.,Owner message 2026-11-09
+Q071,A,APPROVED,2026-11-09,"Reconstruct represented instrument loops from transmitters, controllers, final elements, indicators, switches and explicit signal links.",Owner message 2026-11-09
+Q072,A,APPROVED,2026-11-09,"Distinguish electrical, pneumatic, hydraulic, capillary, software, communications and other instrument signals from process piping.",Owner message 2026-11-09
+Q073,A,APPROVED,2026-11-09,"Represent PLC/DCS/SIS/remote-control system boundaries, depicted I/O, alarms and interlocks without inventing control logic.",Owner message 2026-11-09
+Q074,A,APPROVED,2026-11-09,"Recognise relief devices, shutdowns, vents, blowdowns, drains, car seals, locks, spectacle blinds, bypasses, fail positions and depicted protective functions.",Owner message 2026-11-09
+Q075,A,APPROVED,2026-11-09,"Identify safety-relevant objects for review, but never independently award safeguard/IPL/SIL/PFD credit, approve studies or claim plant safety.",Owner message 2026-11-09
+Q076,A,APPROVED,2026-11-09,Build project-wide cross-drawing engineering model using compatible and evidence-based off-sheet matches.,Owner message 2026-11-09
+Q077,A,APPROVED,2026-11-09,"Keep immutable drawing revisions, detect added/removed/changed objects, distinguish source changes from recognition/model changes.",Owner message 2026-11-09
+Q078,A,APPROVED,2026-11-09,"Store evidence, provenance, review, confidence status, alternatives and conflicts for every entity and relation; separate observed from inferred.",Owner message 2026-11-09
+Q079,A,APPROVED,2026-11-09,Distinguish drawing occurrences from proposed plant/engineering identities; never merge on tag equality alone.,Owner message 2026-11-09
+Q080,A,APPROVED,2026-11-09,"Extend existing standalone SQLite with additive versioned engineering-entity, attribute, port, relationship, evidence and review structures.",Owner message 2026-11-09
+Q081,A,APPROVED,2026-11-09,"Export source references, text, equipment/line registers, typed graph, design values, symbols, annotations, uncertainty, approvals and coordinates for another AI.",Owner message 2026-11-09
+Q082,A,APPROVED,2026-11-09,"Create evidence-backed engineering narrative per drawing: purpose, equipment, flow, loops, protection, interfaces and unknowns.",Owner message 2026-11-09
+Q083,A,APPROVED,2026-11-09,"Label statements DIRECT_OBSERVATION, STRUCTURALLY_DERIVED, CONTEXTUAL_INFERENCE, CONFLICTING or UNKNOWN and cite evidence; no invented conditions.",Owner message 2026-11-09
+Q084,A,APPROVED,2026-11-09,"Support source-grounded engineering graph queries: connected items, measured variables, routes, isolation proposals, revision changes and unresolved issues.",Owner message 2026-11-09
+Q085,A,APPROVED,2026-11-09,"Deterministic local extraction is usable without any LLM; optional lawfully licensed local AI interpretation, no runtime uploads to cloud AI.",Owner message 2026-11-09
+Q086,A,APPROVED,2026-11-09,"Interactive overlay viewer with selectable equipment, instruments, valves, lines, source evidence, search, zoom and cross-highlighting.",Owner message 2026-11-09
+Q087,A,APPROVED,2026-11-09,Auditable accept/reject/reclassify/edit/link/unlink with named reviewer and immutable review history.,Owner message 2026-11-09
+Q088,A,APPROVED,2026-11-09,"Cancellable, resumable bounded batch jobs with partial results, caching, progress and project summaries.",Owner message 2026-11-09
+Q089,A,APPROVED,2026-11-09,"Linked equipment, valves, instruments, lines, loops, graph, document, review, discrepancy and AI-export workspaces.",Owner message 2026-11-09
+Q090,A,APPROVED,2026-11-09,Export user-selected files only after confirmation; import and analysis persist only to project database; no silent overwrites.,Owner message 2026-11-09
+Q091,A,APPROVED,2026-11-09,"Normal Windows 11 CPU-only workstation baseline with optional GPU acceleration, tiled processing, caching, bounded memory and graceful fallback.",Owner message 2026-11-09
+Q092,A,APPROVED,2026-11-09,"Retain compatible components and select permissive licence-cleared code/models/weights; record dependency and redistribution evidence, no unapproved copyleft/commercial.",Owner message 2026-11-09
+Q093,A,APPROVED,2026-11-09,"Local-only no-telemetry security, untrusted-file isolation, secure project data and temp files, bounded processes and explicit export.",Owner message 2026-11-09
+Q094,A,APPROVED,2026-11-09,"Quick, Standard and Deep modes, all evidence-preserving; deep selectively reprocesses uncertain regions and builds richer graph hypotheses.",Owner message 2026-11-09
+Q095,A,APPROVED,2026-11-09,"Report stage status, coverage, failure, timeout, skipped analysis and partial results; zero data must not appear as complete success without proof.",Owner message 2026-11-09
+Q096,A,APPROVED,2026-11-09,"Unit, regression, OCR, symbol, geometry, graph, GUI, integration, security, performance, cancellation, export, installer and compatibility tests, positive/negative/edge cases.",Owner message 2026-11-09
+Q097,A,APPROVED,2026-11-09,"Controlled synthetic fixtures plus independently annotated real sheets, with independent holdout, precision/recall, per-class evidence, omissions and calibrated scoring where justified.",Owner message 2026-11-09
+Q098,A,APPROVED,2026-11-09,"Independent release gates for software, accuracy, integration and engineering; status NOT_RUN/FAIL/BLOCKED surfaced; never claim validation not done.",Owner message 2026-11-09
+Q099,A,APPROVED,2026-11-09,"Deliver integrated source, tests, schemas, rule catalogues, traceability, benchmark tools, Windows build/installer when possible, instructions, rollback and AI-ready examples.",Owner message 2026-11-09
+Q100,A,APPROVED,2026-11-09,"Claude fully implements and tests in-scope WPs autonomously, preserving access/security/legal gates; final product release is owner-approved only.",Owner message 2026-11-09

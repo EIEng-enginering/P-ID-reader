@@ -208,7 +208,7 @@ def test_migration_v10_creates_backup_preserves_source(tmp_path,source):
     with ProjectStore(path) as upgraded:
         assert upgraded.migration_backup is not None
         assert upgraded.export_extraction(eid)==extract
-        assert upgraded.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert upgraded.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert upgraded.verify_audit_chain()
     with sqlite3.connect(next(tmp_path.glob('previous.sqlite.pre-v12-*.sqlite'))) as old:
         assert old.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='10'

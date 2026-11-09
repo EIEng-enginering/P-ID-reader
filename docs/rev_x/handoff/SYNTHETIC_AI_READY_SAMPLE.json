@@ -1,0 +1,239 @@
+{
+  "schema_version": "engineering-intelligence-v1",
+  "package": {
+    "run_id": "SYNTH-001",
+    "created_utc": "2026-11-09T00:00:00Z",
+    "offline": true,
+    "proposal_only": true,
+    "source_scope": "DRAWING_REVISION_ONLY",
+    "engineering_validation": "NOT_PERFORMED",
+    "status": "PARTIAL",
+    "engine_version": "EXAMPLE_ONLY_NOT_IMPLEMENTED",
+    "warnings": [
+      "SYNTHETIC ONLY - not derived from any engineering plant or user drawing."
+    ]
+  },
+  "drawings": [
+    {
+      "id": "doc_synth_1",
+      "source_name": "SYNTHETIC_ONLY_PID.pdf",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "page_count": 1,
+      "drawing_no": "SYNTH-001",
+      "revision": null,
+      "registration_status": "UNREGISTERED",
+      "title": "Synthetic pipe and filter drawing",
+      "page_coordinate_frame": "media-top-left-v1",
+      "page_regions": [
+        {
+          "page_index": 0,
+          "region_type": "MAIN_PROCESS",
+          "bbox": {
+            "x0": 0.05,
+            "y0": 0.1,
+            "x1": 0.95,
+            "y1": 0.8
+          }
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_filter",
+      "drawing_id": "doc_synth_1",
+      "page_index": 0,
+      "bbox": {
+        "x0": 0.38,
+        "y0": 0.4,
+        "x1": 0.56,
+        "y1": 0.64
+      },
+      "raw": "F-1",
+      "type": "OCR_TEXT",
+      "producer": "synthetic_fixture",
+      "producer_version": "1",
+      "semantic_level": "DIRECT_OBSERVATION",
+      "source_object_ids": [
+        "fixture-f1"
+      ]
+    },
+    {
+      "id": "ev_valve",
+      "drawing_id": "doc_synth_1",
+      "page_index": 0,
+      "bbox": {
+        "x0": 0.2,
+        "y0": 0.47,
+        "x1": 0.25,
+        "y1": 0.53
+      },
+      "raw": "HV-1",
+      "type": "OCR_TEXT",
+      "producer": "synthetic_fixture",
+      "producer_version": "1",
+      "semantic_level": "DIRECT_OBSERVATION",
+      "source_object_ids": [
+        "fixture-hv1"
+      ]
+    },
+    {
+      "id": "ev_pipe",
+      "drawing_id": "doc_synth_1",
+      "page_index": 0,
+      "bbox": {
+        "x0": 0.25,
+        "y0": 0.49,
+        "x1": 0.38,
+        "y1": 0.51
+      },
+      "raw": "drawn line from valve to filter port",
+      "type": "LINE_PATH",
+      "producer": "synthetic_fixture",
+      "producer_version": "1",
+      "semantic_level": "DIRECT_OBSERVATION",
+      "source_object_ids": [
+        "fixture-path-1"
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "id": "ent_valve",
+      "kind": "VALVE",
+      "tag": "HV-1",
+      "display_name": "Synthetic hand valve",
+      "classification": "MANUAL_VALVE",
+      "semantic_level": "CONTEXTUAL_INFERENCE",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "source_evidence_ids": [
+        "ev_valve"
+      ],
+      "source_occurrence_ids": [
+        "occ_valve"
+      ],
+      "attributes": [],
+      "ports": [
+        {
+          "id": "port_valve_out",
+          "kind": "PROCESS_OUT",
+          "source_evidence_ids": [
+            "ev_valve"
+          ]
+        }
+      ],
+      "score": {
+        "kind": "NONE"
+      }
+    },
+    {
+      "id": "ent_filter",
+      "kind": "EQUIPMENT",
+      "tag": "F-1",
+      "display_name": "Synthetic filter",
+      "classification": "FILTER",
+      "semantic_level": "CONTEXTUAL_INFERENCE",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "source_evidence_ids": [
+        "ev_filter"
+      ],
+      "source_occurrence_ids": [
+        "occ_filter"
+      ],
+      "attributes": [
+        {
+          "name": "equipment_id",
+          "verbatim": "F-1",
+          "semantic_level": "DIRECT_OBSERVATION",
+          "evidence_ids": [
+            "ev_filter"
+          ],
+          "numeric_type": "NOT_NUMERIC"
+        }
+      ],
+      "ports": [
+        {
+          "id": "port_filter_in",
+          "kind": "PROCESS_IN",
+          "source_evidence_ids": [
+            "ev_filter"
+          ]
+        }
+      ],
+      "score": {
+        "kind": "NONE"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "rel_valve_filter",
+      "type": "DRAWN_CONNECTS",
+      "from_entity_id": "ent_valve",
+      "to_entity_id": "ent_filter",
+      "from_port_id": "port_valve_out",
+      "to_port_id": "port_filter_in",
+      "direction": "UNKNOWN",
+      "semantic_level": "STRUCTURALLY_DERIVED",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "source_evidence_ids": [
+        "ev_pipe"
+      ],
+      "hypothesis_group_id": null,
+      "score": {
+        "kind": "UNCALIBRATED",
+        "raw_score": 0.7
+      }
+    }
+  ],
+  "quality": {
+    "status": "PARTIAL",
+    "stage_outcomes": [
+      {
+        "stage": "SYNTHETIC_EXAMPLE",
+        "status": "SUCCESS",
+        "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "observed_count": 3,
+        "pages_processed": [
+          0
+        ],
+        "truncated": false,
+        "elapsed_ms": 0
+      }
+    ],
+    "warnings": [
+      "Flow direction unknown: source does not contain an arrow."
+    ],
+    "unprocessed_regions": [],
+    "coverage_note": "Only two elements are illustrated, not an exhaustive drawing sample."
+  },
+  "narrative": [
+    {
+      "claim_id": "c1",
+      "text": "A proposed drawn line connects synthetic valve HV-1 and filter F-1. Flow direction is not shown.",
+      "semantic_level": "STRUCTURALLY_DERIVED",
+      "evidence_ids": [
+        "ev_pipe",
+        "ev_filter",
+        "ev_valve"
+      ],
+      "unresolved_issue_ids": [
+        "u1"
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "id": "u1",
+      "severity": "INFO",
+      "description": "Flow direction UNKNOWN; no drawn process arrow.",
+      "evidence_ids": [
+        "ev_pipe"
+      ],
+      "affected_entity_ids": [
+        "ent_valve",
+        "ent_filter"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+"""Original-geometry synthetic PDFs for the Rev X test-suite (no client or standards content)."""
+from __future__ import annotations
+
+from io import BytesIO
+
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
+
+W, H = 1190.0, 842.0  # A3 landscape in points
+
+
+def _lines(c, count: int) -> None:
+    """Dense plain vector strokes (stand-in for outlined lettering and pipework)."""
+    c.setLineWidth(0.4)
+    for i in range(count):
+        x = 40 + (i % 60) * 17
+        y = 120 + (i // 60) * 9
+        c.line(x, y, x + 9, y + (3 if i % 2 else 0))
+
+
+def sheet_pdf(*, dense: int = 0, title: bool = True, notes: bool = False, table: bool = False, border: bool = False,
+              raster: bool = False, body_words: int = 0, rotate: int = 0, crop: tuple | None = None,
+              revision: bool = False) -> bytes:
+    buf = BytesIO()
+    c = canvas.Canvas(buf, pagesize=(W, H), pageCompression=0, invariant=1)
+    if border:
+        c.setLineWidth(1)
+        c.line(20, 20, W - 20, 20)
+        c.line(20, H - 20, W - 20, H - 20)
+        c.line(20, 20, 20, H - 20)
+        c.line(W - 20, 20, W - 20, H - 20)
+    if raster:
+        from PIL import Image, ImageDraw
+        img = Image.new("L", (1700, 1200), 255)
+        d = ImageDraw.Draw(img)
+        for i in range(40):
+            d.line([(60 + i * 38, 100), (60 + i * 38, 1100)], fill=0, width=3)
+        d.rectangle([300, 300, 700, 600], outline=0, width=5)
+        c.drawImage(ImageReader(img), 0, 0, width=W, height=H)
+    if dense:
+        _lines(c, dense)
+    c.setFont("Helvetica", 7)
+    for i in range(body_words):
+        c.drawString(60 + (i % 20) * 52, 700 - (i // 20) * 11, f"W{i:03d}")
+    if title:
+        x0, y0 = W - 330, 30
+        c.rect(x0, y0, 300, 120)
+        c.line(x0, y0 + 60, x0 + 300, y0 + 60)
+        c.setFont("Helvetica", 8)
+        for i, t in enumerate(["DRAWING NO: 0209-01-ML-02-001", "TITLE: STATION PIPING AND INSTRUMENT",
+                               "SCALE: NONE   SHEET 1 OF 2", "DATE: 2015-02-11   APPROVED: AB", "REV C   STATUS: PRELIMINARY"]):
+            c.drawString(x0 + 8, y0 + 100 - i * 12, t)
+    if revision:
+        c.setFont("Helvetica", 7)
+        for i, t in enumerate(["REV DATE DESCRIPTION BY CHK APPR", "A 2014-01-01 ISSUED FOR REVIEW AB CD EF",
+                               "B 2014-06-01 REVISED PER COMMENTS AB CD EF"]):
+            c.drawString(W - 330, H - 60 - i * 10, t)
+    if notes:
+        c.setFont("Helvetica", 7)
+        for i, t in enumerate(["NOTES:", "1. ALL DIMENSIONS IN MM", "2. HOLD 1 TIE-IN POINT TO BE CONFIRMED",
+                               "3. SEE LEGEND FOR SYMBOLS"]):
+            c.drawString(40, 160 - i * 10, t)
+    if table:
+        x0, y0 = 420, 40
+        c.setFont("Helvetica", 7)
+        c.drawString(x0, y0 + 105, "STATION DATA")
+        for r in range(5):
+            c.line(x0, y0 + r * 20, x0 + 220, y0 + r * 20)
+        for k in range(4):
+            c.line(x0 + k * 73, y0, x0 + k * 73, y0 + 80)
+        for r, row in enumerate([("ITEM", "DESIGN", "OPERATING"), ("PRESSURE", "6895", "3450"), ("TEMP", "60", "15")]):
+            for k, cell in enumerate(row):
+                c.drawString(x0 + 4 + k * 73, y0 + 62 - r * 20, cell)
+    c.showPage()
+    c.save()
+    data = buf.getvalue()
+    if rotate or crop:
+        from pypdf import PdfReader, PdfWriter
+        from pypdf.generic import RectangleObject
+        reader = PdfReader(BytesIO(data))
+        writer = PdfWriter()
+        page = reader.pages[0]
+        if crop:
+            page.cropbox = RectangleObject(list(crop))
+        if rotate:
+            page.rotate(rotate)
+        writer.add_page(page)
+        out = BytesIO()
+        writer.write(out)
+        data = out.getvalue()
+    return data

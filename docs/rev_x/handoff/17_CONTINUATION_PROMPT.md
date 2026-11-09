@@ -1,0 +1,5 @@
+# Claude continuation instructions when project session/context changes
+
+Read this entire handoff and live worktree `HANDOFF_STATE.md` (written by prior agent) first. Preserve owner Q1-Q100 Option A approved, frozen Worksheet R1 original SHA `09174700ff54cdf3bd899d952951d8969041f1a094cbe8cefff9bd714cbd25e2`, exact source revision and Git working state. Do NOT restart from original ZIP over newer work. Verify the prior state with Git and actual test artifacts before resuming.
+
+Continue autonomously with first **incomplete** WPU in `requirements/IMPLEMENTATION_TRACEABILITY.csv` using test-first change, integrated code, targeted/full pytest and R1 checker, ADR and manifest updates. Mark external blocked checks `BLOCKED` and proceed with independent WPs. At session end, update `HANDOFF_STATE.md` with machine/environment, Git branch and hash, last passing tests, changed files, unfinished tasks, user authorization, dependencies and exact next command. No claim of asynchronous background work.

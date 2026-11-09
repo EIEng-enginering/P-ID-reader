@@ -280,12 +280,12 @@ def test_rev_l_database_upgrades_to_v7_and_creates_backup(tmp_path):
     dbfile=tmp_path/'legacy.sqlite'
     with ProjectStore(dbfile) as db:
         add_source(db,'Legacy','R1')
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
     with sqlite3.connect(dbfile) as connection:
         # Mimic the former v6 metadata on the same additive schema. No destructive migration.
         connection.execute("UPDATE project_meta SET value='6' WHERE key='standalone_schema'")
     with ProjectStore(dbfile) as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.db.execute('SELECT count(*) FROM extraction').fetchone()[0]==1
         assert db.verify_audit_chain()
     backups=list(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))
@@ -351,7 +351,7 @@ def test_actual_v6_project_fixture_migrates_without_losing_rows(tmp_path):
         old_count=connection.execute('SELECT count(*) FROM extraction').fetchone()[0]
     assert old_version=='6'
     with ProjectStore(output) as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.db.execute('SELECT count(*) FROM extraction').fetchone()[0]==old_count
         assert db.verify_audit_chain()
     assert list(tmp_path.glob('migrating_old.sqlite.pre-v12-*.sqlite'))

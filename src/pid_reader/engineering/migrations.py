@@ -5,7 +5,7 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime, timezone
 
-LATEST_SCHEMA = 12
+LATEST_SCHEMA = 13
 
 MIGRATION_2 = """
 BEGIN IMMEDIATE;
@@ -203,6 +203,15 @@ def upgrade(db: sqlite3.Connection, path: Path, *, existed_before_open: bool) ->
         check=db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()
         if check is None or check[0]!='12':
             raise ValueError('Standalone centreline migration did not complete')
+    if version<=12:
+        try:
+            db.executescript(MIGRATION_13)
+        except Exception:
+            if db.in_transaction: db.rollback()
+            raise
+        check=db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()
+        if check is None or check[0]!='13':
+            raise ValueError('Standalone engineering-intelligence migration did not complete')
     return backup_path
 
 MIGRATION_4 = """
@@ -626,5 +635,86 @@ CREATE TRIGGER IF NOT EXISTS block_delete_rc_gap BEFORE DELETE ON raster_centrel
 CREATE TRIGGER IF NOT EXISTS block_update_rc_decision BEFORE UPDATE ON raster_centreline_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
 CREATE TRIGGER IF NOT EXISTS block_delete_rc_decision BEFORE DELETE ON raster_centreline_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
 UPDATE project_meta SET value='12' WHERE key='standalone_schema' AND value='11';
+COMMIT;
+"""
+
+
+# Rev X (WPU-12): engineering-intelligence storage. Purely additive: no v12 table is touched, so a v12
+# reader still opens the file. Downgrade is by restoring the automatic pre-migration backup, never by dropping tables.
+MIGRATION_13 = """
+BEGIN IMMEDIATE;
+CREATE TABLE IF NOT EXISTS intelligence_run (
+  run_id TEXT PRIMARY KEY,
+  extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+  preset TEXT NOT NULL, status TEXT NOT NULL,
+  engine_version TEXT NOT NULL, config_sha256 TEXT NOT NULL,
+  source_sha256 TEXT NOT NULL, run_hash TEXT NOT NULL,
+  summary_json TEXT NOT NULL, created_utc TEXT NOT NULL,
+  CHECK(status IN ('COMPLETE_CANDIDATES','PARTIAL','INCOMPLETE','FAILED','NOT_RUN','CANCELLED')),
+  UNIQUE(extraction_id,run_hash)
+);
+CREATE TABLE IF NOT EXISTS stage_outcome (
+  outcome_id TEXT PRIMARY KEY,
+  run_id TEXT NOT NULL REFERENCES intelligence_run(run_id),
+  extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+  stage_id TEXT NOT NULL, status TEXT NOT NULL,
+  outcome_json TEXT NOT NULL, created_utc TEXT NOT NULL,
+  CHECK(status IN ('SUCCESS','PARTIAL','SKIPPED','FAILED','TIMEOUT','CANCELLED','NOT_RUN')),
+  UNIQUE(run_id,stage_id)
+);
+CREATE TABLE IF NOT EXISTS page_region (
+  region_id TEXT PRIMARY KEY,
+  run_id TEXT NOT NULL REFERENCES intelligence_run(run_id),
+  extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+  page INTEGER NOT NULL, kind TEXT NOT NULL,
+  region_json TEXT NOT NULL,
+  UNIQUE(run_id,region_id)
+);
+CREATE TABLE IF NOT EXISTS engineering_item (
+  item_id TEXT PRIMARY KEY,
+  run_id TEXT NOT NULL REFERENCES intelligence_run(run_id),
+  extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+  item_kind TEXT NOT NULL, tag_normalized TEXT,
+  page INTEGER, item_json TEXT NOT NULL,
+  CHECK(item_kind IN ('OCCURRENCE','PORT','RELATION','ASSET_HYPOTHESIS','CONFLICT','LOOP','TABLE','ATTRIBUTE','EVIDENCE'))
+);
+CREATE TABLE IF NOT EXISTS intelligence_snapshot (
+  snapshot_id TEXT PRIMARY KEY,
+  extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+  run_id TEXT NOT NULL REFERENCES intelligence_run(run_id),
+  schema_id TEXT NOT NULL, snapshot_sha256 TEXT NOT NULL,
+  snapshot_json TEXT NOT NULL, created_utc TEXT NOT NULL,
+  UNIQUE(extraction_id,snapshot_sha256)
+);
+CREATE TABLE IF NOT EXISTS intelligence_decision (
+  decision_id TEXT PRIMARY KEY,
+  extraction_id TEXT NOT NULL REFERENCES extraction(extraction_id),
+  item_id TEXT NOT NULL, actor TEXT NOT NULL,
+  decision TEXT NOT NULL, old_value_json TEXT, new_value_json TEXT,
+  reason TEXT NOT NULL, source_sha256 TEXT NOT NULL, model_generation TEXT NOT NULL,
+  created_utc TEXT NOT NULL,
+  CHECK(decision IN ('ACCEPTED_AS_READING','REJECTED','IGNORED','NEEDS_REVIEW','RECLASSIFIED','EDITED','LINKED','UNLINKED','AMBIGUITY_RESOLVED'))
+);
+CREATE INDEX IF NOT EXISTS ix_ir_extraction ON intelligence_run(extraction_id);
+CREATE INDEX IF NOT EXISTS ix_so_run ON stage_outcome(run_id);
+CREATE INDEX IF NOT EXISTS ix_so_status ON stage_outcome(status);
+CREATE INDEX IF NOT EXISTS ix_pr_extraction_page ON page_region(extraction_id,page);
+CREATE INDEX IF NOT EXISTS ix_ei_run_kind ON engineering_item(run_id,item_kind);
+CREATE INDEX IF NOT EXISTS ix_ei_tag ON engineering_item(item_kind,tag_normalized);
+CREATE INDEX IF NOT EXISTS ix_isn_extraction ON intelligence_snapshot(extraction_id);
+CREATE INDEX IF NOT EXISTS ix_idec_item ON intelligence_decision(item_id);
+CREATE TRIGGER IF NOT EXISTS block_update_intelligence_run BEFORE UPDATE ON intelligence_run BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_intelligence_run BEFORE DELETE ON intelligence_run BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_stage_outcome BEFORE UPDATE ON stage_outcome BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_stage_outcome BEFORE DELETE ON stage_outcome BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_page_region BEFORE UPDATE ON page_region BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_page_region BEFORE DELETE ON page_region BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_engineering_item BEFORE UPDATE ON engineering_item BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_engineering_item BEFORE DELETE ON engineering_item BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_intelligence_snapshot BEFORE UPDATE ON intelligence_snapshot BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_intelligence_snapshot BEFORE DELETE ON intelligence_snapshot BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_update_intelligence_decision BEFORE UPDATE ON intelligence_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+CREATE TRIGGER IF NOT EXISTS block_delete_intelligence_decision BEFORE DELETE ON intelligence_decision BEGIN SELECT RAISE(ABORT,'append-only record'); END;
+UPDATE project_meta SET value='13' WHERE key='standalone_schema' AND value='12';
 COMMIT;
 """

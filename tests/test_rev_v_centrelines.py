@@ -163,7 +163,7 @@ def test_migrate_existing_v11_database_with_backup(tmp_path,source):
             c.execute(f'DROP TABLE {table}')
         c.execute("UPDATE project_meta SET value='11' WHERE key='standalone_schema'")
     with ProjectStore(path) as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.export_extraction(eid)==x
         assert db.verify_audit_chain()
     with sqlite3.connect(next(tmp_path.glob('old.sqlite.pre-v12-*.sqlite'))) as b:

@@ -118,7 +118,7 @@ def test_rehashed_forged_link_proposal_is_not_accepted():
 def test_storage_is_idempotent_audited_and_read_only_evidence_is_linked(tmp_path):
     pdf,e,g,s,o,links=layers()
     with ProjectStore(tmp_path/'k.sqlite') as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         eid=db.add_extraction(e,source_pdf_bytes=pdf)
         gid=db.add_geometry_analysis(eid,g)
         sid=db.add_symbol_analysis(eid,gid,s)
@@ -185,7 +185,7 @@ def test_migration_v4_retains_old_records_and_produces_preupgrade_backup(tmp_pat
         db.executescript(MIGRATION_4)
     with ProjectStore(path) as project:
         assert project.migration_backup is not None
-        assert project.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert project.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert project.db.execute("SELECT name FROM sqlite_master WHERE name='text_link_decision'").fetchone()
     with sqlite3.connect(next(tmp_path.glob('old.sqlite.pre-v12-*.sqlite'))) as backup:
         assert backup.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='4'

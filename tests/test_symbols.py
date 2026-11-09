@@ -93,7 +93,7 @@ def test_standalone_persistence_review_and_migration(tmp_path):
     pdf,e,g,s=analyze()
     src=tmp_path/'symbols.sqlite'
     with ProjectStore(src) as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         eid=db.add_extraction(e,source_pdf_bytes=pdf)
         gid=db.add_geometry_analysis(eid,g)
         aid=db.add_symbol_analysis(eid,gid,s)
@@ -127,7 +127,7 @@ def test_migration_from_existing_v2(tmp_path):
         db.executescript(MIGRATION_2)
     with ProjectStore(p) as db:
         assert db.migration_backup and db.migration_backup.exists()
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.db.execute("SELECT name FROM sqlite_master WHERE name='symbol_analysis'").fetchone()
     with sqlite3.connect(next(tmp_path.glob('old.sqlite.pre-v12-*.sqlite'))) as backup:
         assert backup.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='2'

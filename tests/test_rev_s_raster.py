@@ -123,7 +123,7 @@ def test_persist_idempotent_review_audit_and_no_host_writes(tmp_path,pdf,raster)
     path=tmp_path/'raster.sqlite'
     source_extract=_extract(pdf)
     with ProjectStore(path) as db:
-        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         eid=db.add_extraction(source_extract,source_pdf_bytes=pdf)
         aid=db.add_raster_analysis(eid,raster)
         assert aid==db.add_raster_analysis(eid,raster)
@@ -170,7 +170,7 @@ def test_v9_upgrade_preserves_existing_rows_and_creates_backup(tmp_path,pdf):
     with ProjectStore(path) as upgraded:
         assert upgraded.migration_backup is not None
         assert upgraded.export_extraction(eid)==source_extract
-        assert upgraded.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='12'
+        assert upgraded.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert upgraded.verify_audit_chain()
     backup=next(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))
     with sqlite3.connect(backup) as db:

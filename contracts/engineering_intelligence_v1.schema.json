@@ -1,0 +1,999 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pid-reader:standalone:engineering-intelligence:v1",
+  "title": "P&ID Reader Standalone Engineering Intelligence Export v1 (NOT Worksheet R1)",
+  "description": "Development starter schema - source-backed proposed drawing reading, not plant verification or DEXPI.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "package",
+    "drawings",
+    "evidence",
+    "entities",
+    "relationships",
+    "quality",
+    "narrative",
+    "unresolved"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "engineering-intelligence-v1"
+    },
+    "package": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "created_utc",
+        "offline",
+        "proposal_only",
+        "source_scope",
+        "engineering_validation",
+        "status"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "created_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "offline": {
+          "const": true
+        },
+        "proposal_only": {
+          "const": true
+        },
+        "source_scope": {
+          "const": "DRAWING_REVISION_ONLY"
+        },
+        "engineering_validation": {
+          "const": "NOT_PERFORMED"
+        },
+        "status": {
+          "enum": [
+            "NOT_RUN",
+            "FAILED",
+            "INCOMPLETE",
+            "PARTIAL",
+            "COMPLETE_CANDIDATES"
+          ]
+        },
+        "engine_version": {
+          "type": "string"
+        },
+        "model_config_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "drawings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "source_name",
+          "sha256",
+          "page_count",
+          "drawing_no",
+          "revision",
+          "registration_status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source_name": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "page_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "drawing_no": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "registration_status": {
+            "enum": [
+              "REGISTERED",
+              "UNREGISTERED"
+            ]
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page_coordinate_frame": {
+            "const": "media-top-left-v1"
+          },
+          "page_regions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "page_index",
+                "region_type",
+                "bbox"
+              ],
+              "properties": {
+                "page_index": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "region_type": {
+                  "type": "string"
+                },
+                "bbox": {
+                  "$ref": "#/$defs/bbox"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "drawing_id",
+          "page_index",
+          "bbox",
+          "raw",
+          "type",
+          "producer",
+          "producer_version",
+          "semantic_level"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "drawing_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "bbox": {
+            "$ref": "#/$defs/bbox"
+          },
+          "raw": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "NATIVE_TEXT",
+              "OCR_TEXT",
+              "VECTOR_SHAPE",
+              "RASTER_SHAPE",
+              "LINE_PATH",
+              "DRAWING_NOTE",
+              "ANNOTATION",
+              "USER_REVIEW",
+              "OTHER"
+            ]
+          },
+          "producer": {
+            "type": "string"
+          },
+          "producer_version": {
+            "type": "string"
+          },
+          "semantic_level": {
+            "enum": [
+              "DIRECT_OBSERVATION",
+              "STRUCTURALLY_DERIVED",
+              "CONTEXTUAL_INFERENCE",
+              "CONFLICTING",
+              "UNKNOWN"
+            ]
+          },
+          "score": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "NONE",
+                  "UNCALIBRATED",
+                  "CALIBRATED"
+                ]
+              },
+              "raw_score": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "calibrated_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "calibration_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "source_object_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "model_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "config_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "tag",
+          "semantic_level",
+          "review_state",
+          "source_evidence_ids",
+          "source_occurrence_ids",
+          "attributes",
+          "ports"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "DOCUMENT_OCCURRENCE",
+              "EQUIPMENT",
+              "EQUIPMENT_NOZZLE",
+              "PIPING_LINE",
+              "PIPING_SEGMENT",
+              "FITTING",
+              "VALVE",
+              "VALVE_ACTUATOR",
+              "INSTRUMENT",
+              "INSTRUMENT_LOOP",
+              "CONTROL_SYSTEM",
+              "SIGNAL",
+              "SAFETY_DEVICE",
+              "PACKAGE",
+              "BUILDING",
+              "UTILITY",
+              "OFFPAGE_CONNECTOR",
+              "ANNOTATION",
+              "TABLE",
+              "TABLE_CELL",
+              "UNCLASSIFIED_SYMBOL"
+            ]
+          },
+          "tag": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "classification": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "semantic_level": {
+            "enum": [
+              "DIRECT_OBSERVATION",
+              "STRUCTURALLY_DERIVED",
+              "CONTEXTUAL_INFERENCE",
+              "CONFLICTING",
+              "UNKNOWN"
+            ]
+          },
+          "review_state": {
+            "enum": [
+              "PROPOSED_UNVERIFIED",
+              "ACCEPTED_AS_READING",
+              "REJECTED",
+              "IGNORED",
+              "NEEDS_REVIEW",
+              "STALE"
+            ]
+          },
+          "source_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "source_occurrence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "asset_hypothesis_group_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "verbatim",
+                "semantic_level",
+                "evidence_ids"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "verbatim": {
+                  "type": "string"
+                },
+                "normalized_value": {},
+                "original_unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "normalized_unit": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "numeric_type": {
+                  "type": "string",
+                  "enum": [
+                    "SETPOINT",
+                    "DESIGN",
+                    "OPERATING",
+                    "RATING",
+                    "SIZE",
+                    "RANGE",
+                    "UNKNOWN",
+                    "NOT_NUMERIC"
+                  ]
+                },
+                "qualifier": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "semantic_level": {
+                  "enum": [
+                    "DIRECT_OBSERVATION",
+                    "STRUCTURALLY_DERIVED",
+                    "CONTEXTUAL_INFERENCE",
+                    "CONFLICTING",
+                    "UNKNOWN"
+                  ]
+                },
+                "evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "status": {
+                  "enum": [
+                    "PROPOSED_UNVERIFIED",
+                    "ACCEPTED_AS_READING",
+                    "REJECTED",
+                    "IGNORED",
+                    "NEEDS_REVIEW",
+                    "STALE"
+                  ]
+                },
+                "alternatives": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "ports": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "kind",
+                "source_evidence_ids"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "kind": {
+                  "enum": [
+                    "PROCESS_IN",
+                    "PROCESS_OUT",
+                    "PROCESS_BIDIRECTIONAL",
+                    "PROCESS_UNKNOWN",
+                    "SIGNAL_IN",
+                    "SIGNAL_OUT",
+                    "INSTRUMENT_TAP",
+                    "ACTUATOR_SIGNAL",
+                    "NOZZLE",
+                    "DRAIN",
+                    "VENT",
+                    "UTILITY",
+                    "OTHER"
+                  ]
+                },
+                "label": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "bbox": {
+                  "$ref": "#/$defs/bbox"
+                },
+                "angle_degrees": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "source_evidence_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "score": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "NONE",
+                  "UNCALIBRATED",
+                  "CALIBRATED"
+                ]
+              },
+              "raw_score": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "calibrated_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "calibration_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "from_entity_id",
+          "to_entity_id",
+          "direction",
+          "semantic_level",
+          "review_state",
+          "source_evidence_ids"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "DRAWN_CONNECTS",
+              "SIGNAL_CONNECTS",
+              "HAS_PORT",
+              "HAS_NOZZLE",
+              "MEASURES",
+              "INDICATES",
+              "CONTROLS",
+              "ACTUATES",
+              "POSITION_FEEDBACK",
+              "ALARM_REFERENCE",
+              "PART_OF_PACKAGE",
+              "PROPOSED_SAME_AS",
+              "OFFPAGE_MATCH_CANDIDATE",
+              "REFERENCES",
+              "LOCATED_IN",
+              "OTHER"
+            ]
+          },
+          "from_entity_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to_entity_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "from_port_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "to_port_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "direction": {
+            "enum": [
+              "UNKNOWN",
+              "UNIDIRECTIONAL",
+              "BIDIRECTIONAL",
+              "NOT_APPLICABLE"
+            ]
+          },
+          "semantic_level": {
+            "enum": [
+              "DIRECT_OBSERVATION",
+              "STRUCTURALLY_DERIVED",
+              "CONTEXTUAL_INFERENCE",
+              "CONFLICTING",
+              "UNKNOWN"
+            ]
+          },
+          "review_state": {
+            "enum": [
+              "PROPOSED_UNVERIFIED",
+              "ACCEPTED_AS_READING",
+              "REJECTED",
+              "IGNORED",
+              "NEEDS_REVIEW",
+              "STALE"
+            ]
+          },
+          "source_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "hypothesis_group_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "score": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "NONE",
+                  "UNCALIBRATED",
+                  "CALIBRATED"
+                ]
+              },
+              "raw_score": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "calibrated_probability": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "calibration_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "status",
+        "stage_outcomes",
+        "warnings",
+        "unprocessed_regions"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "NOT_RUN",
+            "FAILED",
+            "INCOMPLETE",
+            "PARTIAL",
+            "COMPLETE_CANDIDATES"
+          ]
+        },
+        "stage_outcomes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "stage",
+              "status",
+              "input_sha256",
+              "observed_count"
+            ],
+            "properties": {
+              "stage": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "SUCCESS",
+                  "PARTIAL",
+                  "SKIPPED",
+                  "FAILED",
+                  "TIMEOUT",
+                  "CANCELLED",
+                  "NOT_RUN"
+                ]
+              },
+              "input_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "observed_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "error_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "pages_processed": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "truncated": {
+                "type": "boolean"
+              },
+              "elapsed_ms": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "unprocessed_regions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "drawing_id",
+              "page_index",
+              "bbox",
+              "reason"
+            ],
+            "properties": {
+              "drawing_id": {
+                "type": "string"
+              },
+              "page_index": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "bbox": {
+                "$ref": "#/$defs/bbox"
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "coverage_note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "narrative": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "claim_id",
+          "text",
+          "semantic_level",
+          "evidence_ids"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "semantic_level": {
+            "enum": [
+              "DIRECT_OBSERVATION",
+              "STRUCTURALLY_DERIVED",
+              "CONTEXTUAL_INFERENCE",
+              "CONFLICTING",
+              "UNKNOWN"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "unresolved_issue_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "severity",
+          "description",
+          "evidence_ids"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "INFO",
+              "WARNING",
+              "CRITICAL"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "affected_entity_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "hypothesis_group_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "bbox": {
+      "type": "object",
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "properties": {
+        "x0": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y0": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "x1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y1": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
