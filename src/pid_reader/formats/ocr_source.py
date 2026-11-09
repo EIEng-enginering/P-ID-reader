@@ -55,6 +55,7 @@ _RAPID = None
 TILE_PX = 1200          # large drawings are read tile by tile so 5-8 pt lettering is not shrunk away
 TILE_OVERLAP_PX = 150
 _STATS: dict = {}
+_HOOK: dict = {}       # {"tile": callable(done, total)} set for the duration of one ocr_pdf_preview call (one analysis runs at a time)
 
 
 def reset_diagnostics() -> None:
@@ -114,8 +115,14 @@ def _rapid_lines(image):
         return list(found)
     lines = []
     step = TILE_PX - TILE_OVERLAP_PX
-    for y in range(0, max(1, height - TILE_OVERLAP_PX), step):
-        for x in range(0, max(1, width - TILE_OVERLAP_PX), step):
+    ys = list(range(0, max(1, height - TILE_OVERLAP_PX), step))
+    xs = list(range(0, max(1, width - TILE_OVERLAP_PX), step))
+    total_tiles, done_tiles = len(ys) * len(xs), 0
+    for y in ys:
+        for x in xs:
+            if _HOOK.get("tile"):
+                _HOOK["tile"](done_tiles, total_tiles)        # reports progress and honours Cancel between tiles
+            done_tiles += 1
             crop = image.crop((x, y, min(width, x + TILE_PX), min(height, y + TILE_PX)))
             found = _run_tile(engine, np.asarray(crop))
             for quad, text, conf in (found or []):
@@ -198,7 +205,7 @@ def _tesseract_words(image, timeout_seconds: int):
 
 def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
                     dpi: int | None = None, max_pixels: int = 12_000_000,
-                    timeout_seconds: int = 30, engine: str = 'tesseract') -> dict:
+                    timeout_seconds: int = 30, engine: str = 'tesseract', cancel=None, progress=None) -> dict:
     if (dpi is not None and (type(dpi) is not int or not 72<=dpi<=300)) or type(max_pixels) is not int or not 1<=max_pixels<=12_000_000:
         raise ValueError('Unsupported OCR rendering profile')
     if type(timeout_seconds) is not int or not 1<=timeout_seconds<=300:
@@ -260,7 +267,18 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
     output=[]
     with pdfplumber.open(BytesIO(pdf_bytes)) as geometry_pdf:
       frames = {page_number: frame_from_pdfplumber(geometry_pdf.pages[page_number-1]) for page_number in chosen}
-    for page_number in chosen:
+    for page_index, page_number in enumerate(chosen):
+        if cancel is not None:
+            cancel.check()
+        if progress is not None:
+            progress(page_index/len(chosen), f'OCR page {page_number} ({page_index+1} of {len(chosen)})')
+
+        def _tile_hook(done, total, page_index=page_index, page_number=page_number):
+            if cancel is not None:
+                cancel.check()
+            if progress is not None:
+                progress((page_index+done/max(1, total))/len(chosen), f'OCR page {page_number}: text block {done+1} of {total}')
+        _HOOK['tile']=_tile_hook
         page=pdf[page_number-1]
         width,height=page.get_size()
         frame=frames[page_number]
@@ -309,6 +327,7 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
     result['result_sha256']=sha256_hex(canonical_json(result).encode('utf-8'))
     if len(canonical_json(result).encode('utf-8'))>MAX_PREVIEW_RESULT_BYTES:
         raise ValueError('OCR result exceeds output budget')
+    _HOOK.clear()
     return result
 
 

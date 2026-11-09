@@ -323,3 +323,17 @@ def test_incomplete_analysis_is_shown_as_incomplete_not_success(window, qapp, tm
     wait_idle(window, qapp)
     window.quality_tab.refresh()
     assert "INCOMPLETE" in window.quality_tab.banner.text() or "FAILED" in window.quality_tab.banner.text() or window.quality_tab.banner.text().startswith("Status:")
+
+
+def test_busy_message_says_what_is_running_and_how_far(window, qapp, monkeypatch):
+    from pid_reader.ui import main_window as mw
+
+    class Fake:
+        title = "Analysing drawing"
+    window.task = Fake()
+    window._task_progress = (0.6, "OCR page 1: text block 3 of 6")
+    shown = []
+    monkeypatch.setattr(mw.QMessageBox, "information", lambda parent, title, text, *a, **k: shown.append(text))
+    window.run_task("Saving drawing files", lambda report, cancelled: None, lambda r: None)
+    window.task = None
+    assert shown and "60 %" in shown[0] and "OCR page 1" in shown[0] and "Cancel" in shown[0] and "Analysing drawing" in shown[0]

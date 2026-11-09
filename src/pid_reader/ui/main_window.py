@@ -221,7 +221,10 @@ class MainWindow(QMainWindow):
 
     def run_task(self, title: str, fn, on_done) -> None:
         if self.task is not None:
-            QMessageBox.information(self, "Busy", f"“{self.task.title}” is still running.")
+            frac, msg = getattr(self, "_task_progress", (0.0, ""))
+            QMessageBox.information(self, "Busy", f"\u201c{self.task.title}\u201d is still running ({int(frac * 100)} %: {msg or 'working'}).\n\n"
+                                                  "Wait for it to finish, or press Cancel (next to the progress bar) and try again. "
+                                                  "Finished work is kept.")
             return
         task = Task(title, fn, self)
         self.task = task
@@ -229,7 +232,8 @@ class MainWindow(QMainWindow):
         self.cancel_btn.setVisible(True)
         self.progress.setValue(0)
         self.statusBar().showMessage(title + "…")
-        task.progress.connect(lambda f, m: (self.progress.setValue(int(f * 100)), self.statusBar().showMessage(m)))
+        self._task_progress = (0.0, "starting")
+        task.progress.connect(lambda f, m: (setattr(self, "_task_progress", (f, m)), self.progress.setValue(int(f * 100)), self.statusBar().showMessage(m)))
 
         def finish():
             self.task = None

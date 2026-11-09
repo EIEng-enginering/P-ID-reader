@@ -25,6 +25,17 @@ def _noop(_stage: str, _fraction: float, _message: str) -> None:
 
 
 PIPELINE_VERSION = "pipeline-rev-x-1"
+MAX_JUNCTION_ITEMS_PER_PAGE = 1500
+# Relative cost of every stage (including the Rev X ones). The progress bar follows this plan, so it can only reach 100 % after the last
+# stage has finished and the run has been recorded.
+PROGRESS_WEIGHTS = {"classify": 2, "geometry": 6, "raster": 4, "symbols": 2, "linework": 2, "catalogue": 2, "signals": 2, "ocr": 22, "text_links": 2,
+                    "raster_network": 3, "raster_centrelines": 3, "symbol_library": 26, "engineering_graph": 14, "control_loops": 2, "doc_text": 4, "record": 5}
+_W_TOTAL = float(sum(PROGRESS_WEIGHTS.values()))
+_W_START, _acc = {}, 0.0
+for _k, _w in PROGRESS_WEIGHTS.items():
+    _W_START[_k] = _acc / _W_TOTAL
+    _acc += _w
+del _k, _w, _acc
 
 
 def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
@@ -65,7 +76,12 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
 
     def step(stage: str, message: str) -> None:
         recorder.begin(stage)
-        progress(stage, STAGES.index(stage) / total, message)
+        progress(stage, _W_START[stage], message)
+
+    def sub(stage: str, fraction: float, message: str) -> None:
+        """Progress inside a stage: ``fraction`` 0..1 of that stage's share of the bar. Never reports 100 % before the end."""
+        span = PROGRESS_WEIGHTS[stage] / _W_TOTAL
+        progress(stage, min(0.995, _W_START[stage] + span * max(0.0, min(1.0, fraction))), message)
 
     extraction = db.export_extraction(extraction_id)
     source = db.get_source_pdf(extraction["document"]["sha256"])
@@ -81,6 +97,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
     page_analysis: list[dict] = []
     profiles: dict = {}
     recorder.begin("classify")
+    progress("classify", 0.0, "Classifying pages and finding title block, tables and notes")
     try:
         check()
         page_analysis = analyse_pages(source, pages, source_sha256=source_sha, profiles_out=profiles)
@@ -211,10 +228,13 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             if ocr_engine == "auto" and not engines_now:
                 mark("ocr", "SKIPPED", "no offline OCR engine installed (Tesseract or RapidOCR)")
             else:
-                ocr = ocr_pdf_preview(source, pages=pages, engine=ocr_engine)
+                ocr = ocr_pdf_preview(source, pages=pages, engine=ocr_engine, cancel=cancel,
+                                      progress=lambda f, m: sub("ocr", 0.9 * f, m))
                 ocr_counters = last_diagnostics()
                 from .ocr_adaptive import augment_ocr
+                sub("ocr", 0.9, "Re-reading pages that gave no text (other orientations and contrast)")
                 ocr, ocr_trace = augment_ocr(source, ocr, page_analysis, preset=preset, cancel=cancel)
+                sub("ocr", 1.0, "OCR finished")
                 ids["ocr"] = db.add_ocr_analysis(extraction_id, ocr)
                 counts["ocr_words"] = sum(len(p["words"]) for p in ocr["pages"])
                 mark("ocr", "DONE", f"{counts['ocr_words']} words ({ocr['algorithm']})",
@@ -226,6 +246,8 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         except Exception as exc:
             ocr_exception = f"{type(exc).__name__}: {exc}"
             ocr_counters = last_diagnostics()
+            from ..formats import ocr_source as _ocr_mod
+            _ocr_mod._HOOK.clear()
             if str(exc).startswith("OCR_RUNTIME_EXCEPTION"):
                 ocr_exception = str(exc)
             mark("ocr", "FAILED", f"{type(exc).__name__}: {exc}")
@@ -281,8 +303,6 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
     else:
         mark('raster_centrelines','SKIPPED','requires raster network evidence')
 
-    progress("done", 1.0, "Analysis finished")
-
     # ---- Rev X health: separate "did not run", "failed" and "ran and found nothing"
     ink_pages: set[int] = set()
     if topology:
@@ -307,6 +327,8 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         graph_nodes=counts.get("symbols", 0))
     items: list[dict] = []
     recorder.begin("symbol_library")
+    if library_symbols:
+        progress("symbol_library", _W_START["symbol_library"], "Searching for valves, actuators, instruments and equipment")
     if not library_symbols:
         recorder.end("symbol_library", "SKIPPED", "library symbol detection not requested")
     else:
@@ -315,11 +337,11 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             from .symbol_detect import detect_symbols
             sym_items, sym_stats = [], {"pages": 0, "candidates": 0, "partial_pages": 0, "tiles": 0, "weak_class_withheld": 0}
             sym_by_page: dict[int, list[dict]] = {}
-            for pg in page_analysis:
-                if not (pg["counts"]["graphics_count"] or pg["counts"]["image_count"]):
-                    continue                      # no ink at all; a sparse page with a few symbols is still searched
+            todo = [pg for pg in page_analysis if pg["counts"]["graphics_count"] or pg["counts"]["image_count"]]   # no ink at all: nothing to search
+            for pi, pg in enumerate(todo):
                 check()
-                found = detect_symbols(source, pg["page"], preset=preset if preset in ("quick", "standard", "deep") else "standard", cancel=cancel)
+                found = detect_symbols(source, pg["page"], preset=preset if preset in ("quick", "standard", "deep") else "standard", cancel=cancel,
+                                       progress=lambda f, m, pi=pi, n=len(todo), pn=pg["page"]: sub("symbol_library", (pi + f) / n, f"Page {pn}: {m}"))
                 sym_stats["pages"] += 1
                 sym_stats["candidates"] += len(found["candidates"])
                 sym_stats["tiles"] += found["tiles_processed"]
@@ -353,11 +375,12 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             from .engineering_graph import build_graph
             g_stats = {"pages": 0, "edges": 0, "conflicts": 0, "junctions": 0, "partial_pages": 0, "unattached_ports": 0, "arrows": 0}
             graph_items: list[dict] = []
-            for pg in page_analysis:
-                if pg["page"] not in sym_by_page:
-                    continue
+            gpages = [pg for pg in page_analysis if pg["page"] in sym_by_page]
+            for gi, pg in enumerate(gpages):
                 check()
-                vec = analyze_vector_network(source, pg["page"], cancel=cancel)
+                sub("engineering_graph", gi / max(1, len(gpages)), f"Page {pg['page']}: tracing drawn lines and junctions")
+                vec = analyze_vector_network(source, pg["page"], cancel=cancel,
+                                             progress=lambda f, m, gi=gi, n=len(gpages), pn=pg["page"]: sub("engineering_graph", (gi + f) / n, f"Page {pn}: {m}"))
                 words = [{"id": f"nat-{pg['page']}-{i}", "text": w["text"], "bbox": w["bbox"], "source": "NATIVE"}
                          for i, w in enumerate((profiles.get(pg["page"]) or {}).get("words", []))]
                 words += [{"id": w["id"], "text": w["text"], "bbox": w["bbox"], "source": "OCR"} for w in ocr_words_by_page.get(pg["page"], [])]
@@ -394,15 +417,22 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                     graph_items.append({"item_id": a["asset_id"], "item_kind": "ASSET_HYPOTHESIS", "tag_normalized": (a["tag_text"] or "").upper() or None,
                                         "page": pg["page"], "asset": a, "truth_class": "CONTEXTUAL_INFERENCE", "review_state": "PROPOSED_UNVERIFIED",
                                         "evidence": [{"page": pg["page"], "occurrences": a["occurrences"]}]})
-                for j in vec["junctions"]:
-                    if j["status"] in ("UNKNOWN_CROSSING", "SEPARATED_FAVOURED", "JOINED_FAVOURED", "JOINED_SUPPORTED", "SEPARATED_SUPPORTED"):
+                # Only junctions that carry a question or a supporting mark are stored as evidence items. Plain joined contacts (every symbol
+                # outline touches the pipe) are counted in the stage statistics instead: a dense sheet has tens of thousands of them.
+                kept_j = [j for j in vec["junctions"] if j["status"] in ("UNKNOWN_CROSSING", "SEPARATED_FAVOURED", "JOINED_SUPPORTED", "SEPARATED_SUPPORTED")]
+                if len(kept_j) > MAX_JUNCTION_ITEMS_PER_PAGE:
+                    g_stats["junction_items_capped"] = g_stats.get("junction_items_capped", 0) + len(kept_j) - MAX_JUNCTION_ITEMS_PER_PAGE
+                    kept_j = kept_j[:MAX_JUNCTION_ITEMS_PER_PAGE]
+                for j in kept_j:
+                    if True:
                         graph_items.append({"item_id": j["id"], "item_kind": "EVIDENCE", "tag_normalized": None, "page": pg["page"], "junction": j,
                                             "truth_class": "DIRECT_OBSERVATION", "review_state": "PROPOSED_UNVERIFIED",
                                             "evidence": [{"page": pg["page"], "point_norm": j["point_norm"]}]})
             items += graph_items
             counts["graph_edges"] = g_stats["edges"]
             recorder.end("engineering_graph", "DONE", f"{g_stats['edges']} drawn-connection proposals, {g_stats['conflicts']} conflicts on {g_stats['pages']} page(s)",
-                         candidates=g_stats["edges"], pages_processed=g_stats["pages"], cap_truncations=g_stats["partial_pages"],
+                         candidates=g_stats["edges"], pages_processed=g_stats["pages"],
+                         cap_truncations=g_stats["partial_pages"] + (1 if g_stats.get("junction_items_capped") else 0),
                          diagnostics={"stats": g_stats})
         except Cancelled:
             raise
@@ -410,6 +440,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             recorder.end("engineering_graph", "FAILED", f"{type(exc).__name__}: {exc}")
     loops_result: dict = {}
     recorder.begin("control_loops")
+    progress("control_loops", _W_START["control_loops"], "Assembling instrument loops")
     if not graphs:
         recorder.end("control_loops", "SKIPPED", "needs the typed graph")
     else:
@@ -442,6 +473,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         except Exception as exc:
             recorder.end("control_loops", "FAILED", f"{type(exc).__name__}: {exc}")
     recorder.begin("doc_text")
+    progress("doc_text", _W_START["doc_text"], "Reading tables, notes and title block")
     try:
         check()
         from .doc_text import extract_document_text
@@ -456,6 +488,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
     except Exception as exc:
         recorder.end("doc_text", "FAILED", f"{type(exc).__name__}: {exc}")
     run_id = None
+    progress("record", _W_START["record"], "Saving the analysis run")
     if record:
         try:
             from .intelligence_store import record_run
@@ -468,6 +501,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                                 config=recorder.config)
         except Exception as exc:  # recording must never hide the analysis result
             health["record_error"] = f"{type(exc).__name__}: {exc}"
+    progress("done", 1.0, "Analysis finished")
     return {"extraction_id": extraction_id, "analyses": ids, "counts": counts, "stages": stages,
             "outcomes": recorder.ordered(), "health": health, "page_analysis": page_analysis, "run_id": run_id,
             "items": items, "graphs": graphs, "loops": loops_result,

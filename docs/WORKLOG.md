@@ -19,3 +19,6 @@
 4. Mistakes and corrections: Python edit scripts first rewrote LF files as CRLF (text-mode on Windows) — fixed and all later edits use `newline=''`; migration backup file names changed with the schema bump and three tests were updated late; a too-small size ladder first missed valves 10 % off the template size, replaced by coarse-to-fine search; an arrow on a long stroke first directed every edge on that stroke, now only the part it sits on; weak symbols first created graph edges, now excluded.
 5. Nothing was pushed. No drawings left the machine. The reserved final split and the real public example library were not used for tuning.
 
+# Progress fix (2026-11-09, later)
+Reported: the program said the analysis was still running when saving reports, at 100 %, and sometimes sat at 60 %. Cause: `analyze_drawing` announced "done" (100 %) before the new slow stages, and the OCR, symbol and graph stages had no progress or cancel hooks. Measured on S023 with a per-stage timer before and after the change; regression tests in `tests/test_revx_progress.py`.
+

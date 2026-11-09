@@ -147,4 +147,5 @@ Original Worksheet R1 worker and host G4-G7 remain unchanged and NOT_RUN.
 | X-010 | P1 | Cross-sheet matching needs printed drawing numbers and TO/FROM text on both sheets; many real sheets use pennant symbols. | Pennant symbol detection; line-number-based pairing. |
 | X-011 | P1 | Alternative OCR engine / unified RapidOCR package not evaluated; only the existing RapidOCR 1.4.4 and optional Tesseract. | Comparative benchmark with pinned hashes and licence audit. |
 | X-012 | P2 | Dependency licence review (Qt LGPL, PyInstaller, OpenCV/FFmpeg) and code signing outstanding. | Owner/legal decision. |
+| X-013 | P1 | Standard depth still takes about 4 minutes on the densest sampled sheet (OCR 40 s, symbol search about 60 s, line graph about 30 s) and reports PARTIAL when the peak cap is hit. | Profile Deep; cache renders across stages; restrict search to drawing-area regions. |
 

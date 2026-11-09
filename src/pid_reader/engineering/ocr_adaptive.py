@@ -114,6 +114,7 @@ def read_variant(pdf_bytes: bytes, page_number: int, engine: str, variant: str, 
     from ..formats import ocr_source
     from ..formats.page_coordinates import frame_from_pdfplumber
     spec = VARIANTS[variant]
+    ocr_source._HOOK.clear()                 # a stale progress hook from an earlier call must never fire here
     document_sha = sha256(pdf_bytes).hexdigest()
     page = pdfium.PdfDocument(pdf_bytes)[page_number - 1]
     width, height = page.get_size()

@@ -253,7 +253,7 @@ def arrow_directions(arrows: list[dict], strokes: list[dict]) -> list[dict]:
 
 
 def analyze_vector_network(pdf_bytes: bytes, page_number: int, *, cancel=None, tile_target: int = TILE_TARGET,
-                           max_page_segments: int = MAX_PAGE_SEGMENTS, max_tiles: int = MAX_TILES) -> dict:
+                           max_page_segments: int = MAX_PAGE_SEGMENTS, max_tiles: int = MAX_TILES, progress=None) -> dict:
     """Strokes, typed junctions, dots/hops and arrow directions for one page, tiled when dense."""
     import pdfplumber
     source_sha = hashlib.sha256(pdf_bytes).hexdigest()
@@ -271,9 +271,11 @@ def analyze_vector_network(pdf_bytes: bytes, page_number: int, *, cancel=None, t
     tiles = tile_plan(strokes, geo["width"], geo["height"], tile_target, max_tiles=max_tiles)
     contacts: dict[tuple, dict] = {}
     tiles_info = []
-    for t in tiles:
+    for ti, t in enumerate(tiles):
         if cancel is not None:
             cancel.check()
+        if progress is not None:
+            progress(0.1 + 0.85 * ti / max(1, len(tiles)), f"line tile {ti + 1} of {len(tiles)}")
         segs = [s for s in strokes if _in_box(t["box"], _seg_box(s))]
         found, truncated = _contacts_in_tile(segs, MAX_CONTACTS_PER_TILE, cancel)
         for c in found:

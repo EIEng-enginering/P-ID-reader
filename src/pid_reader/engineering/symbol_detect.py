@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from functools import lru_cache
 from math import ceil
 
 from . import symbol_library as lib
@@ -30,6 +31,7 @@ PRESETS = {
     "deep": {"families": ("VALVE", "ACTUATOR", "INSTRUMENT", "EQUIPMENT"), "coarse_ratio": 1.2, "fine_step": 0.03, "threshold": 0.58},
 }
 MAX_CANDIDATES_PER_PAGE = 4000
+PEAK_CAP = 5000          # coarse-stage local maxima kept per template/size/orientation (more is reported as PEAK_CAP, never dropped silently)
 MAX_TILES = 64
 
 
@@ -124,7 +126,20 @@ def _match(ink_blur, template_id: str, size_pt: float, scale: float, stroke: int
     return [(float(res[y, x]), int(x), int(y), t.shape[1], t.shape[0]) for y, x in zip(ys.tolist(), xs.tolist())]
 
 
-def _search(ink, ink_coarse, ink_fine, spec: dict, rot: int, cfg: dict, scale: float, stroke: int, ink_bin=None) -> list[dict]:
+@lru_cache(maxsize=8192)
+def _tpl(template_id: str, width_px: int, stroke: int, rot: int):
+    """Rendered template plus its 3x3- and 7x7-blurred forms and whether each has any contrast. Read-only; cached because the same few hundred
+    templates are re-used for every peak and every tile (rendering and blurring them each time was most of the run time on dense sheets)."""
+    import cv2
+    t = lib.render(template_id, width_px, stroke, rot)
+    tb3, tb7 = cv2.GaussianBlur(t, (3, 3), 0), cv2.GaussianBlur(t, (7, 7), 0)
+    return t, tb3, tb7, bool(float(tb3.std()) >= 1.0), bool(float(tb7.std()) >= 1.0)
+
+
+REFINE_CAP = 400        # coarse peaks refined per template search; more is reported as PEAK_CAP
+
+
+def _search(ink, ink_coarse, ink_fine, spec: dict, rot: int, cfg: dict, scale: float, stroke: int, ink_bin=None, stats: dict | None = None) -> list[dict]:
     """Two-stage size search for one template and orientation (see module docstring).
 
     Stage 1 correlates a heavily blurred page with a coarse size ladder at a lowered threshold; stage 2 re-correlates only inside a
@@ -135,18 +150,25 @@ def _search(ink, ink_coarse, ink_fine, spec: dict, rot: int, cfg: dict, scale: f
     coarse_thr = max(0.45, cfg["threshold"] - 0.15)
     peaks = []
     for size in _sizes(spec, cfg["coarse_ratio"]):
-        t = lib.render(spec["template_id"], int(round(size * scale)), stroke, rot)
-        if t.shape[0] < 8 or t.shape[1] < 8 or t.shape[0] >= ink.shape[0] or t.shape[1] >= ink.shape[1]:
-            continue
-        tb = cv2.GaussianBlur(t, (7, 7), 0)
-        if float(tb.std()) < 1.0:
+        t, _tb3, tb, _ok3, ok7 = _tpl(spec["template_id"], int(round(size * scale)), stroke, rot)
+        if t.shape[0] < 8 or t.shape[1] < 8 or t.shape[0] >= ink.shape[0] or t.shape[1] >= ink.shape[1] or not ok7:
             continue
         res = np.nan_to_num(cv2.matchTemplate(ink_coarse, tb, cv2.TM_CCOEFF_NORMED), nan=0.0, posinf=0.0, neginf=0.0)
-        ys, xs = np.where(res >= coarse_thr)
-        if len(ys) > 150000:
-            raise ValueError("template matches far too much of the tile; page content is not drawing-like")
+        # Only local maxima within about a third of the template are peaks. On dense drawings thousands of neighbouring positions pass
+        # the threshold; comparing them one by one in Python was minutes of work per template for no extra information.
+        k = max(3, min(t.shape) | 1)
+        local_max = res >= cv2.dilate(res, np.ones((k, k), np.uint8))
+        ys, xs = np.nonzero(local_max & (res >= coarse_thr))
+        if len(ys) > PEAK_CAP:
+            if stats is not None:
+                stats["peak_cap"] = stats.get("peak_cap", 0) + 1
+            keep = np.argpartition(-res[ys, xs], PEAK_CAP)[:PEAK_CAP]
+            ys, xs = ys[keep], xs[keep]
         for y, x in zip(ys.tolist(), xs.tolist()):
             peaks.append((float(res[y, x]), size, x, y, t.shape[1], t.shape[0]))
+    # only peaks that could still reach the threshold after refinement are worth the fine search
+    refine_floor = max(coarse_thr, cfg["threshold"] - 0.10)
+    peaks = [p for p in peaks if p[0] >= refine_floor]
     peaks.sort(key=lambda p: (-p[0], p[3], p[2], p[1]))
     taken: list[tuple[int, int, int, int, float]] = []
     out = []
@@ -157,7 +179,9 @@ def _search(ink, ink_coarse, ink_fine, spec: dict, rot: int, cfg: dict, scale: f
                for a, b, c, d, sz in taken):
             continue
         taken.append((x, y, tw, th, size))
-        if len(taken) > 600:
+        if len(taken) > REFINE_CAP:
+            if stats is not None:
+                stats["peak_cap"] = stats.get("peak_cap", 0) + 1       # reported as PEAK_CAP: the strongest peaks were refined
             break
         padx, pady = int(tw * 0.35) + 4, int(th * 0.35) + 4
         wx0, wy0 = max(0, x - padx), max(0, y - pady)
@@ -166,13 +190,10 @@ def _search(ink, ink_coarse, ink_fine, spec: dict, rot: int, cfg: dict, scale: f
         best = None
         for f in np.arange(0.84, 1.17, cfg["fine_step"]):
             fsize = size * float(f)
-            t = lib.render(spec["template_id"], int(round(fsize * scale)), stroke, rot)
-            if t.shape[0] >= window.shape[0] or t.shape[1] >= window.shape[1] or t.shape[0] < 8:
+            t, tb, _tb7, ok3, _ok7 = _tpl(spec["template_id"], int(round(fsize * scale)), stroke, rot)
+            if t.shape[0] >= window.shape[0] or t.shape[1] >= window.shape[1] or t.shape[0] < 8 or not ok3:
                 continue
-            tb = cv2.GaussianBlur(t, (3, 3), 0)
-            if float(tb.std()) < 1.0:
-                continue
-            res = np.nan_to_num(cv2.matchTemplate(window, tb, cv2.TM_CCOEFF_NORMED), nan=0.0, posinf=0.0, neginf=0.0)
+            res = np.nan_to_num(cv2.matchTemplate(window, tb, cv2.TM_CCOEFF_NORMED), copy=False, nan=0.0, posinf=0.0, neginf=0.0)
             my, mx = np.unravel_index(int(res.argmax()), res.shape)
             sc = float(res[my, mx])
             prec = _precision(ink_bin, t, wx0 + int(mx), wy0 + int(my)) if ink_bin is not None else 1.0
@@ -196,7 +217,8 @@ def _sizes(spec: dict, ratio: float) -> tuple[float, ...]:
 
 
 def detect_symbols(pdf_bytes: bytes, page_number: int, *, preset: str = "standard", families: tuple[str, ...] | None = None,
-                   tile_px: int = 2400, overlap_px: int = 360, max_scale: float = 2.5, max_side_px: int = 10000, cancel=None) -> dict:
+                   tile_px: int = 2400, overlap_px: int = 360, max_scale: float = 2.5, max_side_px: int = 10000, cancel=None,
+                   progress=None) -> dict:
     """Find library symbols on one page. Returns candidates (proposals), a completeness record, and the parameters used."""
     import cv2
     import numpy as np
@@ -223,9 +245,17 @@ def detect_symbols(pdf_bytes: bytes, page_number: int, *, preset: str = "standar
     body_families = [f for f in fams if f != "ACTUATOR"]
     specs = [s for s in lib.LIBRARY.values() if s["graphical_family"] in body_families]
     tiles_done = 0
-    for (x0, y0, x1, y1) in tiles:
+    peak_stats: dict = {}
+    total_steps = max(1, len(tiles) * max(1, len(specs)))
+    step = 0
+
+    def tick(message: str) -> None:
+        if progress is not None:
+            progress(min(1.0, step / total_steps), message)
+    for ti, (x0, y0, x1, y1) in enumerate(tiles):
         if cancel is not None:
             cancel.check()
+        tick(f"tile {ti + 1} of {len(tiles)}")
         ink = 255 - _render_tile(page, w_pt, h_pt, scale, (x0, y0, x1, y1))
         if int((ink > 128).sum()) < 40:                     # essentially blank tile
             tiles_done += 1
@@ -239,10 +269,14 @@ def detect_symbols(pdf_bytes: bytes, page_number: int, *, preset: str = "standar
             for rot in lib.rotations_for(spec["template_id"]):
                 if cancel is not None:
                     cancel.check()
-                for hit in _search(ink, ink_coarse, ink_fine, spec, rot, cfg, scale, stroke, ink_bin):
+                for hit in _search(ink, ink_coarse, ink_fine, spec, rot, cfg, scale, stroke, ink_bin, peak_stats):
                     raw.append({"score": hit["score"], "precision": hit["precision"], "template_id": spec["template_id"], "rotation": rot, "size_pt": hit["size_pt"],
                                 "box_px": (x0 + hit["x"], y0 + hit["y"], x0 + hit["x"] + hit["w"], y0 + hit["y"] + hit["h"]), "tile": (x0, y0)})
+            step += 1
+            tick(f"tile {ti + 1} of {len(tiles)}: {spec['shape_variant'].replace('_', ' ').lower()}")
         tiles_done += 1
+    if peak_stats.get("peak_cap"):
+        incomplete.append({"reason": "PEAK_CAP", "template_searches_capped": peak_stats["peak_cap"], "peak_cap": PEAK_CAP, "refine_cap": REFINE_CAP})
     candidates = _merge(raw, document_sha, page_number, width_px, height_px, scale)
     if len(candidates) > MAX_CANDIDATES_PER_PAGE:
         incomplete.append({"reason": "CANDIDATE_CAP", "found": len(candidates), "kept": MAX_CANDIDATES_PER_PAGE})
