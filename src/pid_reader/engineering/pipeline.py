@@ -197,6 +197,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
     ocr = None
     ocr_exception = ""
     ocr_counters: dict = {}
+    ocr_trace: list[dict] = []
     from ..formats.ocr_source import available_engines, last_diagnostics
     engines_now = available_engines()
     if ocr_engine is None:
@@ -210,12 +211,14 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             else:
                 ocr = ocr_pdf_preview(source, pages=pages, engine=ocr_engine)
                 ocr_counters = last_diagnostics()
+                from .ocr_adaptive import augment_ocr
+                ocr, ocr_trace = augment_ocr(source, ocr, page_analysis, preset=preset, cancel=cancel)
                 ids["ocr"] = db.add_ocr_analysis(extraction_id, ocr)
                 counts["ocr_words"] = sum(len(p["words"]) for p in ocr["pages"])
                 mark("ocr", "DONE", f"{counts['ocr_words']} words ({ocr['algorithm']})",
                      tile_count=ocr_counters.get("tiles_attempted", 0), candidates=counts["ocr_words"],
                      pages_processed=len(ocr["pages"]), evidence_count=counts["ocr_words"],
-                     output_sha256=ocr["result_sha256"])
+                     output_sha256=ocr["result_sha256"], diagnostics={"adaptive_trace": ocr_trace})
         except Cancelled:
             raise
         except Exception as exc:
@@ -292,7 +295,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         pages_selected=[] if ocr_engine is None else list(pages), counters=ocr_counters, native_words=native_words,
         ocr_words={n: len(w) for n, w in ocr_words_by_page.items()},
         recognized_tags=sum(1 for o in extraction["objects"] if o.get("attributes", {}).get("source") == "OCR"),
-        exception=ocr_exception)
+        exception=ocr_exception, retry_count=len(ocr_trace))
     if recorder.outcomes.get("ocr"):
         recorder.outcomes["ocr"]["diagnostics"]["ocr"] = ocr_diag
     health = evaluate_health(
