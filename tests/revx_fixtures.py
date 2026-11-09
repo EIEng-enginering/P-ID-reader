@@ -100,3 +100,122 @@ def sheet_pdf(*, dense: int = 0, title: bool = True, notes: bool = False, table:
         writer.write(out)
         data = out.getvalue()
     return data
+
+
+# ---------------------------------------------------------------------------------------------------- symbol sheets
+def draw_symbol(c, kind: str, cx: float, cy: float, s: float, rot: int = 0, *, lw: float = 0.8) -> None:
+    """Draw a symbol with plain reportlab path code (independent of the library's own drawers). (cx, cy) = centre, PDF points."""
+    c.saveState()
+    c.translate(cx, cy)
+    c.rotate(-rot)                 # clockwise rotation like the library
+    c.setLineWidth(lw)
+    c.setStrokeGray(0)
+    c.setFillGray(0)
+    h = s * 0.6
+
+    def poly(pts, fill=0, stroke=1):
+        p = c.beginPath()
+        p.moveTo(*pts[0])
+        for q in pts[1:]:
+            p.lineTo(*q)
+        p.close()
+        c.drawPath(p, fill=fill, stroke=stroke)
+
+    def bowtie(fill=0):
+        poly([(-s / 2, -h / 2), (-s / 2, h / 2), (0, 0)], fill=fill)
+        poly([(s / 2, -h / 2), (s / 2, h / 2), (0, 0)], fill=fill)
+    if kind == "gate":
+        bowtie()
+    elif kind == "bowtie_filled":
+        bowtie(fill=1)
+    elif kind == "globe":
+        bowtie()
+        c.circle(0, 0, s * 0.12, stroke=0, fill=1)
+    elif kind == "ball":
+        bowtie()
+        c.circle(0, 0, s * 0.17, stroke=1, fill=0)
+    elif kind == "butterfly":
+        bowtie()
+        c.line(0, -h / 2, 0, h / 2)
+    elif kind == "check":
+        hh = s * 0.7
+        poly([(-s / 2 + s * .05, -hh / 2 + hh * .05), (-s / 2 + s * .05, hh / 2 - hh * .05), (s * .35, 0)])
+        c.line(s * .45, -hh / 2, s * .45, hh / 2)
+    elif kind == "inst_field":
+        c.circle(0, 0, s / 2, stroke=1, fill=0)
+    elif kind == "inst_panel":
+        c.circle(0, 0, s / 2, stroke=1, fill=0)
+        c.line(-s / 2, 0, s / 2, 0)
+    elif kind == "flange":
+        c.line(-s * 0.04, -h / 2, -s * 0.04, h / 2)
+        c.line(s * 0.04, -h / 2, s * 0.04, h / 2)
+    elif kind == "flow_arrow":
+        poly([(-s / 2, -h / 3), (-s / 2, h / 3), (s / 2, 0)], fill=1)
+    elif kind == "vessel_v":
+        w, hh = s, s * 2.2
+        c.line(-w / 2, -hh * .32, -w / 2, hh * .32)
+        c.line(w / 2, -hh * .32, w / 2, hh * .32)
+        c.ellipse(-w / 2, hh * .32 - hh * .18, w / 2, hh * .32 + hh * .18, stroke=1, fill=0) if False else None
+        p = c.beginPath()
+        p.moveTo(-w / 2, hh * .32)
+        p.curveTo(-w / 2, hh * .5, w / 2, hh * .5, w / 2, hh * .32)
+        c.drawPath(p, stroke=1, fill=0)
+        p = c.beginPath()
+        p.moveTo(-w / 2, -hh * .32)
+        p.curveTo(-w / 2, -hh * .5, w / 2, -hh * .5, w / 2, -hh * .32)
+        c.drawPath(p, stroke=1, fill=0)
+    c.restoreState()
+
+
+def draw_actuator(c, kind: str, cx: float, cy: float, s: float, *, lw: float = 0.8) -> None:
+    """Actuator head above a valve centred at (cx, cy) with body width ``s`` (stem starts at the valve apex)."""
+    c.saveState()
+    c.setLineWidth(lw)
+    c.setStrokeGray(0)
+    top = cy + s * 0.30                       # valve apex is the stem root (just above the body)
+    if kind == "manual":
+        c.line(cx, top, cx, top + s * 0.62)
+        c.line(cx - s * 0.32, top + s * 0.62, cx + s * 0.32, top + s * 0.62)
+    elif kind == "diaphragm":
+        c.line(cx, top, cx, top + s * 0.28)
+        p = c.beginPath()
+        p.moveTo(cx - s * 0.34, top + s * 0.28)
+        p.curveTo(cx - s * 0.34, top + s * 0.72, cx + s * 0.34, top + s * 0.72, cx + s * 0.34, top + s * 0.28)
+        p.close()
+        c.drawPath(p, stroke=1, fill=0)
+    elif kind == "motor":
+        c.line(cx, top, cx, top + s * 0.22)
+        c.circle(cx, top + s * 0.22 + s * 0.2, s * 0.2, stroke=1, fill=0)
+    c.restoreState()
+
+
+def symbol_sheet_pdf(items: list[dict], *, size=(600.0, 420.0), pipe: bool = True, raster: bool = False, noise: int = 0) -> bytes:
+    """items: ``{"kind", "x", "y", "s", "rot"?, "actuator"?}`` in points (origin bottom-left)."""
+    buf = BytesIO()
+    pw, ph = size
+    c = canvas.Canvas(buf, pagesize=size, pageCompression=0, invariant=1)
+    if pipe:
+        c.setLineWidth(0.8)
+        ys = sorted({it["y"] for it in items if it.get("pipe", not it["kind"].startswith(("inst", "vessel")))})
+        for y in ys:
+            c.line(10, y, pw - 10, y)
+    for it in items:
+        draw_symbol(c, it["kind"], it["x"], it["y"], it["s"], it.get("rot", 0))
+        if it.get("actuator"):
+            draw_actuator(c, it["actuator"], it["x"], it["y"], it["s"])
+    c.setLineWidth(0.4)
+    for i in range(noise):
+        c.line(5 + (i * 37) % int(pw - 20), 5 + (i * 53) % int(ph - 20), 9 + (i * 37) % int(pw - 20), 9 + (i * 53) % int(ph - 20))
+    c.showPage()
+    c.save()
+    data = buf.getvalue()
+    if raster:
+        import pypdfium2 as pdfium
+        img = pdfium.PdfDocument(data)[0].render(scale=2.2).to_pil().convert("L")
+        buf2 = BytesIO()
+        c2 = canvas.Canvas(buf2, pagesize=size, pageCompression=0, invariant=1)
+        c2.drawImage(ImageReader(img), 0, 0, width=pw, height=ph)
+        c2.showPage()
+        c2.save()
+        data = buf2.getvalue()
+    return data

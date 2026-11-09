@@ -30,7 +30,8 @@ PIPELINE_VERSION = "pipeline-rev-x-1"
 def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                     catalogue_id: str | None = None, use_example_catalogue: bool = True,
                     progress: Callable[[str, float, str], None] = _noop,
-                    cancel: CancelToken | None = None, preset: str = "standard", record: bool = True) -> dict:
+                    cancel: CancelToken | None = None, preset: str = "standard", record: bool = True,
+                    library_symbols: bool = False) -> dict:
     """Run every available layer for ``extraction_id``.
 
     ``ocr_engine``: ``None`` skips OCR; ``'auto'`` uses Tesseract if installed,
@@ -305,12 +306,48 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         symbol_stage_status=recorder.outcomes.get("symbols", {}).get("status", "NOT_RUN"),
         graph_nodes=counts.get("symbols", 0))
     items: list[dict] = []
+    recorder.begin("symbol_library")
+    if not library_symbols:
+        recorder.end("symbol_library", "SKIPPED", "library symbol detection not requested")
+    else:
+        try:
+            check()
+            from .symbol_detect import detect_symbols
+            sym_items, sym_stats = [], {"pages": 0, "candidates": 0, "partial_pages": 0, "tiles": 0, "weak_class_withheld": 0}
+            for pg in page_analysis:
+                if not (pg["counts"]["graphics_count"] or pg["counts"]["image_count"]):
+                    continue                      # no ink at all; a sparse page with a few symbols is still searched
+                check()
+                found = detect_symbols(source, pg["page"], preset=preset if preset in ("quick", "standard", "deep") else "standard", cancel=cancel)
+                sym_stats["pages"] += 1
+                sym_stats["candidates"] += len(found["candidates"])
+                sym_stats["tiles"] += found["tiles_processed"]
+                sym_stats["partial_pages"] += found["status"] == "PARTIAL"
+                for c in found["candidates"]:
+                    sym_stats["weak_class_withheld"] += c["confidence_status"] == "WEAK_CLASS_WITHHELD"
+                    sym_items.append({"item_id": c["id"], "item_kind": "OCCURRENCE", "tag_normalized": None, "page": c["page"],
+                                      "producer": "symbol-detect-v1", "review_state": "PROPOSED_UNVERIFIED", "truth_class": "STRUCTURALLY_DERIVED",
+                                      "occurrence": {k: c[k] for k in ("template_id", "graphical_family", "shape_variant", "engineering_class",
+                                                                       "class_candidates", "actuation", "function", "raw_score", "score_kind", "precision",
+                                                                       "confidence_status", "rotation", "size_pt", "alternatives")},
+                                      "bbox": c["bbox"], "ports": c["ports"],
+                                      "evidence": [{"page": c["page"], "bbox": c["bbox"], "source_sha256": source_sha, **c["evidence"]}]})
+            items += sym_items
+            counts["library_symbols"] = sym_stats["candidates"]
+            recorder.end("symbol_library", "DONE", f"{sym_stats['candidates']} symbol candidates on {sym_stats['pages']} page(s)",
+                         candidates=sym_stats["candidates"], pages_processed=sym_stats["pages"], tile_count=sym_stats["tiles"],
+                         cap_truncations=sym_stats["partial_pages"], diagnostics={"stats": sym_stats})
+        except Cancelled:
+            raise
+        except Exception as exc:
+            recorder.end("symbol_library", "FAILED", f"{type(exc).__name__}: {exc}")
     recorder.begin("doc_text")
     try:
         check()
         from .doc_text import extract_document_text
-        items, text_stats = extract_document_text(page_analysis, profiles, ocr_words_by_page, source_sha)
-        counts["doc_text_items"] = len(items)
+        text_items, text_stats = extract_document_text(page_analysis, profiles, ocr_words_by_page, source_sha)
+        items += text_items
+        counts["doc_text_items"] = len(text_items)
         recorder.end("doc_text", "DONE", f"{text_stats['tables']} tables, {text_stats['table_values']} values, {text_stats['notes']} notes",
                      candidates=len(items), pages_processed=text_stats["pages"], cap_truncations=text_stats["capped_pages"],
                      diagnostics={"stats": text_stats})
