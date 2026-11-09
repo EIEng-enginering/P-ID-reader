@@ -166,7 +166,7 @@ def test_migrate_existing_v11_database_with_backup(tmp_path,source):
         assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.export_extraction(eid)==x
         assert db.verify_audit_chain()
-    with sqlite3.connect(next(tmp_path.glob('old.sqlite.pre-v12-*.sqlite'))) as b:
+    with sqlite3.connect(next(tmp_path.glob('old.sqlite.pre-v13-*.sqlite'))) as b:
         assert b.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='11'
 
 

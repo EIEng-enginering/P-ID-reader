@@ -167,7 +167,7 @@ def test_migrate_old_v7_database_preserves_records(tmp_path):
         assert newer.db.execute("SELECT value FROM project_meta WHERE key='test_marker'").fetchone()[0]=='untouched'
         assert newer.migration_backup is not None
         assert newer.verify_audit_chain()
-    with sqlite3.connect(next(tmp_path.glob('previous.sqlite.pre-v12-*.sqlite'))) as previous:
+    with sqlite3.connect(next(tmp_path.glob('previous.sqlite.pre-v13-*.sqlite'))) as previous:
         assert previous.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='7'
 
 

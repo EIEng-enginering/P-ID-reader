@@ -288,7 +288,7 @@ def test_rev_l_database_upgrades_to_v7_and_creates_backup(tmp_path):
         assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.db.execute('SELECT count(*) FROM extraction').fetchone()[0]==1
         assert db.verify_audit_chain()
-    backups=list(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))
+    backups=list(tmp_path.glob('legacy.sqlite.pre-v13-*.sqlite'))
     assert len(backups)==1
     with sqlite3.connect(backups[0]) as old:
         assert old.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='6'
@@ -354,7 +354,7 @@ def test_actual_v6_project_fixture_migrates_without_losing_rows(tmp_path):
         assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.db.execute('SELECT count(*) FROM extraction').fetchone()[0]==old_count
         assert db.verify_audit_chain()
-    assert list(tmp_path.glob('migrating_old.sqlite.pre-v12-*.sqlite'))
+    assert list(tmp_path.glob('migrating_old.sqlite.pre-v13-*.sqlite'))
 
 
 def test_crosssheet_snapshot_does_not_reinterpret_old_drawing_metadata(tmp_path):

@@ -251,7 +251,7 @@ def test_v5_database_upgrade_creates_backup(tmp_path):
         assert db.migration_backup is not None and db.migration_backup.exists()
         assert db.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert db.verify_audit_chain()
-    with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))) as old:
+    with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v13-*.sqlite'))) as old:
         assert old.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='5'
 
 

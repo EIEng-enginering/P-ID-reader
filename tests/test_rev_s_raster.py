@@ -172,7 +172,7 @@ def test_v9_upgrade_preserves_existing_rows_and_creates_backup(tmp_path,pdf):
         assert upgraded.export_extraction(eid)==source_extract
         assert upgraded.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='13'
         assert upgraded.verify_audit_chain()
-    backup=next(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))
+    backup=next(tmp_path.glob('legacy.sqlite.pre-v13-*.sqlite'))
     with sqlite3.connect(backup) as db:
         assert db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=='9'
 

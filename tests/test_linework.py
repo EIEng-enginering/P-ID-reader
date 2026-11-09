@@ -153,7 +153,7 @@ def test_migrate_v3_with_unmodified_original_records(tmp_path):
         assert upgraded.migration_backup and upgraded.migration_backup.exists()
         assert upgraded.db.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=="13"
         assert upgraded.db.execute("SELECT name FROM sqlite_master WHERE name='linework_candidate'").fetchone()
-    with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v12-*.sqlite'))) as old:
+    with sqlite3.connect(next(tmp_path.glob('legacy.sqlite.pre-v13-*.sqlite'))) as old:
         assert old.execute("SELECT value FROM project_meta WHERE key='standalone_schema'").fetchone()[0]=="3"
 
 
