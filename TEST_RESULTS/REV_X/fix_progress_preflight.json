@@ -1,0 +1,31 @@
+{
+  "scope": "Local development and contract smoke checks only; not engineering acceptance.",
+  "runtime_python": "3.12.10",
+  "checks": {
+    "source_checkout": {
+      "status": "PASS",
+      "imported": "C:\\PIDWork\\final_src\\src\\pid_reader\\__init__.py",
+      "expected": "C:\\PIDWork\\final_src\\src\\pid_reader\\__init__.py"
+    },
+    "frozen_r1": {
+      "status": "PASS",
+      "sha256": "09174700ff54cdf3bd899d952951d8969041f1a094cbe8cefff9bd714cbd25e2",
+      "archive_integrity": true
+    },
+    "synthetic_worker": {
+      "status": "PASS",
+      "exit_code": 0,
+      "result_hash_valid": true,
+      "schema_and_rule_violations": 0,
+      "objects": 18
+    }
+  },
+  "passed": true,
+  "not_run": [
+    "Windows Python 3.12 / PySide6 6.12 UI",
+    "Real Worksheet host G4-G7",
+    "Independent industrial P&ID accuracy benchmark",
+    "Commercial CAD/DEXPI interoperability",
+    "Windows installation and offline dependency licensing"
+  ]
+}
