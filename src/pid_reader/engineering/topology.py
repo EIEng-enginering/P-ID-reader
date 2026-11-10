@@ -136,6 +136,17 @@ def analyze_pdf_topology(pdf_bytes: bytes, *, pages: tuple[int, ...] | None = No
                     "shape_candidates": [], "warnings": [],
                     "disclaimer": "Geometric observations only; no physical piping or instrument connectivity confirmed."}
     per_page: dict[int,list[dict]] = defaultdict(list)
+    shape_repeats: dict[tuple, int] = defaultdict(int)
+
+    def shape_id(page_number: int, bbox: dict, kind: str) -> str:
+        """Id of an outline. The first drawn copy keeps the id it always had; an identical outline drawn again (overprint, duplicated
+        object) gets its occurrence number added, so two outlines never share an id."""
+        key = (page_number, bbox["x0"], bbox["y0"], bbox["x1"], bbox["y1"], kind)
+        n = shape_repeats[key]
+        shape_repeats[key] += 1
+        if n == 0:
+            return stable_id("shape", result["source_sha256"], page_number, bbox, kind)
+        return stable_id("shape", result["source_sha256"], page_number, bbox, kind, n)
     try:
         with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
             for page_number in selected:
@@ -181,7 +192,7 @@ def analyze_pdf_topology(pdf_bytes: bytes, *, pages: tuple[int, ...] | None = No
                         continue
                     bbox = {"x0":round(x0/width,7),"y0":round(y0/height,7),
                             "x1":round(x1/width,7),"y1":round(y1/height,7)}
-                    cid = stable_id("shape",result["source_sha256"],page_number,bbox,"CLOSED_CURVE")
+                    cid = shape_id(page_number, bbox, "CLOSED_CURVE")
                     result["shape_candidates"].append({"id":cid,"page":page_number,
                         "shape":"CLOSED_NEAR_CIRCULAR_OUTLINE", "bbox":bbox,
                         "status":"PROPOSED_GEOMETRY",
@@ -199,7 +210,7 @@ def analyze_pdf_topology(pdf_bytes: bytes, *, pages: tuple[int, ...] | None = No
                             "x1":round(min(1.,x1/width),7), "y1":round(min(1.,y1/height),7)}
                     if bbox["x0"]>=bbox["x1"] or bbox["y0"]>=bbox["y1"]:
                         continue
-                    sid=stable_id("shape",result["source_sha256"],page_number,bbox,"RECTANGULAR_OUTLINE")
+                    sid=shape_id(page_number, bbox, "RECTANGULAR_OUTLINE")
                     result["shape_candidates"].append({"id":sid,"page":page_number,
                         "shape":"RECTANGULAR_OUTLINE","bbox":bbox,"status":"PROPOSED_GEOMETRY",
                         "limitation":"Rectangle may be equipment, drawing border, legend or annotation; unclassified."})

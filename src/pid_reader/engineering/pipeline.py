@@ -116,7 +116,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         ids["geometry"] = db.add_geometry_analysis(extraction_id, topology)
         counts["segments"] = len(topology["segments"])
         counts["contacts"] = len(topology["contact_candidates"])
-        mark("geometry", "DONE", f"{counts['segments']} strokes, {counts['contacts']} contacts")
+        mark("geometry", "DONE", f"{counts['segments']} strokes, {counts['contacts']} contacts", candidates=counts["contacts"])
     except Cancelled:
         raise
     except Exception as exc:  # recorded, later stages that depend on it are skipped
@@ -140,7 +140,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                 counts["raster_strokes"] = len(result["stroke_candidates"])
                 counts["raster_filled_valves"] = len(result["filled_valve_candidates"])
                 counts["raster_outlined_valves"] = len(result.get("outline_valve_candidates", []))
-                mark("raster", "DONE", f"{counts['raster_strokes']} raster strokes, {counts['raster_filled_valves']} filled and {counts['raster_outlined_valves']} outlined glyph proposals")
+                mark("raster", "DONE", f"{counts['raster_strokes']} raster strokes, {counts['raster_filled_valves']} filled and {counts['raster_outlined_valves']} outlined glyph proposals", candidates=counts["raster_strokes"])
     except Cancelled:
         raise
     except Exception as exc:
@@ -153,7 +153,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             symbols = build_symbol_proposals(extraction, db.get_geometry_analysis(ids["geometry"]))
             ids["symbols"] = db.add_symbol_analysis(extraction_id, ids["geometry"], symbols)
             counts["symbols"] = len(symbols["symbol_candidates"])
-            mark("symbols", "DONE", f"{counts['symbols']} outline candidates, {len(symbols['port_candidates'])} port hypotheses")
+            mark("symbols", "DONE", f"{counts['symbols']} outline candidates, {len(symbols['port_candidates'])} port hypotheses", candidates=counts["symbols"])
         except Cancelled:
             raise
         except Exception as exc:
@@ -168,7 +168,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                                           db.get_symbol_analysis(ids["symbols"]))
             ids["linework"] = db.add_linework_analysis(extraction_id, ids["geometry"], ids["symbols"], lw)
             counts["valves"] = len(lw["valve_candidates"])
-            mark("linework", "DONE", f"{counts['valves']} valve candidates")
+            mark("linework", "DONE", f"{counts['valves']} valve candidates", candidates=counts["valves"])
         except Cancelled:
             raise
         except Exception as exc:
@@ -190,7 +190,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                                                           ids["linework"], cid)
                 ids["catalogue"] = aid
                 counts["catalogue_matches"] = len(result["candidates"])
-                mark("catalogue", "DONE", f"{counts['catalogue_matches']} template matches (catalogue {cid[-8:]})")
+                mark("catalogue", "DONE", f"{counts['catalogue_matches']} template matches (catalogue {cid[-8:]})", candidates=counts["catalogue_matches"])
         except Cancelled:
             raise
         except Exception as exc:
@@ -204,7 +204,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             ids["signals"] = db.add_signal_analysis(extraction_id, ids["geometry"], ids["symbols"],
                                                     ids["linework"], sig)
             counts["signal_candidates"] = len(sig["candidates"])
-            mark("signals", "DONE", f"{counts['signal_candidates']} signal-style candidates")
+            mark("signals", "DONE", f"{counts['signal_candidates']} signal-style candidates", candidates=counts["signal_candidates"])
         except Cancelled:
             raise
         except Exception as exc:
@@ -245,6 +245,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             raise
         except Exception as exc:
             ocr_exception = f"{type(exc).__name__}: {exc}"
+            ocr = None                  # words that were not registered must not feed raster network, health, graph, loops or document text
             ocr_counters = last_diagnostics()
             from ..formats import ocr_source as _ocr_mod
             _ocr_mod._HOOK.clear()
@@ -259,7 +260,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                                      db.get_ocr_analysis(ids["ocr"]))
             ids["text_links"] = db.add_text_link_analysis(extraction_id, ids["symbols"], ids["ocr"], links)
             counts["text_links"] = len(links["proposals"])
-            mark("text_links", "DONE", f"{counts['text_links']} symbol/tag proposals")
+            mark("text_links", "DONE", f"{counts['text_links']} symbol/tag proposals", candidates=counts["text_links"])
         except Cancelled:
             raise
         except Exception as exc:
@@ -276,7 +277,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
             ids['raster_network']=db.add_raster_network_analysis(
                 extraction_id,ids['raster'],context,ocr_analysis_id=ids.get('ocr'))
             counts['raster_contacts']=len(context['contact_candidates'])
-            mark('raster_network','DONE',f"{counts['raster_contacts']} unresolved contact proposals")
+            mark('raster_network','DONE',f"{counts['raster_contacts']} unresolved contact proposals", candidates=counts['raster_contacts'])
         except Cancelled:
             raise
         except Exception as exc:
@@ -295,7 +296,7 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                 extraction_id,ids['raster'],ids['raster_network'],lines)
             counts['raster_centrelines']=len(lines['centrelines'])
             counts['raster_gaps']=len(lines['gap_candidates'])
-            mark('raster_centrelines','DONE',f"{counts['raster_centrelines']} centrelines, {counts['raster_gaps']} unresolved gaps")
+            mark('raster_centrelines','DONE',f"{counts['raster_centrelines']} centrelines, {counts['raster_gaps']} unresolved gaps", candidates=counts['raster_centrelines'])
         except Cancelled:
             raise
         except Exception as exc:
@@ -311,20 +312,6 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         ink_pages |= {row["page"] for row in db.get_raster_analysis(ids["raster"]).get("stroke_candidates", [])}
     ocr_words_by_page = {p["page"]: p["words"] for p in (ocr or {}).get("pages", [])}
     native_words = {p["page"]: p["counts"]["word_count"] for p in page_analysis}
-    ocr_diag = ocr_diagnostics(
-        requested=ocr_engine is not None, engine_choice=ocr_engine or "off", engines_available=engines_now,
-        stage_status=recorder.outcomes.get("ocr", {}).get("status", "NOT_RUN"),
-        pages_selected=[] if ocr_engine is None else list(pages), counters=ocr_counters, native_words=native_words,
-        ocr_words={n: len(w) for n, w in ocr_words_by_page.items()},
-        recognized_tags=sum(1 for o in extraction["objects"] if o.get("attributes", {}).get("source") == "OCR"),
-        exception=ocr_exception, retry_count=len(ocr_trace))
-    if recorder.outcomes.get("ocr"):
-        recorder.outcomes["ocr"]["diagnostics"]["ocr"] = ocr_diag
-    health = evaluate_health(
-        page_analysis=page_analysis, outcomes=recorder.outcomes, ocr_diag=ocr_diag, ink_pages=ink_pages,
-        ocr_words_by_page=ocr_words_by_page,
-        symbol_stage_status=recorder.outcomes.get("symbols", {}).get("status", "NOT_RUN"),
-        graph_nodes=counts.get("symbols", 0))
     items: list[dict] = []
     recorder.begin("symbol_library")
     if library_symbols:
@@ -346,6 +333,8 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
                 sym_stats["candidates"] += len(found["candidates"])
                 sym_stats["tiles"] += found["tiles_processed"]
                 sym_stats["partial_pages"] += found["status"] == "PARTIAL"
+                if found.get("incomplete"):
+                    sym_stats.setdefault("incomplete", []).append({"page": pg["page"], "reasons": found["incomplete"]})
                 sym_by_page[pg["page"]] = found["candidates"]
                 for c in found["candidates"]:
                     sym_stats["weak_class_withheld"] += c["confidence_status"] == "WEAK_CLASS_WITHHELD"
@@ -487,6 +476,22 @@ def analyze_drawing(db, extraction_id: str, *, ocr_engine: str | None = "auto",
         raise
     except Exception as exc:
         recorder.end("doc_text", "FAILED", f"{type(exc).__name__}: {exc}")
+    # Health is evaluated here, after the symbol-library, graph, loops and document-text stages, so the drawing status never
+    # overstates a run whose later stages were partial or failed.
+    ocr_diag = ocr_diagnostics(
+        requested=ocr_engine is not None, engine_choice=ocr_engine or "off", engines_available=engines_now,
+        stage_status=recorder.outcomes.get("ocr", {}).get("status", "NOT_RUN"),
+        pages_selected=[] if ocr_engine is None else list(pages), counters=ocr_counters, native_words=native_words,
+        ocr_words={n: len(w) for n, w in ocr_words_by_page.items()},
+        recognized_tags=sum(1 for o in extraction["objects"] if o.get("attributes", {}).get("source") == "OCR"),
+        exception=ocr_exception, retry_count=len(ocr_trace))
+    if recorder.outcomes.get("ocr"):
+        recorder.outcomes["ocr"]["diagnostics"]["ocr"] = ocr_diag
+    health = evaluate_health(
+        page_analysis=page_analysis, outcomes=recorder.outcomes, ocr_diag=ocr_diag, ink_pages=ink_pages,
+        ocr_words_by_page=ocr_words_by_page,
+        symbol_stage_status=recorder.outcomes.get("symbols", {}).get("status", "NOT_RUN"),
+        graph_nodes=counts.get("symbols", 0))
     run_id = None
     r5: dict = {}
     from . import r5_features

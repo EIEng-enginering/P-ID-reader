@@ -62,7 +62,7 @@ def reset_diagnostics() -> None:
     """Start a fresh per-run counter set (the OCR result dict itself stays unchanged and hash-stable)."""
     _STATS.clear()
     _STATS.update({"tiles_attempted": 0, "tiles_successful": 0, "tile_failures": 0, "tile_error_classes": [],
-                   "pages_attempted": 0, "words_per_page": {}})
+                   "pages_attempted": 0, "words_per_page": {}, "duplicate_words_merged": 0})
 
 
 def last_diagnostics() -> dict:
@@ -299,6 +299,7 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
         else:
             raw_words=_tesseract_words(image,timeout_seconds)
         words=[]
+        by_id={}                       # word id -> index in ``words``
         for text,conf,left,top,wid,hei,split in raw_words:
             if wid<1 or hei<1:
                 continue
@@ -307,12 +308,23 @@ def ocr_pdf_preview(pdf_bytes: bytes, *, pages: tuple[int,...] | None = None,
             if bbox['x0']>=bbox['x1'] or bbox['y0']>=bbox['y1']:
                 continue
             bbox=frame.bbox_to_media(bbox)
-            words.append({'id':stable_id('ocr',document_sha,page_number,bbox,text),
-                          'text':text,'page':page_number,'bbox':bbox,
-                          'raw_ocr_score':round(conf,4),'review_state':'PROPOSED',
-                          'engine':'local_rapidocr' if engine=='rapidocr' else 'local_tesseract'})
+            word={'id':stable_id('ocr',document_sha,page_number,bbox,text),
+                  'text':text,'page':page_number,'bbox':bbox,
+                  'raw_ocr_score':round(conf,4),'review_state':'PROPOSED',
+                  'engine':'local_rapidocr' if engine=='rapidocr' else 'local_tesseract'}
             if split:
-                words[-1]['split']='PROPORTIONAL_FROM_LINE'
+                word['split']='PROPORTIONAL_FROM_LINE'
+            # Two overlapping tiles can report the same drawn token inside two different lines; the proportional split then
+            # yields two words with one identical box and text, hence one identical id. They are the same observation: keep
+            # the higher raw engine score (never rescored) and count the merge, so the OCR result stays valid.
+            seen=by_id.get(word['id'])
+            if seen is not None:
+                _STATS['duplicate_words_merged']=_STATS.get('duplicate_words_merged',0)+1
+                if word['raw_ocr_score']>words[seen]['raw_ocr_score']:
+                    words[seen]=word
+                continue
+            by_id[word['id']]=len(words)
+            words.append(word)
             if len(words)>MAX_WORDS_PER_PAGE:
                 raise ValueError('OCR word-count budget exceeded')
         _STATS['pages_attempted']=_STATS.get('pages_attempted',0)+1
