@@ -1,0 +1,20 @@
+# OPTIONAL TR1 torch component (learned symbol detector and offline trainer). NOT part of the app environment and NOT needed to run the app.
+# Install into its own virtual environment so the app's lock file and frozen build stay unchanged:
+#   py -3.12 -m venv "%LOCALAPPDATA%\PIDReader\tr1\torch_env"
+#   "%LOCALAPPDATA%\PIDReader\tr1\torch_env\Scripts\python" -m pip install -r requirements-tr1-torch.txt --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple
+# Exact versions below are the ones tested on Windows 11 / Python 3.12.10 (see docs/tr1_integration/TR1_INTEGRATION_STATUS.md).
+torch==2.15.0+cpu
+torchvision==0.29.2+cpu
+numpy==2.5.4
+pillow==13.0.0
+pypdfium2==5.15.2
+# transitive pins as installed
+filelock==4.2.4
+fsspec==2026.9.0
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+mpmath==1.3.0
+networkx==3.7
+setuptools==78.1.0
+sympy==1.14.0
+typing_extensions==4.16.0

@@ -9,6 +9,17 @@ def _r5_settings_isolated(tmp_path_factory, monkeypatch):
     monkeypatch.setenv("PID_R5_SETTINGS", str(tmp_path_factory.mktemp("r5set") / "r5_features.json"))
 
 
+@pytest.fixture(autouse=True)
+def _tr1_isolated(tmp_path_factory, monkeypatch):
+    """TR1 switches default OFF; a test must never inherit the developer's switches or touch the real TR1 data folder."""
+    for name in ("PIDLAB_SYMBOL_FRCNN_TR1", "PIDLAB_SYMBOL_CATALOGUE_TR1", "PIDLAB_CORRECTION_QUEUE_TR1", "PIDLAB_TRAINING_BATCH_TR1",
+                 "PIDLAB_LOCAL_TRAINER_TR1", "PIDLAB_MODEL_REGISTRY_TR1", "PIDLAB_TR1_PYTHON", "PIDLAB_TR1_MODEL_DIR", "PIDLAB_TR1_TIMEOUT_S"):
+        monkeypatch.delenv(name, raising=False)
+    base = tmp_path_factory.mktemp("tr1")
+    monkeypatch.setenv("PIDLAB_TR1_SETTINGS", str(base / "tr1_features.json"))
+    monkeypatch.setenv("PIDLAB_TR1_HOME", str(base / "home"))
+
+
 @pytest.fixture
 def synthetic_pdf():
     from reportlab.pdfgen.canvas import Canvas

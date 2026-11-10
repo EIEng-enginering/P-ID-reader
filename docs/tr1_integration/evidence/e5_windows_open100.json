@@ -1,0 +1,610 @@
+{
+ "summary": {
+  "valve_instr": {
+   "tp": 517,
+   "fp": 68,
+   "fn": 90,
+   "precision": 0.8837606837606837,
+   "recall": 0.8517298187808896,
+   "f1": 0.8674496644295303
+  },
+  "valve_instr_general": {
+   "tp": 576,
+   "fp": 142,
+   "fn": 316,
+   "precision": 0.8022284122562674,
+   "recall": 0.6457399103139013,
+   "f1": 0.715527950310559
+  },
+  "per_class": {
+   "valve": {
+    "tp": 197,
+    "fp": 47,
+    "fn": 60
+   },
+   "instrumentation": {
+    "tp": 320,
+    "fp": 21,
+    "fn": 30
+   },
+   "general": {
+    "tp": 59,
+    "fp": 74,
+    "fn": 226
+   },
+   "arrow": {
+    "tp": 85,
+    "fp": 86,
+    "fn": 366
+   }
+  },
+  "median_wall_process_s": 62.45,
+  "median_detect_s": 52.46,
+  "max_peak_working_set_mb": 1014.4,
+  "median_peak_working_set_mb": 1008.0,
+  "plans_with_identical_valve_counts_to_linux": 12,
+  "linux_reference": {
+   "valve_instr_f1": 0.8674496644295303,
+   "median_wall_s": 34.2
+  },
+  "machine": {
+   "platform": "Windows-11-10.0.26200-SP0",
+   "cpu_count": 8
+  },
+  "threshold": 0.65
+ },
+ "plans": [
+  {
+   "plan": 0,
+   "image_px": [
+    7000,
+    4688
+   ],
+   "wall_process_s": 60.8,
+   "detect_s": 51.248,
+   "load_s": 4.6,
+   "peak_working_set_mb": 1009.2,
+   "n_candidates_ge_0.05": 255,
+   "n_at_threshold": 89,
+   "valve_windows": {
+    "tp": 27,
+    "fp": 4,
+    "fn": 8
+   },
+   "valve_linux": {
+    "tp": 27,
+    "fp": 4,
+    "fn": 8
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 27,
+     "fp": 4,
+     "fn": 8
+    },
+    "instrumentation": {
+     "tp": 33,
+     "fp": 1,
+     "fn": 3
+    },
+    "general": {
+     "tp": 7,
+     "fp": 5,
+     "fn": 15
+    },
+    "arrow": {
+     "tp": 6,
+     "fp": 6,
+     "fn": 29
+    }
+   }
+  },
+  {
+   "plan": 1,
+   "image_px": [
+    7000,
+    4675
+   ],
+   "wall_process_s": 69.3,
+   "detect_s": 57.226,
+   "load_s": 6.946,
+   "peak_working_set_mb": 1014.3,
+   "n_candidates_ge_0.05": 212,
+   "n_at_threshold": 59,
+   "valve_windows": {
+    "tp": 4,
+    "fp": 5,
+    "fn": 5
+   },
+   "valve_linux": {
+    "tp": 4,
+    "fp": 5,
+    "fn": 5
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 4,
+     "fp": 5,
+     "fn": 5
+    },
+    "instrumentation": {
+     "tp": 9,
+     "fp": 0,
+     "fn": 0
+    },
+    "general": {
+     "tp": 7,
+     "fp": 16,
+     "fn": 10
+    },
+    "arrow": {
+     "tp": 10,
+     "fp": 8,
+     "fn": 49
+    }
+   }
+  },
+  {
+   "plan": 2,
+   "image_px": [
+    7000,
+    4685
+   ],
+   "wall_process_s": 60.8,
+   "detect_s": 51.102,
+   "load_s": 4.728,
+   "peak_working_set_mb": 1010.0,
+   "n_candidates_ge_0.05": 230,
+   "n_at_threshold": 73,
+   "valve_windows": {
+    "tp": 24,
+    "fp": 3,
+    "fn": 2
+   },
+   "valve_linux": {
+    "tp": 24,
+    "fp": 3,
+    "fn": 2
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 24,
+     "fp": 3,
+     "fn": 2
+    },
+    "instrumentation": {
+     "tp": 20,
+     "fp": 1,
+     "fn": 2
+    },
+    "general": {
+     "tp": 3,
+     "fp": 4,
+     "fn": 40
+    },
+    "arrow": {
+     "tp": 11,
+     "fp": 7,
+     "fn": 32
+    }
+   }
+  },
+  {
+   "plan": 3,
+   "image_px": [
+    7000,
+    4695
+   ],
+   "wall_process_s": 56.7,
+   "detect_s": 47.426,
+   "load_s": 4.509,
+   "peak_working_set_mb": 1010.7,
+   "n_candidates_ge_0.05": 166,
+   "n_at_threshold": 69,
+   "valve_windows": {
+    "tp": 10,
+    "fp": 6,
+    "fn": 5
+   },
+   "valve_linux": {
+    "tp": 10,
+    "fp": 6,
+    "fn": 5
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 10,
+     "fp": 6,
+     "fn": 5
+    },
+    "instrumentation": {
+     "tp": 28,
+     "fp": 4,
+     "fn": 3
+    },
+    "general": {
+     "tp": 4,
+     "fp": 6,
+     "fn": 20
+    },
+    "arrow": {
+     "tp": 3,
+     "fp": 8,
+     "fn": 12
+    }
+   }
+  },
+  {
+   "plan": 4,
+   "image_px": [
+    7000,
+    4669
+   ],
+   "wall_process_s": 56.1,
+   "detect_s": 47.07,
+   "load_s": 4.354,
+   "peak_working_set_mb": 1005.2,
+   "n_candidates_ge_0.05": 199,
+   "n_at_threshold": 73,
+   "valve_windows": {
+    "tp": 24,
+    "fp": 3,
+    "fn": 9
+   },
+   "valve_linux": {
+    "tp": 24,
+    "fp": 3,
+    "fn": 9
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 24,
+     "fp": 3,
+     "fn": 9
+    },
+    "instrumentation": {
+     "tp": 28,
+     "fp": 2,
+     "fn": 2
+    },
+    "general": {
+     "tp": 2,
+     "fp": 0,
+     "fn": 24
+    },
+    "arrow": {
+     "tp": 7,
+     "fp": 7,
+     "fn": 17
+    }
+   }
+  },
+  {
+   "plan": 5,
+   "image_px": [
+    7000,
+    4677
+   ],
+   "wall_process_s": 62.3,
+   "detect_s": 52.442,
+   "load_s": 4.706,
+   "peak_working_set_mb": 1006.8,
+   "n_candidates_ge_0.05": 267,
+   "n_at_threshold": 85,
+   "valve_windows": {
+    "tp": 21,
+    "fp": 1,
+    "fn": 0
+   },
+   "valve_linux": {
+    "tp": 21,
+    "fp": 1,
+    "fn": 0
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 21,
+     "fp": 1,
+     "fn": 0
+    },
+    "instrumentation": {
+     "tp": 32,
+     "fp": 9,
+     "fn": 0
+    },
+    "general": {
+     "tp": 1,
+     "fp": 8,
+     "fn": 20
+    },
+    "arrow": {
+     "tp": 5,
+     "fp": 8,
+     "fn": 33
+    }
+   }
+  },
+  {
+   "plan": 6,
+   "image_px": [
+    7000,
+    4661
+   ],
+   "wall_process_s": 62.6,
+   "detect_s": 52.478,
+   "load_s": 4.575,
+   "peak_working_set_mb": 1004.9,
+   "n_candidates_ge_0.05": 318,
+   "n_at_threshold": 86,
+   "valve_windows": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0
+   },
+   "valve_linux": {
+    "tp": 9,
+    "fp": 0,
+    "fn": 0
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 9,
+     "fp": 0,
+     "fn": 0
+    },
+    "instrumentation": {
+     "tp": 49,
+     "fp": 0,
+     "fn": 0
+    },
+    "general": {
+     "tp": 4,
+     "fp": 11,
+     "fn": 19
+    },
+    "arrow": {
+     "tp": 3,
+     "fp": 9,
+     "fn": 42
+    }
+   }
+  },
+  {
+   "plan": 7,
+   "image_px": [
+    7000,
+    4668
+   ],
+   "wall_process_s": 65.8,
+   "detect_s": 56.341,
+   "load_s": 4.357,
+   "peak_working_set_mb": 1014.4,
+   "n_candidates_ge_0.05": 228,
+   "n_at_threshold": 80,
+   "valve_windows": {
+    "tp": 18,
+    "fp": 3,
+    "fn": 1
+   },
+   "valve_linux": {
+    "tp": 18,
+    "fp": 3,
+    "fn": 1
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 18,
+     "fp": 3,
+     "fn": 1
+    },
+    "instrumentation": {
+     "tp": 25,
+     "fp": 0,
+     "fn": 2
+    },
+    "general": {
+     "tp": 8,
+     "fp": 9,
+     "fn": 9
+    },
+    "arrow": {
+     "tp": 7,
+     "fp": 9,
+     "fn": 32
+    }
+   }
+  },
+  {
+   "plan": 8,
+   "image_px": [
+    7000,
+    4654
+   ],
+   "wall_process_s": 80.8,
+   "detect_s": 65.342,
+   "load_s": 6.127,
+   "peak_working_set_mb": 1006.6,
+   "n_candidates_ge_0.05": 135,
+   "n_at_threshold": 35,
+   "valve_windows": {
+    "tp": 6,
+    "fp": 5,
+    "fn": 5
+   },
+   "valve_linux": {
+    "tp": 6,
+    "fp": 5,
+    "fn": 5
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 6,
+     "fp": 5,
+     "fn": 5
+    },
+    "instrumentation": {
+     "tp": 10,
+     "fp": 1,
+     "fn": 4
+    },
+    "general": {
+     "tp": 2,
+     "fp": 6,
+     "fn": 2
+    },
+    "arrow": {
+     "tp": 1,
+     "fp": 4,
+     "fn": 16
+    }
+   }
+  },
+  {
+   "plan": 9,
+   "image_px": [
+    7000,
+    4658
+   ],
+   "wall_process_s": 70.3,
+   "detect_s": 57.839,
+   "load_s": 6.439,
+   "peak_working_set_mb": 1006.2,
+   "n_candidates_ge_0.05": 240,
+   "n_at_threshold": 60,
+   "valve_windows": {
+    "tp": 14,
+    "fp": 0,
+    "fn": 0
+   },
+   "valve_linux": {
+    "tp": 14,
+    "fp": 0,
+    "fn": 0
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 14,
+     "fp": 0,
+     "fn": 0
+    },
+    "instrumentation": {
+     "tp": 10,
+     "fp": 2,
+     "fn": 10
+    },
+    "general": {
+     "tp": 9,
+     "fp": 5,
+     "fn": 11
+    },
+    "arrow": {
+     "tp": 12,
+     "fp": 8,
+     "fn": 13
+    }
+   }
+  },
+  {
+   "plan": 10,
+   "image_px": [
+    7000,
+    4663
+   ],
+   "wall_process_s": 64.8,
+   "detect_s": 53.353,
+   "load_s": 5.773,
+   "peak_working_set_mb": 1010.3,
+   "n_candidates_ge_0.05": 332,
+   "n_at_threshold": 99,
+   "valve_windows": {
+    "tp": 21,
+    "fp": 9,
+    "fn": 12
+   },
+   "valve_linux": {
+    "tp": 21,
+    "fp": 9,
+    "fn": 12
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 21,
+     "fp": 9,
+     "fn": 12
+    },
+    "instrumentation": {
+     "tp": 37,
+     "fp": 0,
+     "fn": 2
+    },
+    "general": {
+     "tp": 7,
+     "fp": 3,
+     "fn": 45
+    },
+    "arrow": {
+     "tp": 14,
+     "fp": 8,
+     "fn": 62
+    }
+   }
+  },
+  {
+   "plan": 11,
+   "image_px": [
+    7000,
+    4678
+   ],
+   "wall_process_s": 61.8,
+   "detect_s": 50.791,
+   "load_s": 4.443,
+   "peak_working_set_mb": 1006.6,
+   "n_candidates_ge_0.05": 243,
+   "n_at_threshold": 84,
+   "valve_windows": {
+    "tp": 19,
+    "fp": 8,
+    "fn": 13
+   },
+   "valve_linux": {
+    "tp": 19,
+    "fp": 8,
+    "fn": 13
+   },
+   "valve_same_as_linux": true,
+   "all_classes": {
+    "valve": {
+     "tp": 19,
+     "fp": 8,
+     "fn": 13
+    },
+    "instrumentation": {
+     "tp": 39,
+     "fp": 1,
+     "fn": 2
+    },
+    "general": {
+     "tp": 5,
+     "fp": 1,
+     "fn": 11
+    },
+    "arrow": {
+     "tp": 6,
+     "fp": 4,
+     "fn": 29
+    }
+   }
+  }
+ ]
+}

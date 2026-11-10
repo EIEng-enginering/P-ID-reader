@@ -11,3 +11,6 @@ fixtures/*.pre-v*.sqlite
 *.bak
 Example P&IDs/
 Release/
+# TR1 detector weights (73 MB, verified by sha256 against models/E5_MODEL_CARD.json before every load); keep a copy, do not version
+models/*.pt
+tools/tr1_train/**/__pycache__/

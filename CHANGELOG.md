@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased - TR1 learned-symbol integration (branch claude/tr1-integration; every switch OFF by default)
+### Added
+- `src/pid_reader/tr1/`: switches (`flags`), learned detector runner (`detector`; torch-free, runs the detector in a separate process with timeout, cancel and tree kill), stand-alone detector script (`infer_cli.py`, Grok E5 method), coarse-class to catalogue-family mapping (`mapping`), symbol catalogue v1.0.0 (`catalogue`), hash-chained correction queue (`corrections`, plus the CONFIRM kind), review service (`review`), versioned training batches (`batches`, `batch_export`).
+- UI: "Learned detector (TR1, proposed)" menu and detections window (overlay layer; confirm, change class, not a symbol, leave unresolved, second review, batch export).
+- CLI: `tr1-status`, `tr1-detect`.
+- `tools/tr1_train/`: separate offline trainer (Job Object guard, resume to identical weights, seed 20261110, tile preparation, model registry).
+- `models/E5_MODEL_CARD.json` and `models/E5_weights_epoch_02.pt` (sha256 6f636fac...; weights are git-ignored), `requirements-tr1-torch.txt` (optional component).
+- Tests: `tests/test_tr1_*.py`; `tests/conftest.py` isolates the TR1 switches and data folder for every test.
+### Unchanged
+- With every switch OFF no TR1 code path runs and nothing is written. The frozen R1 contract, API, worker, schema v13 and pipeline output are untouched.
+
+## Unreleased — baseline-diagnostic fixes 1 to 4 (branch claude/baseline-fixes-1-4)
+### Fixed
+- OCR: two overlapping tiles could report one drawn token inside two different lines; the proportional split then produced two words with the same id and the whole OCR result was rejected (R5-007). Such words are now merged at word level (higher raw score kept, merge count in the OCR diagnostics). Validators are unchanged.
+- Pipeline: when OCR registration fails the unregistered words are no longer used by the raster network, health, graph, loops or document text. This also removes the raster-network mismatch seen on every sheet whose OCR failed.
+- Geometry: two identical rectangles or circles no longer share a shape id (and therefore symbol and port ids); the first copy keeps its previous id, repeats get an occurrence number.
+- Diagnostics: the drawing status is evaluated after the symbol-library, graph, loops and document-text stages; the symbol-library stage records why a page was partial; stage outcomes record the candidates they produced.
+- New tests: tests/test_baseline_fixes.py (9). No schema change, frozen R1 contract unchanged.
+
 ## Unreleased — save each drawing as its own files
 ### Added
 - File ▸ "Export open drawing as files…" (Ctrl+E), "Export all drawings as files…" (Ctrl+Shift+E) and a button on the Report tab. A folder picker opens on every export; nothing is written on import.

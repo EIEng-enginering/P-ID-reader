@@ -1,0 +1,80 @@
+[
+ {
+  "sheet": "F40_00.pdf",
+  "image_px": [
+   1080,
+   720
+  ],
+  "tiles": 2,
+  "wall_process_s": 15.8,
+  "detect_s": 1.439,
+  "peak_working_set_mb": 595.8,
+  "detections": 18,
+  "at_threshold": 8
+ },
+ {
+  "sheet": "F42_00.pdf",
+  "image_px": [
+   1080,
+   720
+  ],
+  "tiles": 2,
+  "wall_process_s": 11.9,
+  "detect_s": 1.274,
+  "peak_working_set_mb": 597.4,
+  "detections": 16,
+  "at_threshold": 8
+ },
+ {
+  "sheet": "F44_00.pdf",
+  "image_px": [
+   1080,
+   720
+  ],
+  "tiles": 2,
+  "wall_process_s": 10.3,
+  "detect_s": 1.428,
+  "peak_working_set_mb": 596.5,
+  "detections": 13,
+  "at_threshold": 7
+ },
+ {
+  "sheet": "F46_00.pdf",
+  "image_px": [
+   1080,
+   720
+  ],
+  "tiles": 2,
+  "wall_process_s": 10.1,
+  "detect_s": 1.469,
+  "peak_working_set_mb": 597.0,
+  "detections": 13,
+  "at_threshold": 7
+ },
+ {
+  "sheet": "F48_00.pdf",
+  "image_px": [
+   1080,
+   720
+  ],
+  "tiles": 2,
+  "wall_process_s": 10.4,
+  "detect_s": 1.683,
+  "peak_working_set_mb": 597.1,
+  "detections": 14,
+  "at_threshold": 11
+ },
+ {
+  "sheet": "F50_00.pdf",
+  "image_px": [
+   1080,
+   720
+  ],
+  "tiles": 2,
+  "wall_process_s": 10.9,
+  "detect_s": 1.711,
+  "peak_working_set_mb": 600.0,
+  "detections": 18,
+  "at_threshold": 9
+ }
+]

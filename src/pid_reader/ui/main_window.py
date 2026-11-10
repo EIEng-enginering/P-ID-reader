@@ -501,6 +501,21 @@ class MainWindow(QMainWindow):
         m.addSeparator()
         act(m, "Export open drawing as proposed &DEXPI…", self.export_dexpi_gui)
         act(m, "Show connection review &ledger…", self.show_review_ledger)
+        m = self.menuBar().addMenu("&Learned detector (TR1, proposed)")
+        from ..tr1 import flags as tr1_flags
+        self._tr1_actions = {}
+        for key, label in (("PIDLAB_SYMBOL_FRCNN_TR1", "Learned symbol detector (proposals only; needs the optional torch component)"),
+                           ("PIDLAB_SYMBOL_CATALOGUE_TR1", "Symbol catalogue v1.0.0 for reviews"),
+                           ("PIDLAB_CORRECTION_QUEUE_TR1", "Record my confirm / reject / edit decisions as training data"),
+                           ("PIDLAB_TRAINING_BATCH_TR1", "Allow training batches from final reviews")):
+            a = QAction(label, self, checkable=True)
+            a.setChecked(tr1_flags.enabled(key))
+            a.triggered.connect(lambda checked=False, k=key: self.toggle_tr1(k, checked))
+            m.addAction(a)
+            self._tr1_actions[key] = a
+        m.addSeparator()
+        act(m, "Open learned detections for this &page…", self.open_tr1_dialog)
+        act(m, "Detector &status…", self.show_tr1_status)
         m = self.menuBar().addMenu("&Help")
         act(m, "What this software does and does not do", self.show_limits, "F1")
         act(m, "&About", self.show_about)
@@ -698,6 +713,8 @@ class MainWindow(QMainWindow):
             items = [{"id": f["id"], "bbox": f["bbox"], "tip": f"{f['label']} — {f['state'].replace('_', ' ').lower()}"}
                      for f in self.findings.get(layer, []) if f["page"] == page and f["bbox"]]
             self.viewer.set_overlay(layer, items)
+        if getattr(self, "tr1_dialog", None) is not None:
+            self.tr1_dialog.load_saved()
 
     def _overlay_clicked(self, layer: str, item_id: str) -> None:
         if layer == "readings":
@@ -920,6 +937,46 @@ class MainWindow(QMainWindow):
         if os.environ.get("PID_R5_" + key):
             QMessageBox.information(self, "Environment overrides", f"PID_R5_{key} is set in the environment and wins over this setting.")
         self.info(f"R5 {key}: {r5_features.mode(key)} (applies to the next analysis / export; recorded analyses are not changed)")
+
+    def toggle_tr1(self, key: str, on: bool) -> None:
+        from ..tr1 import flags as tr1_flags
+        try:
+            tr1_flags.set_flag(key, on)
+        except Exception as exc:
+            QMessageBox.warning(self, "Setting not saved", f"{type(exc).__name__}: {exc}")
+            return
+        if tr1_flags.source(key) == "environment":
+            QMessageBox.information(self, "Environment overrides", f"{key} is set in the environment and wins over this setting.")
+        self._tr1_actions[key].setChecked(tr1_flags.enabled(key))
+        self.info(f"TR1 {key}: {'on' if tr1_flags.enabled(key) else 'off'} (the normal analysis is not affected either way)")
+        dlg = getattr(self, "tr1_dialog", None)
+        if dlg is not None:
+            dlg.refresh_status()
+
+    def show_tr1_status(self) -> None:
+        from ..tr1 import detector, flags as tr1_flags
+        st = detector.status()
+        lines = [f"{n}: {'on' if v['on'] else 'off'} ({v['source']})" for n, v in tr1_flags.inventory()["switches"].items()]
+        lines += ["", st["message"], f"State: {st['state']}", f"Model card: {st.get('card') or '-'}", f"Weights: {st.get('weights') or '-'}",
+                  f"Torch component: {st.get('python') or '-'}", st["fallback"]]
+        QMessageBox.information(self, "Learned detector status", chr(10).join(lines))
+
+    def open_tr1_dialog(self) -> None:
+        from ..tr1 import flags as tr1_flags
+        if not tr1_flags.enabled("PIDLAB_SYMBOL_FRCNN_TR1"):
+            QMessageBox.information(self, "Switched off", "The learned detector is switched off. Tick it in the Learned detector menu first.")
+            return
+        if not self.current_extraction_id:
+            QMessageBox.information(self, "No drawing open", "Open a drawing first.")
+            return
+        from .tr1_dialog import Tr1Dialog
+        dlg = getattr(self, "tr1_dialog", None)
+        if dlg is None:
+            dlg = self.tr1_dialog = Tr1Dialog(self)
+        dlg.refresh_status()
+        dlg.load_saved()
+        dlg.show()
+        dlg.raise_()
 
     def export_dexpi_gui(self) -> None:
         """Proposed DEXPI export of the open drawing (off unless switched on). Class mapping comes from human-reviewed readings only."""

@@ -1,0 +1,24 @@
+{
+ "model_id": "tr1-frcnn-e5-pid2graph-v1",
+ "producer": "tr1-frcnn-e5",
+ "classes": [
+  "valve",
+  "instrumentation",
+  "general",
+  "arrow"
+ ],
+ "threshold": 0.65,
+ "weights_file": "weights_epoch_02.pt",
+ "weights_sha256": "6f636fac1db0b3b9cf222bc24b7af9c62a4e5caef94da9090c3a19df639bc735",
+ "min_size": 800,
+ "max_size": 800,
+ "detections_per_img": 300,
+ "pdf_render_scale": 2.5,
+ "tile": 800,
+ "overlap": 200,
+ "raster_norm_width": 7000,
+ "training": "E5 REAL_TRAINING on PID2Graph (Zenodo 14803338, CC BY-SA 4.0; St\u00fcrmer et al. DSAA 2025): Dataset PID plans 0-69 + PID2Graph Synthetic 250; COCO init; seed 20261110; 2 epochs",
+ "measured": "see experiments/E5/E5_RESULTS_v1.json (OPEN100 held out by source)",
+ "limitations": "Coarse classes only (valve/instrumentation/general/arrow) - not engineering classes; not validated on owner drawings; uncalibrated scores; PROPOSED only. PDF render scale 2.5 assumes ~40 pt symbols map to ~100 px",
+ "licence": "weights fine-tuned from torchvision COCO weights (BSD-3 code) on CC BY-SA 4.0 data; attribution: PID2Graph, St\u00fcrmer, Graumann, Koch (DLR), doi 10.5281/zenodo.14803338"
+}

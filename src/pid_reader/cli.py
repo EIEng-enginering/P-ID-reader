@@ -207,6 +207,9 @@ def main(argv: list[str] | None = None) -> int:
     dx.add_argument("database");dx.add_argument("extraction_id");dx.add_argument("folder");dx.add_argument("--include-unreviewed",action="store_true")
     dx.add_argument("--dexpi-files",help="folder with the official Core.xml and Plant.xml (structure check) and DEXPI_XML_Schema.xsd (needs lxml)")
     sub.add_parser("r5-features",help="Show every R5 switch (OFF/SHADOW/ON) and the features kept disabled")
+    sub.add_parser("tr1-status",help="TR1: show every PIDLAB_*_TR1 switch and whether the learned detector can run (all OFF by default)")
+    td=sub.add_parser("tr1-detect",help="TR1: run the learned symbol detector on one PDF page (PROPOSED detections only). Needs PIDLAB_SYMBOL_FRCNN_TR1=on and the optional torch component")
+    td.add_argument("pdf");td.add_argument("--page",type=int,default=1);td.add_argument("--timeout",type=float,default=None);td.add_argument("--output-json")
     xp=sub.add_parser("export-xlsx",help="Excel workbook of registers, loops, lines, findings and checks (unverified readings)")
     xp.add_argument("database");xp.add_argument("destination");xp.add_argument("--extraction-id",action="append",default=None)
     gx=sub.add_parser("graph-export",help="Canonical proposed-connectivity graph of one drawing (JSON or GraphML)")
@@ -255,6 +258,20 @@ def main(argv: list[str] | None = None) -> int:
             from .engineering import r5_features
             print(canonical_json(r5_features.inventory()))
             return 0
+        if args.cmd=="tr1-status":
+            from .tr1 import detector as tr1_detector, flags as tr1_flags
+            print(canonical_json({"flags":tr1_flags.inventory(),"detector":tr1_detector.status()}))
+            return 0
+        if args.cmd=="tr1-detect":
+            from .tr1 import detector as tr1_detector
+            res=tr1_detector.detect(args.pdf,args.page,timeout_s=args.timeout)
+            res.pop("record",None)
+            text=canonical_json(res)
+            if args.output_json:
+                Path(args.output_json).write_text(text,encoding="utf-8")
+            else:
+                print(text)
+            return 0 if res["status"]=="DONE" else (3 if res["status"]=="UNAVAILABLE" else 4)
         if args.cmd=="gui":
             from .ui.app import run_app
             return run_app(args.database)
