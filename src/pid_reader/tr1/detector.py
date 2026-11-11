@@ -45,6 +45,15 @@ def model_dirs() -> list[Path]:
     return dirs
 
 
+def _find_file(names, first_dir: Path | None = None) -> Path | None:
+    """A weights file by any of ``names``: beside its card first, then in the other model folders (a frozen build ships only the cards)."""
+    for d in ([first_dir] if first_dir else []) + model_dirs():
+        for name in names:
+            if d is not None and (d / name).is_file():
+                return d / name
+    return None
+
+
 def locate_model() -> tuple[Path, Path] | None:
     """(card, weights) of the first complete model found, else None. The card names the weights file; ``E5_`` + that name is also accepted."""
     for d in model_dirs():
@@ -53,9 +62,26 @@ def locate_model() -> tuple[Path, Path] | None:
             wf = data.get("weights_file") if isinstance(data, dict) else None
             if not wf:
                 continue
-            for name in (wf, card.name.split("_MODEL_CARD")[0] + "_" + wf):
-                if (d / name).is_file():
-                    return card, d / name
+            w = _find_file((wf, card.name.split("_MODEL_CARD")[0] + "_" + wf), d)
+            if w is not None:
+                return card, w
+    return None
+
+
+FINE_SWITCH = "PIDLAB_FINE_CLASS_R3"
+MERGE_SWITCH = "PIDLAB_TILE_MERGE_R3"
+FINE_CARD_NAME = "R3_FINE_CLASS_CARD.json"
+
+
+def locate_fine() -> tuple[Path, Path, dict] | None:
+    """(card, weights, card data) of the fine-class stage, or None. The weights sha256 is checked here and again before loading."""
+    for d in model_dirs():
+        card = d / FINE_CARD_NAME
+        data = store.read_json(card) if card.is_file() else None
+        if isinstance(data, dict) and data.get("weights_file") and re.fullmatch(r"[0-9a-f]{64}", str(data.get("weights_sha256"))):
+            w = _find_file((data["weights_file"],), d)
+            if w is not None and _sha256(w) == data["weights_sha256"]:
+                return card, w, data
     return None
 
 
@@ -184,6 +210,13 @@ def validate_result(result: dict, card: dict, *, source_sha256: str, page: int) 
         seen.add(c.get("id"))
         if (c.get("evidence") or {}).get("weights_sha256") != card["weights_sha256"]:
             bad.append("WEIGHTS_SHA:" + str(c.get("id")))
+        if "edge_partial" in c and not isinstance(c["edge_partial"], bool):
+            bad.append("EDGE_PARTIAL:" + str(c.get("id")))
+        if "fine" in c:
+            f = c["fine"]
+            if not (isinstance(f, dict) and f.get("status") in ("PROPOSED", "ABSTAINED") and (f.get("subtype_id") is None or isinstance(f.get("subtype_id"), int))
+                    and (f.get("status") == "PROPOSED") == (f.get("subtype_id") is not None) and f.get("names") == "unverified"):
+                bad.append("FINE:" + str(c.get("id")))
     return bad[:50]
 
 
@@ -207,6 +240,16 @@ def detect(pdf_path: str | os.PathLike, page: int = 1, *, timeout_s: float | Non
     cmd = [st["python"], "-B", "-I", str(INFER_SCRIPT), str(card_path), str(weights_path), str(pdf_path), "--page", str(int(page)), "--out", str(tmp_out)]
     if threads:
         cmd += ["--threads", str(int(threads))]
+    policy = flags.choice(MERGE_SWITCH)
+    if policy != "r1_drop_inner_edge":
+        cmd += ["--merge-policy", policy]
+    notices = []
+    if flags.enabled(FINE_SWITCH):
+        fine = locate_fine()
+        if fine is None:
+            notices.append("Fine subtype stage is switched on but its card or weights are missing or do not match; detections carry no subtype proposal.")
+        else:
+            cmd += ["--fine-card", str(fine[0]), "--fine-weights", str(fine[1])]
     kw = {"creationflags": _nowin()} if os.name == "nt" else {"start_new_session": True}
     t0 = time.monotonic()
     err_path = tmp_out.with_suffix(".err")
@@ -239,10 +282,11 @@ def detect(pdf_path: str | os.PathLike, page: int = 1, *, timeout_s: float | Non
         dets = [mapping.enrich(c) for c in result["candidates"]]
         record = {"schema": SCHEMA_OUT, "source_sha256": source_sha, "page": int(page), "source_name": pdf_path.name, "model": card["model_id"],
                   "weights_sha256": card["weights_sha256"], "threshold": card["threshold"], "limitations": card["limitations"], "diagnostics": result.get("diagnostics", {}),
-                  "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "detections": dets}
+                  "merge_policy": policy, "notices": notices, "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "detections": dets}
         if write_sidecar:
             store.write_json_atomic(store.detection_path(source_sha, int(page)), record)
-        return {"status": "DONE", "state": "READY", "message": f"{len(dets)} proposed detection(s) in {wall:.1f} s (not verified).", "detections": dets, "wall_s": wall,
+        return {"status": "DONE", "state": "READY", "message": f"{len(dets)} proposed detection(s) in {wall:.1f} s (not verified)." + ("".join(" " + n for n in notices)), "detections": dets, "wall_s": wall,
+                "notices": notices,
                 "diagnostics": result.get("diagnostics", {}), "source_sha256": source_sha, "record": record}
     finally:
         for p in (tmp_out, err_path):

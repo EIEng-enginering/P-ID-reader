@@ -507,12 +507,26 @@ class MainWindow(QMainWindow):
         for key, label in (("PIDLAB_SYMBOL_FRCNN_TR1", "Learned symbol detector (proposals only; needs the optional torch component)"),
                            ("PIDLAB_SYMBOL_CATALOGUE_TR1", "Symbol catalogue v1.0.0 for reviews"),
                            ("PIDLAB_CORRECTION_QUEUE_TR1", "Record my confirm / reject / edit decisions as training data"),
-                           ("PIDLAB_TRAINING_BATCH_TR1", "Allow training batches from final reviews")):
+                           ("PIDLAB_TRAINING_BATCH_TR1", "Allow training batches from final reviews"),
+                           ("PIDLAB_TAG_ASSIGN_R3", "Propose which tag belongs to which detection (abstains when unsure)"),
+                           ("PIDLAB_GRAPH_CONSERVATIVE_R3", "Show conservative join hints between detections (hints, not connections)"),
+                           ("PIDLAB_FINE_CLASS_R3", "Propose a subtype id for each detection (names unverified)")):
             a = QAction(label, self, checkable=True)
             a.setChecked(tr1_flags.enabled(key))
             a.triggered.connect(lambda checked=False, k=key: self.toggle_tr1(k, checked))
             m.addAction(a)
             self._tr1_actions[key] = a
+        merge_menu = m.addMenu("Tile-seam merge policy")
+        self._tr1_merge_actions = {}
+        mgrp = QActionGroup(self)
+        for val, label in (("r1_drop_inner_edge", "R1 rule (default): drop boxes touching an inner tile edge"), ("edge_safe", "Edge-safe: keep and stitch large objects across seams"),
+                           ("edge_safe+coarse", "Edge-safe plus a coarse pass for very large objects (slower)")):
+            a = QAction(label, self, checkable=True)
+            a.setChecked(tr1_flags.choice("PIDLAB_TILE_MERGE_R3") == val)
+            a.triggered.connect(lambda checked=False, v=val: self.set_tr1_merge(v))
+            mgrp.addAction(a)
+            merge_menu.addAction(a)
+            self._tr1_merge_actions[val] = a
         m.addSeparator()
         act(m, "Open learned detections for this &page…", self.open_tr1_dialog)
         act(m, "Detector &status…", self.show_tr1_status)
@@ -952,6 +966,17 @@ class MainWindow(QMainWindow):
         dlg = getattr(self, "tr1_dialog", None)
         if dlg is not None:
             dlg.refresh_status()
+
+    def set_tr1_merge(self, value: str) -> None:
+        from ..tr1 import flags as tr1_flags
+        try:
+            tr1_flags.set_choice("PIDLAB_TILE_MERGE_R3", value)
+        except Exception as exc:
+            QMessageBox.warning(self, "Setting not saved", f"{type(exc).__name__}: {exc}")
+            return
+        if tr1_flags.source("PIDLAB_TILE_MERGE_R3") == "environment":
+            QMessageBox.information(self, "Environment overrides", "PIDLAB_TILE_MERGE_R3 is set in the environment and wins over this setting.")
+        self.info(f"TR1 tile-seam merge policy: {tr1_flags.choice('PIDLAB_TILE_MERGE_R3')} (applies to the next detector run)")
 
     def show_tr1_status(self) -> None:
         from ..tr1 import detector, flags as tr1_flags

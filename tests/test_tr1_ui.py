@@ -58,8 +58,10 @@ def test_switch_run_display_and_record_corrections(qapp, tmp_path, monkeypatch):
     monkeypatch.setattr(mw.QMessageBox, "warning", lambda *a, **k: shown.append("WARN " + a[2]))
     try:
         assert "&Learned detector (TR1, proposed)" in [a.text() for a in w.menuBar().actions()]
-        assert {k: a.isChecked() for k, a in w._tr1_actions.items()} == {"PIDLAB_SYMBOL_FRCNN_TR1": False, "PIDLAB_SYMBOL_CATALOGUE_TR1": False,
-                                                                       "PIDLAB_CORRECTION_QUEUE_TR1": False, "PIDLAB_TRAINING_BATCH_TR1": False}
+        assert {k: a.isChecked() for k, a in w._tr1_actions.items()} == {k: False for k in (
+            "PIDLAB_SYMBOL_FRCNN_TR1", "PIDLAB_SYMBOL_CATALOGUE_TR1", "PIDLAB_CORRECTION_QUEUE_TR1", "PIDLAB_TRAINING_BATCH_TR1",
+            "PIDLAB_TAG_ASSIGN_R3", "PIDLAB_GRAPH_CONSERVATIVE_R3", "PIDLAB_FINE_CLASS_R3")}
+        assert {k: a.isChecked() for k, a in w._tr1_merge_actions.items()} == {"r1_drop_inner_edge": True, "edge_safe": False, "edge_safe+coarse": False}
         w._import([FIX / "synthetic_catalog_symbols.pdf"])
         wait_idle(w, qapp)
         w.open_tr1_dialog()                                                     # a drawing is open, the switch is off
@@ -70,9 +72,16 @@ def test_switch_run_display_and_record_corrections(qapp, tmp_path, monkeypatch):
             w._tr1_actions[key].trigger()                                      # ticking the menu item persists the switch
             assert flags.enabled(key) and flags.source(key) == "settings file"
 
+        w._tr1_merge_actions["edge_safe"].trigger()                              # the seam-merge choice persists too
+        assert flags.choice("PIDLAB_TILE_MERGE_R3") == "edge_safe"
+        for key in ("PIDLAB_TAG_ASSIGN_R3", "PIDLAB_FINE_CLASS_R3"):
+            w._tr1_actions[key].trigger()
+            assert flags.enabled(key)
         sha = hashlib.sha256(w.current_pdf).hexdigest()
         dets = [_det("frc-aaa", "valve", 0.95, "LEADING", (0.10, 0.10, 0.14, 0.13)), _det("frc-bbb", "instrumentation", 0.80, "LEADING", (0.40, 0.40, 0.44, 0.44)),
                 _det("frc-ccc", "general", 0.30, "WEAK_CLASS_WITHHELD", (0.60, 0.60, 0.70, 0.70))]
+        dets[0]["fine"] = {"subtype_id": 3, "confidence": 0.91, "status": "PROPOSED", "names": "unverified"}
+        dets[1]["edge_partial"] = True
         record = {"schema": detector.SCHEMA_OUT, "source_sha256": sha, "page": 1, "source_name": "synthetic.pdf", "detections": dets, "model": "stand-in",
                   "diagnostics": {}}
         real_status = detector.status
@@ -87,22 +96,23 @@ def test_switch_run_display_and_record_corrections(qapp, tmp_path, monkeypatch):
         assert dlg.table.rowCount() == 3
         assert len(w.viewer._layers["tr1_frcnn"]) == 3                          # drawn on the sheet as an overlay layer
         assert "PROPOSED" in w.viewer._layers["tr1_frcnn"][0].toolTip()
-        assert dlg.table.item(0, 4).text() == "unreviewed"
+        assert dlg.table.item(0, 4).text() == "id 3 (0.91)" and "seam-stitched" in dlg.table.item(1, 3).text()
+        assert dlg.table.item(0, 6).text() == "unreviewed"
 
         dlg.table.selectRow(0)
         dlg.do_confirm()
-        assert dlg.table.item(0, 4).text() == "confirmed"
+        assert dlg.table.item(0, 6).text() == "confirmed"
         dlg.table.selectRow(1)
         dlg.do_reject()
-        assert dlg.table.item(1, 4).text() == "rejected"
+        assert dlg.table.item(1, 6).text() == "rejected"
         dlg.table.selectRow(2)
         dlg.do_confirm()                                                        # the detector withheld this one -> needs a second person
-        assert dlg.table.item(2, 4).text() == "awaiting second review"
+        assert dlg.table.item(2, 6).text() == "awaiting second review"
         assert "second reviewer" in w.details.toPlainText()
 
         events = review._queue().events()
         assert [e["action"] for e in events].count("SUBMIT") == 3 and review._queue().verify() == []
-        assert all(e["actor"] in ("GUI Tester", "tr1-detector") for e in events)
+        assert all(e["actor"] in ("GUI Tester", "pipeline:tr1-e5-detector", "pipeline:tr1-frcnn-e5") for e in events)
 
         w._tr1_actions["PIDLAB_SYMBOL_FRCNN_TR1"].trigger()                    # switching it off again changes nothing else
         assert not flags.enabled("PIDLAB_SYMBOL_FRCNN_TR1")

@@ -12,10 +12,10 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QDialog, QDialogButtonBox, QHBoxLayout, QInputDialog, QLabel, QMessageBox,
                                QPlainTextEdit, QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout)
 
-from ..tr1 import batch_export, detector, flags, mapping, review, store
+from ..tr1 import batch_export, detector, flags, mapping, proposals, review, store
 
 LAYER = "tr1_frcnn"
-COLUMNS = ("Score", "Detector says", "Suggested family", "Detector status", "Your review", "Id")
+COLUMNS = ("Score", "Detector says", "Suggested family", "Detector status", "Subtype id (names unverified)", "Tag (proposal)", "Your review", "Id")
 
 
 class ClassPicker(QDialog):
@@ -84,6 +84,10 @@ class Tr1Dialog(QDialog):
             self.buttons[key] = b
         lay.addLayout(row)
         row = QHBoxLayout()
+        self.hints_btn = QPushButton("Join hints…")
+        self.hints_btn.setToolTip("Conservative hints about which detections one drawn line joins. Hints only, not connections.")
+        self.hints_btn.clicked.connect(self.show_join_hints)
+        row.addWidget(self.hints_btn)
         self.batch_btn = QPushButton("Build training batch from final reviews…")
         self.batch_btn.clicked.connect(self.do_batch)
         row.addWidget(self.batch_btn)
@@ -110,6 +114,7 @@ class Tr1Dialog(QDialog):
         for b in self.buttons.values():
             b.setEnabled(ok)
         self.batch_btn.setEnabled(ok and flags.enabled(batch_export.SWITCH))
+        self.hints_btn.setEnabled(flags.enabled(proposals.HINT_SWITCH) and bool(self.record))
 
     def selected(self) -> dict | None:
         r = self.table.currentRow()
@@ -137,14 +142,47 @@ class Tr1Dialog(QDialog):
             except Exception as exc:
                 self.main.info(f"Review state unavailable: {type(exc).__name__}: {exc}")
         dets = self.record["detections"]
+        tags = self._tag_proposals(dets)
         self.table.setRowCount(len(dets))
         for r, d in enumerate(dets):
-            vals = (f"{d['raw_score']:.2f}", d["coarse_class"], d.get("suggested_family") or "-", d["confidence_status"].replace("_", " ").lower(),
+            fine = d.get("fine")
+            fine_text = "-" if not fine else (f"id {fine['subtype_id']} ({fine['confidence']:.2f})" if fine["status"] == "PROPOSED" else "abstained")
+            tg = tags.get(d["id"])
+            tag_text = "-" if not tg else f"{tg['tag_text']} [{tg['status'].lower()}]"
+            status = d["confidence_status"].replace("_", " ").lower() + (" / seam-stitched" if d.get("edge_partial") else "")
+            vals = (f"{d['raw_score']:.2f}", d["coarse_class"], d.get("suggested_family") or "-", status, fine_text, tag_text,
                     self.states.get(d["id"], {}).get("state", "UNREVIEWED").replace("_", " ").lower(), d["id"])
             for c, v in enumerate(vals):
                 self.table.setItem(r, c, QTableWidgetItem(v))
         self.table.resizeColumnsToContents()
         self.refresh_overlay()
+
+    def _tag_proposals(self, dets: list) -> dict:
+        if not flags.enabled(proposals.TAG_SWITCH) or not self.main.current_result:
+            return {}
+        try:
+            res = proposals.propose_tags(dets, self.main.current_result["objects"], self.main.page, self.main.viewer.page_size,
+                                         getattr(self.main.viewer, "_page_frame", None))
+            return res["per_symbol"]
+        except Exception as exc:
+            self.main.info(f"Tag proposals unavailable: {type(exc).__name__}: {exc}")
+            return {}
+
+    def show_join_hints(self) -> None:
+        if not self.record or not self.main.current_pdf:
+            return
+        try:
+            import numpy as np
+            import pypdfium2 as pdfium
+            pg = pdfium.PdfDocument(self.main.current_pdf)[self.main.page - 1]
+            gray = np.asarray(pg.render(scale=2.5, grayscale=True).to_pil().convert("L"), dtype=np.uint8)   # the detector's frame and scale
+            res = proposals.join_hints(self.record["detections"], gray)
+        except Exception as exc:
+            QMessageBox.information(self, "Join hints", f"{type(exc).__name__}: {exc}")
+            return
+        lines = [f"{a}  --  {b}" for a, b in res["pairs"]] or ["No pair of detections is touched by exactly one drawn line."]
+        QMessageBox.information(self, "Join hints (not connections)",
+                                f"{len(res['pairs'])} hinted pair(s); {res['unresolved_junction_components']} junction(s) left unresolved.\n\n" + "\n".join(lines[:40]) + "\n\n" + res["note"])
 
     def refresh_overlay(self) -> None:
         if not self.record or self.record.get("page") != self.main.page:

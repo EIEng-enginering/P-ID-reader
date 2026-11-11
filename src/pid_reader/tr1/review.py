@@ -14,6 +14,7 @@ from pathlib import Path
 from . import catalogue as cat_mod
 from . import flags, store
 from .corrections import CorrectionQueue, QueueError, _sha
+from .corrections_guard import GuardedQueue, MachineActorRefused  # noqa: F401  (re-exported: machine actors can only import proposals)
 
 NEEDS = ("PIDLAB_CORRECTION_QUEUE_TR1", "PIDLAB_SYMBOL_CATALOGUE_TR1")
 PRODUCER_FALLBACK = "tr1-frcnn"
@@ -45,12 +46,15 @@ def _queue(path: Path | None = None) -> CorrectionQueue:
         raise ReviewUnavailable(why)
     target = Path(path or store.queue_path())
     target.parent.mkdir(parents=True, exist_ok=True)
-    return CorrectionQueue(str(target), catalogue())
+    return GuardedQueue(str(target), catalogue())
+
+
+MACHINE_TRUTH = "MODEL_PSEUDOLABEL"      # a detector output is a machine proposal; only a signed-in human can submit or review (GuardedQueue)
 
 
 def proposal_id(detection: dict) -> str:
     """The id the queue gives this proposal (content-derived, so importing it twice is harmless)."""
-    return "prop-" + _sha(detection)[:20]
+    return "prop-" + _sha(dict(detection, truth_type=MACHINE_TRUTH, review_state="PROPOSED"))[:20]
 
 
 def _box(b: dict) -> list[float]:
@@ -62,8 +66,8 @@ def import_record(record: dict, queue: CorrectionQueue | None = None) -> dict[st
     q = queue or _queue()
     out = {}
     for d in record["detections"]:
-        out[d["id"]] = q.import_proposal(d, document_sha256=record["source_sha256"], page=record["page"], producer=d.get("evidence", {}).get("producer", PRODUCER_FALLBACK),
-                                         actor="tr1-detector")
+        out[d["id"]] = q.import_machine_proposal(d, truth_type=MACHINE_TRUTH, document_sha256=record["source_sha256"], page=record["page"],
+                                                 producer=d.get("evidence", {}).get("producer", PRODUCER_FALLBACK))
     return out
 
 

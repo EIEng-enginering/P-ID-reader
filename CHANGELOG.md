@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased - R3 components (branch claude/r3-integration; every switch OFF by default)
+### Added
+- `PIDLAB_TILE_MERGE_R3` (r1_drop_inner_edge default | edge_safe | edge_safe+coarse): Grok `tiled_r3` seam-merge policies; the default still runs the unchanged R1 rule.
+- `GuardedQueue`: machine actors can only import proposals; submit, second review and adjudicate need a named human.
+- `PIDLAB_TAG_ASSIGN_R3` (tag-to-detection assignment with abstention), `PIDLAB_GRAPH_CONSERVATIVE_R3` (join hints only, never connections), `PIDLAB_FINE_CLASS_R3` (subtype proposal ids, names unverified; card `models/R3_FINE_CLASS_CARD.json`).
+- Detections window: subtype, seam-stitched and tag-proposal columns, Join hints button; menu items and merge-policy choice.
+- Packaging spec ships the detector script and model cards; `docs/tr1_integration/R3_INTEGRATION_STATUS.md`.
+### Not integrated
+- Stacked OCR (negative), ONNX path (E6-10 failed), R3 detector arms (all failed against E5), Grok offline trainer (research tool).
+
 ## Unreleased - TR1 learned-symbol integration (branch claude/tr1-integration; every switch OFF by default)
 ### Added
 - `src/pid_reader/tr1/`: switches (`flags`), learned detector runner (`detector`; torch-free, runs the detector in a separate process with timeout, cancel and tree kill), stand-alone detector script (`infer_cli.py`, Grok E5 method), coarse-class to catalogue-family mapping (`mapping`), symbol catalogue v1.0.0 (`catalogue`), hash-chained correction queue (`corrections`, plus the CONFIRM kind), review service (`review`), versioned training batches (`batches`, `batch_export`).

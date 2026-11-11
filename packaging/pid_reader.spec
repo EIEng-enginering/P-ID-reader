@@ -11,9 +11,14 @@ datas = (collect_data_files("rapidocr_onnxruntime") + collect_data_files("pdfmin
          + collect_data_files("pypdfium2") + collect_data_files("pdfplumber")
          + [(str(ROOT / "contracts"), "contracts"), (str(ROOT / "fixtures" / "synthetic_pid_vector.pdf"), "examples"),
             (str(ROOT / "fixtures" / "synthetic_catalog_symbols.pdf"), "examples"),
-            (str(ROOT / "docs"), "docs")])
+            (str(ROOT / "docs"), "docs"),
+            # TR1: the learned-detector script is started BY PATH with the optional torch component's Python, so it ships as data; only the small cards are bundled
+            # (weights are larger and are placed in %LOCALAPPDATA%/PIDReader/tr1/models or beside the program in models/)
+            (str(ROOT / "src" / "pid_reader" / "tr1" / "infer_cli.py"), "pid_reader/tr1"), (str(ROOT / "src" / "pid_reader" / "tr1" / "tiled_r3.py"), "pid_reader/tr1"),
+            (str(ROOT / "models" / "E5_MODEL_CARD.json"), "models"), (str(ROOT / "models" / "R3_FINE_CLASS_CARD.json"), "models")])
 binaries = collect_dynamic_libs("onnxruntime") + collect_dynamic_libs("pypdfium2_raw")
-hidden = ["pid_reader.engineering.standalone_worker", "pid_reader.worker", "pid_reader.cli", "rapidocr_onnxruntime"]
+hidden = ["pid_reader.engineering.standalone_worker", "pid_reader.worker", "pid_reader.cli", "rapidocr_onnxruntime",
+          "pid_reader.tr1.detector", "pid_reader.tr1.review", "pid_reader.tr1.batch_export", "pid_reader.tr1.proposals", "pid_reader.ui.tr1_dialog"]
 
 a_gui = Analysis([str(ROOT / "packaging" / "pid_reader_app.py")], pathex=[str(ROOT / "src")], binaries=binaries,
                  datas=datas, hiddenimports=hidden, excludes=EXCLUDES)

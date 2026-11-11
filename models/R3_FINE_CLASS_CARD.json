@@ -1,0 +1,17 @@
+{
+ "model_id": "tr1-fine-mnv3s-e6-09-v1",
+ "producer": "tr1-fine-r3",
+ "weights_file": "R3_E6-09_fine_cls_mnv3s.pt",
+ "weights_sha256": "78951ba3080d52897095da867f75e5bc859e4dc34cee30d5edb690416781ba45",
+ "architecture": "torchvision mobilenet_v3_small, classifier[3] = Linear(1024, 32)",
+ "input": "grey crop of the detector box padded by 15 % of its longer side, resized to 64x64 (bilinear), ImageNet mean/std on 3 repeated channels",
+ "pad_fraction": 0.15,
+ "size": 64,
+ "tau": 0.5,
+ "fine_ids": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+ "parent": {"0": "valve", "1": "valve", "2": "valve", "3": "valve", "4": "valve", "5": "valve", "6": "valve", "7": "general", "8": "valve", "9": "valve", "10": "valve", "11": "valve", "12": "valve", "13": "valve", "14": "valve", "15": "valve", "16": "general", "17": "general", "18": "general", "19": "general", "20": "general", "21": "general", "22": "general", "23": "arrow", "24": "valve", "25": "instrumentation", "26": "instrumentation", "27": "instrumentation", "28": "instrumentation", "29": "instrumentation", "30": "instrumentation", "31": "instrumentation"},
+ "decoding": "restricted to the fine ids whose training parent equals the detector's coarse class; below tau the stage abstains",
+ "evidence": "Grok R3 E6-09: DEVCHECK fine macro F1 1.000 on ground-truth crops from synthetic-source Dataset PID sheets (saturated). No real-drawing evidence; not run on detector boxes by Grok.",
+ "limitations": "Numeric Dataset-P&ID symbol ids only: their NAMES are unverified, so an id is shown as 'subtype proposal id N', never as a valve type. Trained on crops from synthetic-source sheets at their native scale; the app crops from a rendered page at a different scale. Not validated on any real drawing. PROPOSED only.",
+ "provenance": "weights fine-tuned from torchvision mobilenet_v3_small ImageNet (BSD-3 code) on 9600 crops from PID2Graph Dataset PID (CC BY-SA 4.0, Sturmer, Graumann, Koch, doi 10.5281/zenodo.14803338) with fine ids aligned from a public Dataset-P&ID mirror; source: GROK_PID_READER_AUTOMATIC_OFFSHORE_RETURN_R3 results/E6-09"
+}
