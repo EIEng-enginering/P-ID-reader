@@ -128,13 +128,7 @@ class Wp456Tab(QWidget):
             try:self.analysis_id=st.add(result)
             finally:st.close()
             self.populate()
-        m.run_task('WP04–06 proposals',job,done)
-        task=m.task
-        if task is not None:
-            task.result.connect(lambda _result:self._release())
-            task.error.connect(lambda _error:self._release())
-            task.stopped.connect(self._release)
-        else:
+        if not m.run_task('WP04–06 proposals',job,done,on_finish=self._release):
             self._release()
 
     def _release(self):

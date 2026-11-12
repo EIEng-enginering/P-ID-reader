@@ -1,0 +1,391 @@
+{
+ "schema": "wp07-diagnostic-reference-v1",
+ "status": "DRAFT_ANALYST_NOT_INDEPENDENT",
+ "source_sha256": "b6b338335a3fc728adac8e631e44b43a56ec485a7403a349c2ca5a3f7621fd51",
+ "page": 1,
+ "coordinate_frame": "MEDIA_NORMALIZED_TOP_LEFT",
+ "scope": "Printed-string readings at the listed boxes only. NOT exhaustive page coverage: tags/fields not listed are neither correct nor wrong.",
+ "reviewer": "none (analyst reading by Claude Code from a 4x render of the scan; two items also stated by the owner)",
+ "limits": [
+  "low-resolution raster scan; characters such as 1/3, 0/O and . were read by eye",
+  "no independent second reviewer",
+  "must not be used as ground truth for accuracy claims"
+ ],
+ "excluded": [
+  {
+   "candidate": 2,
+   "reason": "two-line label"
+  },
+  {
+   "candidate": 6,
+   "reason": "existing word box is cut off before the end of the label"
+  },
+  {
+   "candidate": 20,
+   "reason": "not a line label"
+  },
+  {
+   "candidate": 21,
+   "reason": "not a line label"
+  }
+ ],
+ "not_scored": [
+  "stacked bubble code/number readings (owner reports FR over 720201): need a bubble-aware reference",
+  "symbol classes",
+  "associations",
+  "connections"
+ ],
+ "items": [
+  {
+   "id": "line-0",
+   "kind": "LINE_LABEL",
+   "text": "HPF-00019-114.3-A3S-40",
+   "bbox": {
+    "x0": 0.7881689,
+    "x1": 0.8436426,
+    "y0": 0.1829916,
+    "y1": 0.190205
+   },
+   "basis": "OWNER_STATEMENT_AND_ANALYST_READING",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-1",
+   "kind": "LINE_LABEL",
+   "text": "HPF-22204-114.3-A1S-40",
+   "bbox": {
+    "x0": 0.460972,
+    "x1": 0.5171821,
+    "y0": 0.1860289,
+    "y1": 0.1943812
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-3",
+   "kind": "LINE_LABEL",
+   "text": "GHS-22204-114.3-C3S-80",
+   "bbox": {
+    "x0": 0.6936672,
+    "x1": 0.7503682,
+    "y0": 0.3006834,
+    "y1": 0.308656
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-4",
+   "kind": "LINE_LABEL",
+   "text": "GHS-22203-168.3-C3S-80",
+   "bbox": {
+    "x0": 0.4614629,
+    "x1": 0.518164,
+    "y0": 0.3166287,
+    "y1": 0.3257403
+   },
+   "basis": "OWNER_STATEMENT_AND_ANALYST_READING",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-5",
+   "kind": "LINE_LABEL",
+   "text": "GHS-22206-33.4-C3S-XXS",
+   "bbox": {
+    "x0": 0.5883652,
+    "x1": 0.6448208,
+    "y0": 0.3629461,
+    "y1": 0.3712984
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-7",
+   "kind": "LINE_LABEL",
+   "text": "GHS-22200-168.3-C3S-80",
+   "bbox": {
+    "x0": 0.257732,
+    "x1": 0.3105056,
+    "y0": 0.4403948,
+    "y1": 0.4483675
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-8",
+   "kind": "LINE_LABEL",
+   "text": "GHS-22200-168.3-C3S-80",
+   "bbox": {
+    "x0": 0.257732,
+    "x1": 0.3107511,
+    "y0": 0.4411541,
+    "y1": 0.4483675
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-9",
+   "kind": "LINE_LABEL",
+   "text": "GHS-22207-114.3-C3S-80",
+   "bbox": {
+    "x0": 0.7081492,
+    "x1": 0.7638684,
+    "y0": 0.4483675,
+    "y1": 0.4548216
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-10",
+   "kind": "LINE_LABEL",
+   "text": "DR-22202-33.4-C3S-XXS",
+   "bbox": {
+    "x0": 0.5922926,
+    "x1": 0.5986745,
+    "y0": 0.5288535,
+    "y1": 0.6165528
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-11",
+   "kind": "LINE_LABEL",
+   "text": "PC-22202-33.4-C3S-XXS",
+   "bbox": {
+    "x0": 0.5009818,
+    "x1": 0.5520373,
+    "y0": 0.5512528,
+    "y1": 0.5592255
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-12",
+   "kind": "LINE_LABEL",
+   "text": "WP-22203-33.4-C3S-XXS",
+   "bbox": {
+    "x0": 0.622975,
+    "x1": 0.6777123,
+    "y0": 0.610858,
+    "y1": 0.618451
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-13",
+   "kind": "LINE_LABEL",
+   "text": "WP-22201-33.4-C3S-XXS",
+   "bbox": {
+    "x0": 0.5019637,
+    "x1": 0.5520373,
+    "y0": 0.6438876,
+    "y1": 0.6522399
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-14",
+   "kind": "LINE_LABEL",
+   "text": "DR-22203-33.4-C3S-XXS",
+   "bbox": {
+    "x0": 0.6354934,
+    "x1": 0.6902307,
+    "y0": 0.6385725,
+    "y1": 0.6461655
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-15",
+   "kind": "LINE_LABEL",
+   "text": "WP-22204-33.4-C3S-XXS",
+   "bbox": {
+    "x0": 0.7140403,
+    "x1": 0.7690231,
+    "y0": 0.6446469,
+    "y1": 0.6533789
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-16",
+   "kind": "LINE_LABEL",
+   "text": "WP-00005-60.3-A1S-40-25H-GT",
+   "bbox": {
+    "x0": 0.8014237,
+    "x1": 0.8738341,
+    "y0": 0.643508,
+    "y1": 0.6518603
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-17",
+   "kind": "LINE_LABEL",
+   "text": "DR-22200-33.4-A1S-80",
+   "bbox": {
+    "x0": 0.2933235,
+    "x1": 0.344379,
+    "y0": 0.6909643,
+    "y1": 0.7000759
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-18",
+   "kind": "LINE_LABEL",
+   "text": "DR-00021-60.3-A1S-40-25H-GT",
+   "bbox": {
+    "x0": 0.7366225,
+    "x1": 0.8058419,
+    "y0": 0.7289294,
+    "y1": 0.7372817
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "line-19",
+   "kind": "LINE_LABEL",
+   "text": "DR-00022-60.3-A3S-80-25H-GT",
+   "bbox": {
+    "x0": 0.7992145,
+    "x1": 0.8689249,
+    "y0": 0.7369021,
+    "y1": 0.7452544
+   },
+   "basis": "ANALYST_READING_OF_LOW_RES_SCAN",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "fe2202-top",
+   "kind": "TAG_OR_FIELD",
+   "text": "FE-2202",
+   "bbox": {
+    "x0": 0.4695631,
+    "y0": 0.0516325,
+    "x1": 0.4948454,
+    "y1": 0.0592255
+   },
+   "basis": "ANALYST_READING",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "fe2206-top",
+   "kind": "TAG_OR_FIELD",
+   "text": "FE-2206",
+   "bbox": {
+    "x0": 0.5628375,
+    "y0": 0.0493546,
+    "x1": 0.5891016,
+    "y1": 0.0592255
+   },
+   "basis": "ANALYST_READING",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "fe2206-mid",
+   "kind": "TAG_OR_FIELD",
+   "text": "FE-2206",
+   "bbox": {
+    "x0": 0.5270005,
+    "y0": 0.4578588,
+    "x1": 0.5527737,
+    "y1": 0.4677297
+   },
+   "basis": "ANALYST_READING",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "v2201-header",
+   "kind": "TAG_OR_FIELD",
+   "text": "V-2201",
+   "bbox": {
+    "x0": 0.372,
+    "y0": 0.052,
+    "x1": 0.396,
+    "y1": 0.062
+   },
+   "basis": "ANALYST_READING",
+   "box_origin": "analyst box from a full-resolution crop (baseline never read it)"
+  },
+  {
+   "id": "v2201-vessel",
+   "kind": "TAG_OR_FIELD",
+   "text": "V-2201",
+   "bbox": {
+    "x0": 0.365705,
+    "y0": 0.6734758,
+    "x1": 0.3856156,
+    "y1": 0.6810182
+   },
+   "basis": "ANALYST_READING_AND_ROI_RESULT",
+   "box_origin": "WP01-03 manual-ROI box"
+  },
+  {
+   "id": "drawing-no",
+   "kind": "TAG_OR_FIELD",
+   "text": "030",
+   "bbox": {
+    "x0": 0.8399008,
+    "y0": 0.9357066,
+    "x1": 0.8512785,
+    "y1": 0.9513702
+   },
+   "basis": "ANALYST_READING",
+   "box_origin": "WP01-03 manual-ROI box"
+  },
+  {
+   "id": "sheet-012",
+   "kind": "TAG_OR_FIELD",
+   "text": "012",
+   "bbox": {
+    "x0": 0.8080511,
+    "y0": 0.0345482,
+    "x1": 0.8215513,
+    "y1": 0.0455581
+   },
+   "basis": "ANALYST_READING",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "date-issue",
+   "kind": "TAG_OR_FIELD",
+   "text": "2007/02/08",
+   "bbox": {
+    "x0": 0.8814433,
+    "y0": 0.919514,
+    "x1": 0.9067256,
+    "y1": 0.928246
+   },
+   "basis": "ANALYST_READING",
+   "box_origin": "existing RapidOCR word box (location only)"
+  },
+  {
+   "id": "q2200",
+   "kind": "TAG_OR_FIELD",
+   "text": "Q-2200",
+   "bbox": {
+    "x0": 0.54811,
+    "y0": 0.714123,
+    "x1": 0.565783,
+    "y1": 0.7232346
+   },
+   "basis": "ANALYST_READING_TEXT_ONLY",
+   "box_origin": "existing RapidOCR word box (location only)"
+  }
+ ]
+}

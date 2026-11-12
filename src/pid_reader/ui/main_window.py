@@ -29,6 +29,7 @@ from .tasks import CallbackCancelToken, Task
 from .viewer import LAYER_COLOURS, LAYER_LABELS, DrawingView
 from .wp123_tab import Wp123Tab
 from .wp456_tab import Wp456Tab
+from .model_lab_tab import ModelLabTab
 
 ORG, APP = "EnhanceIntegrationEngineering", "PIDReader"
 LIMITS_TEXT = (
@@ -221,13 +222,16 @@ class MainWindow(QMainWindow):
 
         self.run_task("Saving drawing files", job, done)
 
-    def run_task(self, title: str, fn, on_done) -> None:
+    def run_task(self, title: str, fn, on_done, on_finish=None) -> bool:
+        """Start a background task. `on_finish` runs inside the same slot that clears `self.task`, so a tab can release its busy state
+        atomically with it (a separate queued connection could run later and leave the tab busy while `self.task` is already None).
+        Returns False when another task is running and nothing was started."""
         if self.task is not None:
             frac, msg = getattr(self, "_task_progress", (0.0, ""))
             QMessageBox.information(self, "Busy", f"\u201c{self.task.title}\u201d is still running ({int(frac * 100)} %: {msg or 'working'}).\n\n"
                                                   "Wait for it to finish, or press Cancel (next to the progress bar) and try again. "
                                                   "Finished work is kept.")
-            return
+            return False
         task = Task(title, fn, self)
         self.task = task
         self.progress.setVisible(True)
@@ -242,6 +246,8 @@ class MainWindow(QMainWindow):
             self.progress.setVisible(False)
             self.cancel_btn.setVisible(False)
             task.deleteLater()
+            if on_finish is not None:
+                on_finish()
 
         def ok(result):
             finish()
@@ -255,6 +261,7 @@ class MainWindow(QMainWindow):
         task.stopped.connect(lambda: (finish(), self.statusBar().showMessage(title + " cancelled; finished work was kept."),
                                       self.refresh_all()))
         task.start()
+        return True
 
     def cancel_task(self) -> None:
         if self.task:
@@ -389,6 +396,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(gw, "Graph")
         self.wp123_tab = Wp123Tab(self); self.tabs.addTab(self.wp123_tab, "WP-01–03 proposals")
         self.wp456_tab = Wp456Tab(self); self.tabs.addTab(self.wp456_tab, "WP-04–06 proposals")
+        self.model_lab_tab = ModelLabTab(self); self.tabs.addTab(self.model_lab_tab, "Model comparison")
 
         self.sheet_tab = SheetInfoTab(self); self.tabs.addTab(self.sheet_tab, "Sheet info")
         self.quality_tab = QualityTab(self); self.tabs.addTab(self.quality_tab, "Quality")
@@ -663,6 +671,7 @@ class MainWindow(QMainWindow):
         self.findings = {layer: F.list_findings(self.db, extraction_id, layer, limit=2000) for layer in F.LAYERS}
         self.wp123_tab.reset()
         self.wp456_tab.reset()
+        self.model_lab_tab.reset()
         self.tabs.setCurrentIndex(0)
         self.goto_page(page)
         self.show_findings()

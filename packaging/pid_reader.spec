@@ -6,8 +6,10 @@ ROOT = Path(SPECPATH).parent
 EXCLUDES = ["PySide6.QtWebEngineCore", "PySide6.QtWebEngineWidgets", "PySide6.QtWebEngineQuick", "PySide6.QtQuick",
             "PySide6.QtQml", "PySide6.Qt3DCore", "PySide6.QtMultimedia", "PySide6.QtCharts", "PySide6.QtDataVisualization",
             "PySide6.QtPdf", "PySide6.QtPdfWidgets", "PySide6.QtSql", "PySide6.QtBluetooth", "PySide6.QtNetwork",
-            "tkinter", "matplotlib", "pytest", "IPython"]
-datas = (collect_data_files("rapidocr_onnxruntime") + collect_data_files("pdfminer") + collect_data_files("pypdfium2_raw")
+            "tkinter", "matplotlib", "pytest", "IPython",
+            "torch", "torchvision", "easyocr", "transformers", "rfdetr"]
+datas = ([(str(ROOT / "packaging" / "model_lab_worker.zip"), "model_lab"),
+          (str(ROOT / "tools" / "wp07"), "model_lab/setup")] + collect_data_files("rapidocr_onnxruntime") + collect_data_files("pdfminer") + collect_data_files("pypdfium2_raw")
          + collect_data_files("pypdfium2") + collect_data_files("pdfplumber")
          + [(str(ROOT / "contracts"), "contracts"), (str(ROOT / "fixtures" / "synthetic_pid_vector.pdf"), "examples"),
             (str(ROOT / "fixtures" / "synthetic_catalog_symbols.pdf"), "examples"),

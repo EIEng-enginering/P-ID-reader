@@ -1,3 +1,9 @@
+# CURRENT INSTRUCTIONS — WP-07 (adds to WP-04..06, WP-01..03, R5 and Rev X; supersedes nothing)
+
+WP-07 (optional local model comparison: EasyOCR, TrOCR small printed, RF-DETR P&ID) is applied on branch `claude/wp07-integration` (from main c91ebe6, uncommitted until the owner says, not pushed). Read `docs/wp07/WP07_WINDOWS_INTEGRATION_STATUS.md` first. The ML runtime lives outside the repo and OneDrive (`%LOCALAPPDATA%\PIDReader\models`, set up with `tools/wp07/SetupModels.ps1`); the Model comparison tab is OFF each session. Proposals only; model outputs never replace baseline readings; consensus (`model_lab/consensus.py`) only chooses among observed strings and never edits one; RF-DETR boxes are review proposals and the detector gate stays .65; the draft references in `examples/wp07/` are analyst readings, NOT independent, so no accuracy is claimed; no line-label improvement was demonstrated (RF-DETR bubble localisation is the one clear gain); stacked bubble reading, association and connectivity are open. All earlier rules still hold.
+
+---
+
 # CURRENT INSTRUCTIONS — WP-04..06 (adds to WP-01..03, R5 and Rev X; supersedes nothing)
 
 WP-04..06 is merged on branch `claude/wp456-integration` (from main c0908b9, uncommitted until the owner says). Read `docs/wp456/WP456_INTEGRATION_STATUS.md`. Proposals only; sidecar `%LOCALAPPDATA%\PIDReader\wp456\review.sqlite`; the 353 S418 geometry edges are UNKNOWN centrelines, not pipes; accuracy is NOT_RUN until a reviewer approves an exhaustive reference; the detector gate stays .65; never invent characters from grammar. All earlier rules still hold.

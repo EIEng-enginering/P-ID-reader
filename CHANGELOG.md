@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased - WP-07 model comparison (branch claude/wp07-integration, not committed)
+### Added
+- `engineering/model_lab/` and tab "Model comparison": isolated, cancellable CPU workers for EasyOCR, TrOCR small printed and RF-DETR P&ID; per-crop cache; audited review sidecar; frozen-build worker archive.
+- `model_lab/consensus.py` (chooses among observed strings only), crop variants in `pipeline.prepare`, `tools/wp07/eval_configs.py`, `eval_bubbles.py`, `score_reference.py`, DRAFT references in `examples/wp07/`.
+### Fixed (found on Windows)
+- EasyOCR/RF-DETR edge-overshooting boxes no longer lose the whole crop (3 of 20 S418 tiles were lost).
+- EasyOCR input bounded to 1.3 Mpx: worker peak 9.1 GiB to 3.96 GiB, page time 842 s to 378 s.
+- Peak memory is reported on Windows (psutil peak working set).
+### Not changed
+- Worksheet R1 contract/API/worker, standalone DB v13, detector gate (.65), baseline switches. No accuracy claimed; no line-label improvement demonstrated.
+
 ## Unreleased - WP-04..06 (branch claude/wp456-integration, not committed)
 ### Added
 - `engineering/wp456/` and tab "WP-04-06 proposals": evidence-preserving OCR de-duplication, bounded local Tesseract re-read (UTF-8 TSV), line/bubble review states without invented characters, exact-string scorer (NOT_RUN without an approved reference), detector-gate-preserving symbol and association proposals, conservative geometry graph, separate review sidecar.
