@@ -1,0 +1,31 @@
+[
+  {
+    "mode": "--check",
+    "returncode": 0,
+    "stdout": "New Python files: 18 GUI patch already applied: False\n",
+    "stderr": ""
+  },
+  {
+    "mode": "--apply",
+    "returncode": 0,
+    "stdout": "New Python files: 18 GUI patch already applied: False\nApplied additive files and GUI hook. Run new checks, full suite and Windows acceptance; nothing committed or pushed.\n",
+    "stderr": ""
+  },
+  {
+    "mode": "--check",
+    "returncode": 0,
+    "stdout": "New Python files: 0 GUI patch already applied: True\n",
+    "stderr": ""
+  },
+  {
+    "mode": "--apply",
+    "returncode": 0,
+    "stdout": "New Python files: 0 GUI patch already applied: True\nApplied additive files and GUI hook. Run new checks, full suite and Windows acceptance; nothing committed or pushed.\n",
+    "stderr": ""
+  },
+  {
+    "mode": "conflict-protection",
+    "returncode": 2,
+    "refused_as_expected": true
+  }
+]

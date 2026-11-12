@@ -1,3 +1,9 @@
+# CURRENT INSTRUCTIONS — WP-04..06 (adds to WP-01..03, R5 and Rev X; supersedes nothing)
+
+WP-04..06 is merged on branch `claude/wp456-integration` (from main c0908b9, uncommitted until the owner says). Read `docs/wp456/WP456_INTEGRATION_STATUS.md`. Proposals only; sidecar `%LOCALAPPDATA%\PIDReader\wp456\review.sqlite`; the 353 S418 geometry edges are UNKNOWN centrelines, not pipes; accuracy is NOT_RUN until a reviewer approves an exhaustive reference; the detector gate stays .65; never invent characters from grammar. All earlier rules still hold.
+
+---
+
 # CURRENT INSTRUCTIONS — WP-01..03 INTEGRATION (adds to R5 and Rev X; supersedes nothing)
 
 WP-01..03 (ChatGPT package) is merged selectively on branch `claude/wp123-integration` (from main c2935a8). Read `docs/wp123/WP123_INTEGRATION_STATUS.md`. WP123 output is PROPOSED_UNVERIFIED, stored only in its own sidecar; no automatic acceptance; the S418 manual ROI profile is drawing-specific; Tesseract is optional and may be absent. All earlier rules still hold.

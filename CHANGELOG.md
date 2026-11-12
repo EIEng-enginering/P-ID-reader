@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased - WP-04..06 (branch claude/wp456-integration, not committed)
+### Added
+- `engineering/wp456/` and tab "WP-04-06 proposals": evidence-preserving OCR de-duplication, bounded local Tesseract re-read (UTF-8 TSV), line/bubble review states without invented characters, exact-string scorer (NOT_RUN without an approved reference), detector-gate-preserving symbol and association proposals, conservative geometry graph, separate review sidecar.
+### Fixed
+- `frame_from_pdfplumber`: asymmetric CropBox on 180/270 degree pages shifted boxes (mirrored now).
+- WP456 page sizes follow the rotation-aware frame (were swapped on 90/270 degree pages).
+### Not changed
+- Worksheet R1 contract/API/worker, standalone DB v13, detector gate (.65), all switches.
+
 ## Unreleased - WP-01..03 text-to-engineering proposals (branch claude/wp123-integration)
 ### Added
 - `engineering/wp123_*`: OCR-to-tag/line-number/title-block proposals, detector triage (withheld, never deleted), OCR-anchored circle evidence, abstaining tag-to-detector association, isolated append-only review sidecar; schema `contracts/standalone_wp123_result_v1.schema.json`, `tools/check_wp123.py`.

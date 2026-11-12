@@ -1,0 +1,17 @@
+{
+  "main_window.py": "1c3a74fa5a08c8cefeede3ceb835f7b86490a9fb15aafb05a1404f37ba216502",
+  "viewer.py": "2158f492284a8c432696b5ad8e5d494135eb2908eccd0059ebf3bb00b48dfac1",
+  "cli.py": "3b72bd200a6e4c8519f3e515095957443ac131df28be334d9435ca89194a459f",
+  "tools/check_wp123.py": "d95e0d97d708d13e323a5614470bdc512a94c19e9d45721bb1e19208dce96814",
+  "tests/test_wp123_store.py": "65bd899d5b189128ed7f344d3e5a3ee25a721a8eb86cab2c46b4b8e85df46c9b",
+  "tests/test_wp123_recovery.py": "367ddc9fd054eea9ca00d8cbe9a080fa1914c00aa49cecbfde7f77d15720961d",
+  "tests/test_wp123_gui.py": "7a0676ca1f0aebd8ed1e11bb01ab619980a02517b4ce0a9f1decea23d00cac35",
+  "tests/test_wp123_integration.py": "bb4ca5e0d2903e3c203aa3ebf5b2bcda3bec5e833713b52c224b44240d47bb14",
+  "tests/test_wp123_optional_vision.py": "5f692100ffc4cb22b38530a516c956088664072398a65ccd9466c00a297a8abf",
+  "src/pid_reader/engineering/wp123_store.py": "242a04e875610a5b183659e28d0cdbc615e85faa2fffd2a1aa0fc4a650a21b0f",
+  "src/pid_reader/engineering/wp123_session.py": "200d7183f442ca4a4460d8fed0c8eb2e1421d01525c62ab4886b501167e30e5b",
+  "src/pid_reader/engineering/wp123_roi.py": "ae192f753e74d34665d6888c86c2fc876a2b35e4b6bd46cac60cf586c3074965",
+  "src/pid_reader/engineering/wp123_bubbles.py": "2c3ab92bea6332c361ada2e140fe3cdd36201f44e024ec0f4109d43f350bae09",
+  "src/pid_reader/engineering/wp123_recovery.py": "cf793603d77f6f6bf444cce4b8ac7b579b4e7d7fda7923059fe60463432ad19b",
+  "src/pid_reader/ui/wp123_tab.py": "81ea110c4f48be05eac518f9839a1a5a87d7d17e595466f23146ab9c51b77bc7"
+}

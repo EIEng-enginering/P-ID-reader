@@ -58,3 +58,14 @@ def test_pdf_circle_coordinate_mapping_for_uncropped_page():
     for b in result:
         assert b['page']==1
         _box(b['bbox'])
+
+
+@pytest.mark.skipif(not tesseract_available(),reason='Tesseract program is not installed on this machine (optional)')
+def test_region_reread_does_not_change_the_general_ocr_engine_selection():
+    """Regression: the locator once left pytesseract pointing at the install folder, which made every OCR engine check see Tesseract."""
+    import pytesseract
+    from pid_reader.formats import ocr_source
+    before=(pytesseract.pytesseract.tesseract_cmd,ocr_source.available_engines())
+    assert tesseract_available()
+    supplemental_ocr(pdf_with_label(),[{'page':1,'id':'h','bbox':{'x0':.1,'y0':.13,'x1':.5,'y1':.35}}],dpi=200)
+    assert (pytesseract.pytesseract.tesseract_cmd,ocr_source.available_engines())==before

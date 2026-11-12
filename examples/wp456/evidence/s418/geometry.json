@@ -1,0 +1,5740 @@
+{
+  "source_sha256": "b6b338335a3fc728adac8e631e44b43a56ec485a7403a349c2ca5a3f7621fd51",
+  "frame": "MEDIA_NORMALIZED_TOP_LEFT",
+  "segments": [
+    {
+      "id": "raster-centreline-003176c411c1a99f",
+      "page": 1,
+      "a": [
+        0.3903437,
+        0.6405063
+      ],
+      "b": [
+        0.3903437,
+        0.6664557
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a8afdbfcbb46ef3a"
+      ]
+    },
+    {
+      "id": "raster-centreline-0124db4b5aa028cf",
+      "page": 1,
+      "a": [
+        0.7651391,
+        0.9506329
+      ],
+      "b": [
+        0.9148936,
+        0.9506329
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-05050f94890cef20",
+        "raster-stroke-647a0623b2515224",
+        "raster-stroke-9f9c9e52873cc00f",
+        "raster-stroke-fb27831678a16737"
+      ]
+    },
+    {
+      "id": "raster-centreline-012821406ca1310a",
+      "page": 1,
+      "a": [
+        0.6252046,
+        0.3231012
+      ],
+      "b": [
+        0.6452537,
+        0.3231012
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-10841cdebd501cd5",
+        "raster-stroke-7e138ecbdcdb03fc"
+      ]
+    },
+    {
+      "id": "raster-centreline-016517c12ebccc3f",
+      "page": 1,
+      "a": [
+        0.7217681,
+        0.5253644
+      ],
+      "b": [
+        0.748773,
+        0.5247314
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-bac36e3c927b2cef",
+        "raster-stroke-de6540f6a83c1b32"
+      ]
+    },
+    {
+      "id": "raster-centreline-01ea492ab58257c0",
+      "page": 1,
+      "a": [
+        0.3072831,
+        0.4477848
+      ],
+      "b": [
+        0.3592471,
+        0.4477848
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4939155d8da3f050",
+        "raster-stroke-aeb6a8f62bf49ca5"
+      ]
+    },
+    {
+      "id": "raster-centreline-02319456b8673d27",
+      "page": 1,
+      "a": [
+        0.6129296,
+        0.8531646
+      ],
+      "b": [
+        0.7905074,
+        0.8531646
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-36ca563bf8cb3ffc"
+      ]
+    },
+    {
+      "id": "raster-centreline-0236dd8800dd8aac",
+      "page": 1,
+      "a": [
+        0.064239,
+        0.7405063
+      ],
+      "b": [
+        0.064239,
+        0.9613924
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2951a45c0a98b71b",
+        "raster-stroke-2b5b91d267c8a553",
+        "raster-stroke-8643d8285446cef2"
+      ]
+    },
+    {
+      "id": "raster-centreline-02c56ca0c22d32e5",
+      "page": 1,
+      "a": [
+        0.3735679,
+        0.0594937
+      ],
+      "b": [
+        0.3940262,
+        0.0594937
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ab7ed5103512ed51"
+      ]
+    },
+    {
+      "id": "raster-centreline-02e1ee377a4da3ab",
+      "page": 1,
+      "a": [
+        0.4410802,
+        0.528481
+      ],
+      "b": [
+        0.4652209,
+        0.528481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ba6c22c0a73a2b52"
+      ]
+    },
+    {
+      "id": "raster-centreline-02ff50faab1b1d10",
+      "page": 1,
+      "a": [
+        0.6669394,
+        0.3443038
+      ],
+      "b": [
+        0.6820786,
+        0.3443038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3202c31fd2544a55"
+      ]
+    },
+    {
+      "id": "raster-centreline-04096a25c5cc4603",
+      "page": 1,
+      "a": [
+        0.1022913,
+        0.8607595
+      ],
+      "b": [
+        0.2193126,
+        0.8582278
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-01ae76621fea8450"
+      ]
+    },
+    {
+      "id": "raster-centreline-0482618ce391d1f0",
+      "page": 1,
+      "a": [
+        0.405892,
+        0.4753165
+      ],
+      "b": [
+        0.4251227,
+        0.4753165
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-aab2602f8a83e474"
+      ]
+    },
+    {
+      "id": "raster-centreline-0714f064d0674cde",
+      "page": 1,
+      "a": [
+        0.8506547,
+        0.8446203
+      ],
+      "b": [
+        0.8715221,
+        0.8446203
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-52b3d4ff04eb8dff",
+        "raster-stroke-ceb5955263410ff7"
+      ]
+    },
+    {
+      "id": "raster-centreline-089a56f2e05ffde1",
+      "page": 1,
+      "a": [
+        0.302272,
+        0.8582294
+      ],
+      "b": [
+        0.3026811,
+        0.9208877
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7ca262e064fda078",
+        "raster-stroke-e14dc67fea2495fb"
+      ]
+    },
+    {
+      "id": "raster-centreline-0b361dcd9dbaf2d6",
+      "page": 1,
+      "a": [
+        0.4689028,
+        0.3258791
+      ],
+      "b": [
+        0.5278226,
+        0.3246132
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-512f365ba568f9a8",
+        "raster-stroke-a5a75f1067adf107"
+      ]
+    },
+    {
+      "id": "raster-centreline-0b4c7ba0ff441b2f",
+      "page": 1,
+      "a": [
+        0.6092471,
+        0.9316456
+      ],
+      "b": [
+        0.6092471,
+        0.9544304
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-86f96606b03ec7e4"
+      ]
+    },
+    {
+      "id": "raster-centreline-0b90bd650fd62565",
+      "page": 1,
+      "a": [
+        0.1080196,
+        0.8601266
+      ],
+      "b": [
+        0.1256137,
+        0.8601266
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e04c98df708c2b5a"
+      ]
+    },
+    {
+      "id": "raster-centreline-0ca7500b9a93a0b6",
+      "page": 1,
+      "a": [
+        0.0560556,
+        0.6120253
+      ],
+      "b": [
+        0.0560556,
+        0.6487342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7823ab15d57eb9f0"
+      ]
+    },
+    {
+      "id": "raster-centreline-0d73eb9c14e5c40f",
+      "page": 1,
+      "a": [
+        0.8508236,
+        0.8159136
+      ],
+      "b": [
+        0.8553244,
+        0.8443946
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-460f78f4433fab72",
+        "raster-stroke-d1b92e5399019655"
+      ]
+    },
+    {
+      "id": "raster-centreline-0e9009c71df930d0",
+      "page": 1,
+      "a": [
+        0.252455,
+        0.0386076
+      ],
+      "b": [
+        0.3494272,
+        0.0386076
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-51ab18c049555ac5"
+      ]
+    },
+    {
+      "id": "raster-centreline-101e872a89a399a5",
+      "page": 1,
+      "a": [
+        0.4263502,
+        0.9322785
+      ],
+      "b": [
+        0.4451718,
+        0.9322785
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a13ca6679a0ccac4"
+      ]
+    },
+    {
+      "id": "raster-centreline-12b2cff389b9cafd",
+      "page": 1,
+      "a": [
+        0.5679214,
+        0.5265823
+      ],
+      "b": [
+        0.6162029,
+        0.5265823
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-693d3d558b465a05"
+      ]
+    },
+    {
+      "id": "raster-centreline-1485fde7d609289c",
+      "page": 1,
+      "a": [
+        0.8302004,
+        0.4686276
+      ],
+      "b": [
+        0.8662069,
+        0.4673618
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1da1c6943713f429",
+        "raster-stroke-5e4e8f0e6b2860d2"
+      ]
+    },
+    {
+      "id": "raster-centreline-148779a454cce0c1",
+      "page": 1,
+      "a": [
+        0.5249591,
+        0.9537975
+      ],
+      "b": [
+        0.6567103,
+        0.9537975
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7429dea579d9592e"
+      ]
+    },
+    {
+      "id": "raster-centreline-14fb7addb9691ef2",
+      "page": 1,
+      "a": [
+        0.8179214,
+        0.0313292
+      ],
+      "b": [
+        0.9112111,
+        0.0313292
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-86acfc5c354dd720",
+        "raster-stroke-ff995184787388bb"
+      ]
+    },
+    {
+      "id": "raster-centreline-1565b7d533c16ce9",
+      "page": 1,
+      "a": [
+        0.0855155,
+        0.9594937
+      ],
+      "b": [
+        0.1043372,
+        0.9594937
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-98b1ea7e7eb6f187"
+      ]
+    },
+    {
+      "id": "raster-centreline-158cad208dc87ebf",
+      "page": 1,
+      "a": [
+        0.4697218,
+        0.6759494
+      ],
+      "b": [
+        0.4697218,
+        0.6987342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-05874b68a4d5e128"
+      ]
+    },
+    {
+      "id": "raster-centreline-15a3501189a6bce7",
+      "page": 1,
+      "a": [
+        0.2839607,
+        0.5873418
+      ],
+      "b": [
+        0.3011457,
+        0.5873418
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8675e060dba60287"
+      ]
+    },
+    {
+      "id": "raster-centreline-16b2ad6acc2aa5a9",
+      "page": 1,
+      "a": [
+        0.0298691,
+        0.5107595
+      ],
+      "b": [
+        0.0482815,
+        0.5101266
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-05bd6641f6fc6395"
+      ]
+    },
+    {
+      "id": "raster-centreline-16f3cac2b754f630",
+      "page": 1,
+      "a": [
+        0.9181669,
+        0.2911392
+      ],
+      "b": [
+        0.9181669,
+        0.314557
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-aea9e971ceca765f"
+      ]
+    },
+    {
+      "id": "raster-centreline-17ebe913a69f3963",
+      "page": 1,
+      "a": [
+        0.3199673,
+        0.9563291
+      ],
+      "b": [
+        0.4644026,
+        0.9563291
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-d8322f7212aa2ee2"
+      ]
+    },
+    {
+      "id": "raster-centreline-197f3a582b5ad6ef",
+      "page": 1,
+      "a": [
+        0.3674304,
+        0.9075949
+      ],
+      "b": [
+        0.3837971,
+        0.9075949
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8189073bf2a838c9"
+      ]
+    },
+    {
+      "id": "raster-centreline-1ac73fec445435b4",
+      "page": 1,
+      "a": [
+        0.061784,
+        0.335443
+      ],
+      "b": [
+        0.061784,
+        0.5525316
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-95481a2eb824e492"
+      ]
+    },
+    {
+      "id": "raster-centreline-1aed9a6d71d46296",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.4721519
+      ],
+      "b": [
+        0.5286416,
+        0.4721519
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3a6d8360baace290",
+        "raster-stroke-414eb12a4c26090b",
+        "raster-stroke-44077676f9cf820b"
+      ]
+    },
+    {
+      "id": "raster-centreline-1be84cf1143e5b6d",
+      "page": 1,
+      "a": [
+        0.4995908,
+        0.1936709
+      ],
+      "b": [
+        0.5572831,
+        0.1936709
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4e6543275d2888b6"
+      ]
+    },
+    {
+      "id": "raster-centreline-1c01102a5b300654",
+      "page": 1,
+      "a": [
+        0.7283142,
+        0.3218354
+      ],
+      "b": [
+        0.7786416,
+        0.3218354
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8018871a6406f05a",
+        "raster-stroke-af17dba802d043fb"
+      ]
+    },
+    {
+      "id": "raster-centreline-1c322f1f43085983",
+      "page": 1,
+      "a": [
+        0.5630115,
+        0.056962
+      ],
+      "b": [
+        0.5875614,
+        0.056962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3d360d3eb0bc308b"
+      ]
+    },
+    {
+      "id": "raster-centreline-1c81e835af698fb6",
+      "page": 1,
+      "a": [
+        0.9140753,
+        0.7379747
+      ],
+      "b": [
+        0.9140753,
+        0.9537975
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-93a6731f9eb40622"
+      ]
+    },
+    {
+      "id": "raster-centreline-1cc029cc36bf7509",
+      "page": 1,
+      "a": [
+        0.638707,
+        0.8550633
+      ],
+      "b": [
+        0.638707,
+        0.8892405
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5f6d360241c71449"
+      ]
+    },
+    {
+      "id": "raster-centreline-1dbac59e577fa092",
+      "page": 1,
+      "a": [
+        0.49509,
+        0.6436709
+      ],
+      "b": [
+        0.5621931,
+        0.6436709
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2e3a4c04fe6ab174"
+      ]
+    },
+    {
+      "id": "raster-centreline-1e60a336b2e44519",
+      "page": 1,
+      "a": [
+        0.703692,
+        0.3734163
+      ],
+      "b": [
+        0.7041012,
+        0.3215176
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4ae8385c1f212849",
+        "raster-stroke-a2dcbc1b6e5f0be5"
+      ]
+    },
+    {
+      "id": "raster-centreline-1ea12c0ba0763f52",
+      "page": 1,
+      "a": [
+        0.5605565,
+        0.9386076
+      ],
+      "b": [
+        0.5834697,
+        0.9386076
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-52fc308e41723f8f"
+      ]
+    },
+    {
+      "id": "raster-centreline-1eab11cf72dc8bd3",
+      "page": 1,
+      "a": [
+        0.1227496,
+        0.8594937
+      ],
+      "b": [
+        0.1423895,
+        0.8594937
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-26c8775c83ea4219"
+      ]
+    },
+    {
+      "id": "raster-centreline-1fb181f627125799",
+      "page": 1,
+      "a": [
+        0.4075286,
+        0.3253165
+      ],
+      "b": [
+        0.4905892,
+        0.3253165
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-27c995e105e96af4"
+      ]
+    },
+    {
+      "id": "raster-centreline-1ff6293e378127a7",
+      "page": 1,
+      "a": [
+        0.6235679,
+        0.8550633
+      ],
+      "b": [
+        0.6235679,
+        0.8765823
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b4f887219c0748d7"
+      ]
+    },
+    {
+      "id": "raster-centreline-21b868c7657aba0a",
+      "page": 1,
+      "a": [
+        0.2643208,
+        0.7006329
+      ],
+      "b": [
+        0.3187398,
+        0.7006329
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1a0feccc759a4767"
+      ]
+    },
+    {
+      "id": "raster-centreline-23131d83899c7f15",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.9398734
+      ],
+      "b": [
+        0.5638298,
+        0.9398734
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-172cc3dfcc58a756"
+      ]
+    },
+    {
+      "id": "raster-centreline-23471cb3931e905f",
+      "page": 1,
+      "a": [
+        0.4459902,
+        0.4727848
+      ],
+      "b": [
+        0.4905892,
+        0.471519
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-01f8c79a44043fc6"
+      ]
+    },
+    {
+      "id": "raster-centreline-2450fa79d7e6acca",
+      "page": 1,
+      "a": [
+        0.5662848,
+        0.9392405
+      ],
+      "b": [
+        0.636252,
+        0.9379747
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-728a7aea2c51e4d2"
+      ]
+    },
+    {
+      "id": "raster-centreline-255111bde1a83083",
+      "page": 1,
+      "a": [
+        0.6395254,
+        0.9170886
+      ],
+      "b": [
+        0.702946,
+        0.9170886
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-151598d257a3ac51"
+      ]
+    },
+    {
+      "id": "raster-centreline-257e731a34a05169",
+      "page": 1,
+      "a": [
+        0.2115385,
+        0.9579114
+      ],
+      "b": [
+        0.3436989,
+        0.9579114
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ab8c43f705530991",
+        "raster-stroke-e2c6749d0441776a"
+      ]
+    },
+    {
+      "id": "raster-centreline-258ba9ad43b13454",
+      "page": 1,
+      "a": [
+        0.0286416,
+        0.6297468
+      ],
+      "b": [
+        0.0490998,
+        0.6291139
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ef6ee177172b62bd"
+      ]
+    },
+    {
+      "id": "raster-centreline-26b572a85b89073b",
+      "page": 1,
+      "a": [
+        0.3326514,
+        0.8740506
+      ],
+      "b": [
+        0.3473813,
+        0.8740506
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-12b5eb0f310b991e"
+      ]
+    },
+    {
+      "id": "raster-centreline-27283fb741f33850",
+      "page": 1,
+      "a": [
+        0.6828969,
+        0.4689873
+      ],
+      "b": [
+        0.6828969,
+        0.4911392
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a12208b439cbafb7"
+      ]
+    },
+    {
+      "id": "raster-centreline-273cb2acd262cdea",
+      "page": 1,
+      "a": [
+        0.0278232,
+        0.5310127
+      ],
+      "b": [
+        0.0482815,
+        0.5316456
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-58ade8677a3a6d6b"
+      ]
+    },
+    {
+      "id": "raster-centreline-2742eba6bb08f0e1",
+      "page": 1,
+      "a": [
+        0.3760229,
+        0.8905063
+      ],
+      "b": [
+        0.3964812,
+        0.8905063
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-fc215620e237182d"
+      ]
+    },
+    {
+      "id": "raster-centreline-2875cbd47c002235",
+      "page": 1,
+      "a": [
+        0.1714403,
+        0.4531646
+      ],
+      "b": [
+        0.1714403,
+        0.4810127
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-14c5269b07134043"
+      ]
+    },
+    {
+      "id": "raster-centreline-2942d51bcc185460",
+      "page": 1,
+      "a": [
+        0.3203764,
+        0.5860759
+      ],
+      "b": [
+        0.3432897,
+        0.5860759
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-cb4e49a633593864"
+      ]
+    },
+    {
+      "id": "raster-centreline-2aec4434f49dd5d7",
+      "page": 1,
+      "a": [
+        0.3543372,
+        0.1955696
+      ],
+      "b": [
+        0.4087561,
+        0.1955696
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0305eb02e0f73231"
+      ]
+    },
+    {
+      "id": "raster-centreline-2b661cbbc2645bbe",
+      "page": 1,
+      "a": [
+        0.1153846,
+        0.9601266
+      ],
+      "b": [
+        0.2086743,
+        0.9582278
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-82ae2d3d6175206c",
+        "raster-stroke-cb8727b4f15a95e2",
+        "raster-stroke-f053d435f712b3b8"
+      ]
+    },
+    {
+      "id": "raster-centreline-2bf3e8d2923e2a83",
+      "page": 1,
+      "a": [
+        0.4136661,
+        0.5433545
+      ],
+      "b": [
+        0.4541735,
+        0.5433545
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-292ea2e1f15fcfaa",
+        "raster-stroke-4d8f906881cf4feb"
+      ]
+    },
+    {
+      "id": "raster-centreline-2bf883ce4717f2ea",
+      "page": 1,
+      "a": [
+        0.2831424,
+        0.4639241
+      ],
+      "b": [
+        0.3445172,
+        0.4639241
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3d3958a07b6295ef"
+      ]
+    },
+    {
+      "id": "raster-centreline-2c99323208f44016",
+      "page": 1,
+      "a": [
+        0.5294599,
+        0.3405063
+      ],
+      "b": [
+        0.5536007,
+        0.3405063
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1843f8555a539715"
+      ]
+    },
+    {
+      "id": "raster-centreline-2cbff774019716be",
+      "page": 1,
+      "a": [
+        0.599018,
+        0.6189873
+      ],
+      "b": [
+        0.6280687,
+        0.6189873
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-d68025c006c570f1"
+      ]
+    },
+    {
+      "id": "raster-centreline-2e4f9a9af00c0bdc",
+      "page": 1,
+      "a": [
+        0.3752046,
+        0.0367089
+      ],
+      "b": [
+        0.4905892,
+        0.0367089
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-311fc2e9dafddc4f",
+        "raster-stroke-aa2035013d402e03",
+        "raster-stroke-c24b8ff1302f0701"
+      ]
+    },
+    {
+      "id": "raster-centreline-2e837d366f188a60",
+      "page": 1,
+      "a": [
+        0.4693126,
+        0.6335443
+      ],
+      "b": [
+        0.4697218,
+        0.6702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a475bd5ebec2ff98"
+      ]
+    },
+    {
+      "id": "raster-centreline-2e85dfc09ea315d7",
+      "page": 1,
+      "a": [
+        0.5171849,
+        0.5506329
+      ],
+      "b": [
+        0.561784,
+        0.5506329
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-11ddd5d02621dcdf"
+      ]
+    },
+    {
+      "id": "raster-centreline-2e956f5f8eb221e4",
+      "page": 1,
+      "a": [
+        0.7502046,
+        0.4968354
+      ],
+      "b": [
+        0.7502046,
+        0.5955696
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-56e3a427ebff7bf2",
+        "raster-stroke-8f3bc43abc7258f6"
+      ]
+    },
+    {
+      "id": "raster-centreline-2f133bb1621aa4a1",
+      "page": 1,
+      "a": [
+        0.492635,
+        0.5512658
+      ],
+      "b": [
+        0.5392799,
+        0.5512658
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4adaa403bb20cf2c"
+      ]
+    },
+    {
+      "id": "raster-centreline-31a9e92c25a372ac",
+      "page": 1,
+      "a": [
+        0.2626841,
+        0.3518987
+      ],
+      "b": [
+        0.2626841,
+        0.3791139
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-62b92ac4a8f6ddb3"
+      ]
+    },
+    {
+      "id": "raster-centreline-31f3cfc83e9e8394",
+      "page": 1,
+      "a": [
+        0.8559738,
+        0.6962025
+      ],
+      "b": [
+        0.8694763,
+        0.735443
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0866ed5346b636e8"
+      ]
+    },
+    {
+      "id": "raster-centreline-322025c8cdd4670a",
+      "page": 1,
+      "a": [
+        0.6689853,
+        0.0329114
+      ],
+      "b": [
+        0.8518822,
+        0.0329114
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e1efb861e7f813d0"
+      ]
+    },
+    {
+      "id": "raster-centreline-32724597a8601121",
+      "page": 1,
+      "a": [
+        0.0319149,
+        0.5582278
+      ],
+      "b": [
+        0.049509,
+        0.5582278
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-cf06e3bd260d401b"
+      ]
+    },
+    {
+      "id": "raster-centreline-34fff0c5d437ff80",
+      "page": 1,
+      "a": [
+        0.2397709,
+        0.8575949
+      ],
+      "b": [
+        0.3919804,
+        0.8575949
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8e5c950cd903fe94"
+      ]
+    },
+    {
+      "id": "raster-centreline-35d2a17673e57929",
+      "page": 1,
+      "a": [
+        0.3375614,
+        0.5708861
+      ],
+      "b": [
+        0.3555646,
+        0.5702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-027de78b1ab85266"
+      ]
+    },
+    {
+      "id": "raster-centreline-35d932e2e954cc8b",
+      "page": 1,
+      "a": [
+        0.0634206,
+        0.6962025
+      ],
+      "b": [
+        0.0634206,
+        0.9221519
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-388e9c1d3a95bd6f"
+      ]
+    },
+    {
+      "id": "raster-centreline-3649c4d3cdb74d8a",
+      "page": 1,
+      "a": [
+        0.2630933,
+        0.4031646
+      ],
+      "b": [
+        0.2958265,
+        0.4031646
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-df84ed349a0e9ca6"
+      ]
+    },
+    {
+      "id": "raster-centreline-366beeb78a47f93a",
+      "page": 1,
+      "a": [
+        0.2066285,
+        0.2208861
+      ],
+      "b": [
+        0.2528642,
+        0.2208861
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-88809cf226ddd252"
+      ]
+    },
+    {
+      "id": "raster-centreline-36b7315f91ee109c",
+      "page": 1,
+      "a": [
+        0.3306056,
+        0.4018987
+      ],
+      "b": [
+        0.3543372,
+        0.4018987
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9f71706c3252a6c6"
+      ]
+    },
+    {
+      "id": "raster-centreline-384587169f071105",
+      "page": 1,
+      "a": [
+        0.0560556,
+        0.5481013
+      ],
+      "b": [
+        0.0560556,
+        0.5746835
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e256e2ee6c032637"
+      ]
+    },
+    {
+      "id": "raster-centreline-3890352d5235b559",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.1949367
+      ],
+      "b": [
+        0.4860884,
+        0.1949367
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8f5cb77841433666"
+      ]
+    },
+    {
+      "id": "raster-centreline-395ec7538bfdd561",
+      "page": 1,
+      "a": [
+        0.4770867,
+        0.3962025
+      ],
+      "b": [
+        0.4770867,
+        0.4196203
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3425b35a1394a323"
+      ]
+    },
+    {
+      "id": "raster-centreline-39767c12ed2b6593",
+      "page": 1,
+      "a": [
+        0.2905074,
+        0.5708861
+      ],
+      "b": [
+        0.3085106,
+        0.5708861
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a885bb798feb20bd"
+      ]
+    },
+    {
+      "id": "raster-centreline-399694c5065776c2",
+      "page": 1,
+      "a": [
+        0.7229951,
+        0.928481
+      ],
+      "b": [
+        0.7725041,
+        0.928481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1d996df94e8f44fd"
+      ]
+    },
+    {
+      "id": "raster-centreline-39d0910402bed699",
+      "page": 1,
+      "a": [
+        0.3228314,
+        0.1962025
+      ],
+      "b": [
+        0.3698854,
+        0.1962025
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e6dc2f05f36b9235"
+      ]
+    },
+    {
+      "id": "raster-centreline-3ab00679b3d2b3df",
+      "page": 1,
+      "a": [
+        0.5683306,
+        0.6196203
+      ],
+      "b": [
+        0.5830606,
+        0.6196203
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a3e6c51ecdd1f984"
+      ]
+    },
+    {
+      "id": "raster-centreline-3b258b66501f1a42",
+      "page": 1,
+      "a": [
+        0.9206219,
+        0.928481
+      ],
+      "b": [
+        0.9206219,
+        0.9601266
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-69345f6375f80a93"
+      ]
+    },
+    {
+      "id": "raster-centreline-3b73eb86fd93bfdf",
+      "page": 1,
+      "a": [
+        0.0286416,
+        0.6082278
+      ],
+      "b": [
+        0.0527823,
+        0.6120253
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ba34c8249e8e5fc8"
+      ]
+    },
+    {
+      "id": "raster-centreline-3c4156ac59d0ffe0",
+      "page": 1,
+      "a": [
+        0.7982758,
+        0.4686625
+      ],
+      "b": [
+        0.8134149,
+        0.4680296
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4807e7e12cffc5b8",
+        "raster-stroke-63e81217d8f983b9"
+      ]
+    },
+    {
+      "id": "raster-centreline-3e13cf74f3a12800",
+      "page": 1,
+      "a": [
+        0.7315876,
+        0.4683544
+      ],
+      "b": [
+        0.7950082,
+        0.4683544
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ae089c042677d603"
+      ]
+    },
+    {
+      "id": "raster-centreline-3e19c26bacfdb0d4",
+      "page": 1,
+      "a": [
+        0.5253682,
+        0.0348101
+      ],
+      "b": [
+        0.6661211,
+        0.0348101
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-41427191a69b4061"
+      ]
+    },
+    {
+      "id": "raster-centreline-3eb498797fc14f22",
+      "page": 1,
+      "a": [
+        0.4930442,
+        0.6443038
+      ],
+      "b": [
+        0.5175941,
+        0.6443038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-87dc611a52d3181b"
+      ]
+    },
+    {
+      "id": "raster-centreline-422f9961923a5a51",
+      "page": 1,
+      "a": [
+        0.5783551,
+        0.6196203
+      ],
+      "b": [
+        0.5783551,
+        0.6436709
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b3fd7c858f57a3e4",
+        "raster-stroke-ef2622b3f44b7da3"
+      ]
+    },
+    {
+      "id": "raster-centreline-424374a7611e890d",
+      "page": 1,
+      "a": [
+        0.9112111,
+        0.0835443
+      ],
+      "b": [
+        0.9112111,
+        0.3411392
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a9de02fc81166316"
+      ]
+    },
+    {
+      "id": "raster-centreline-42d1ddf71fee47d9",
+      "page": 1,
+      "a": [
+        0.6366612,
+        0.0335443
+      ],
+      "b": [
+        0.7782324,
+        0.0335443
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0b5c0533bae06f4b"
+      ]
+    },
+    {
+      "id": "raster-centreline-4373016b5bd07721",
+      "page": 1,
+      "a": [
+        0.4457856,
+        0.856962
+      ],
+      "b": [
+        0.4457856,
+        0.9544304
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-22c012b3c242f122",
+        "raster-stroke-5ca6c4b51c671db8"
+      ]
+    },
+    {
+      "id": "raster-centreline-43bb9233fb86ecda",
+      "page": 1,
+      "a": [
+        0.247545,
+        0.4481013
+      ],
+      "b": [
+        0.3342881,
+        0.4481013
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-363a7563f9caf066"
+      ]
+    },
+    {
+      "id": "raster-centreline-43dc7c2da681266e",
+      "page": 1,
+      "a": [
+        0.2688216,
+        0.6563291
+      ],
+      "b": [
+        0.306874,
+        0.6563291
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-77470a89e74269e6"
+      ]
+    },
+    {
+      "id": "raster-centreline-454392830d49ada1",
+      "page": 1,
+      "a": [
+        0.4799509,
+        0.6202532
+      ],
+      "b": [
+        0.4799509,
+        0.6443038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-75ca375988ed4484"
+      ]
+    },
+    {
+      "id": "raster-centreline-45d6c6bfff1061f9",
+      "page": 1,
+      "a": [
+        0.4689034,
+        0.8556962
+      ],
+      "b": [
+        0.4689034,
+        0.9563291
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7dc4afe47f13607d"
+      ]
+    },
+    {
+      "id": "raster-centreline-465e1ccd841db83b",
+      "page": 1,
+      "a": [
+        0.3383797,
+        0.9246835
+      ],
+      "b": [
+        0.3535188,
+        0.9246835
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2cadf4646662cbdc"
+      ]
+    },
+    {
+      "id": "raster-centreline-4682636b1806c7f2",
+      "page": 1,
+      "a": [
+        0.1157938,
+        0.4550633
+      ],
+      "b": [
+        0.1157938,
+        0.4816456
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3e65dd50e5af8459"
+      ]
+    },
+    {
+      "id": "raster-centreline-477b6fd257a8ffc8",
+      "page": 1,
+      "a": [
+        0.056874,
+        0.8006329
+      ],
+      "b": [
+        0.056874,
+        0.8481013
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2b2f5cb584a2daa0"
+      ]
+    },
+    {
+      "id": "raster-centreline-48e6632dc1deb097",
+      "page": 1,
+      "a": [
+        0.608838,
+        0.8626582
+      ],
+      "b": [
+        0.608838,
+        0.9544304
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-18d46478ec2ba15c"
+      ]
+    },
+    {
+      "id": "raster-centreline-4966a189f0b85e55",
+      "page": 1,
+      "a": [
+        0.0646481,
+        0.9601266
+      ],
+      "b": [
+        0.099018,
+        0.9607595
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4007d00286186791"
+      ]
+    },
+    {
+      "id": "raster-centreline-4a366c4f8b22c801",
+      "page": 1,
+      "a": [
+        0.3289689,
+        0.7
+      ],
+      "b": [
+        0.3989362,
+        0.6987342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-15ea90480640061e",
+        "raster-stroke-5c00832c61855a75",
+        "raster-stroke-ab686fa08cf05708",
+        "raster-stroke-e184a5ea1be5626e"
+      ]
+    },
+    {
+      "id": "raster-centreline-4b9ab3342c07a04f",
+      "page": 1,
+      "a": [
+        0.9185761,
+        0.3518987
+      ],
+      "b": [
+        0.9185761,
+        0.3879747
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8f92fe29757d9ca4",
+        "raster-stroke-cea5d0e4b4a20203"
+      ]
+    },
+    {
+      "id": "raster-centreline-4c5100d84de837ce",
+      "page": 1,
+      "a": [
+        0.4881342,
+        0.6974684
+      ],
+      "b": [
+        0.5887889,
+        0.6974684
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a4bd7201a4bcc4df"
+      ]
+    },
+    {
+      "id": "raster-centreline-4c688b22c20ae606",
+      "page": 1,
+      "a": [
+        0.2618658,
+        0.2120253
+      ],
+      "b": [
+        0.2618658,
+        0.2392405
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-927b9da785872207"
+      ]
+    },
+    {
+      "id": "raster-centreline-4c7c3b3c1104b3b2",
+      "page": 1,
+      "a": [
+        0.7794599,
+        0.1905063
+      ],
+      "b": [
+        0.8494272,
+        0.1905063
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-181cc3846950d0d6"
+      ]
+    },
+    {
+      "id": "raster-centreline-4def42e3c53e3f1b",
+      "page": 1,
+      "a": [
+        0.7225859,
+        0.8693038
+      ],
+      "b": [
+        0.9140753,
+        0.8693038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0bda54e8bb65cb2b",
+        "raster-stroke-4a65374dd181c5fa",
+        "raster-stroke-663fa31badb006b1",
+        "raster-stroke-e1d171ddb37773b4"
+      ]
+    },
+    {
+      "id": "raster-centreline-4e2c97670791257f",
+      "page": 1,
+      "a": [
+        0.6084288,
+        0.8550633
+      ],
+      "b": [
+        0.6084288,
+        0.8981013
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-288e99e3cd194a8c"
+      ]
+    },
+    {
+      "id": "raster-centreline-4ec71d62d4b9d648",
+      "page": 1,
+      "a": [
+        0.054419,
+        0.2297468
+      ],
+      "b": [
+        0.054419,
+        0.2651899
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9d0e4912851e00f0"
+      ]
+    },
+    {
+      "id": "raster-centreline-4f3ed35e95d621cf",
+      "page": 1,
+      "a": [
+        0.4255319,
+        0.5759494
+      ],
+      "b": [
+        0.4255319,
+        0.6094937
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-769f40cf646d9e2c"
+      ]
+    },
+    {
+      "id": "raster-centreline-502be1ff1f90e264",
+      "page": 1,
+      "a": [
+        0.2070376,
+        0.8588608
+      ],
+      "b": [
+        0.2532733,
+        0.8594937
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-77cc2a53a26a1cfb"
+      ]
+    },
+    {
+      "id": "raster-centreline-502da5e99a4fe2dc",
+      "page": 1,
+      "a": [
+        0.5916542,
+        0.3226523
+      ],
+      "b": [
+        0.622336,
+        0.3232936
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7499f33d0bee8b1e",
+        "raster-stroke-896aad5e7b28a7ac"
+      ]
+    },
+    {
+      "id": "raster-centreline-5209f8a27e02bb8d",
+      "page": 1,
+      "a": [
+        0.3265139,
+        0.3373418
+      ],
+      "b": [
+        0.353928,
+        0.3373418
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a8ae6e6748ee1c41"
+      ]
+    },
+    {
+      "id": "raster-centreline-52bfe727f982e678",
+      "page": 1,
+      "a": [
+        0.7131751,
+        0.6177215
+      ],
+      "b": [
+        0.7663666,
+        0.6177215
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3f3a4359bd8eaccc"
+      ]
+    },
+    {
+      "id": "raster-centreline-5361bda556b73d7e",
+      "page": 1,
+      "a": [
+        0.6865794,
+        0.8525316
+      ],
+      "b": [
+        0.8657938,
+        0.8525316
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1734e0c41c357c53"
+      ]
+    },
+    {
+      "id": "raster-centreline-54a62ff6667fd4bd",
+      "page": 1,
+      "a": [
+        0.0601473,
+        0.035443
+      ],
+      "b": [
+        0.0601473,
+        0.206962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7e4fbaf345497649"
+      ]
+    },
+    {
+      "id": "raster-centreline-579cf1072decd265",
+      "page": 1,
+      "a": [
+        0.6399345,
+        0.9177215
+      ],
+      "b": [
+        0.658347,
+        0.9177215
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2a33365549a1a7cf"
+      ]
+    },
+    {
+      "id": "raster-centreline-585689e91ecc2f5f",
+      "page": 1,
+      "a": [
+        0.0282324,
+        0.5860759
+      ],
+      "b": [
+        0.0527823,
+        0.5860759
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7819b774a034ce37",
+        "raster-stroke-b0706cdd6418ce64",
+        "raster-stroke-d74e75874a8a65c5"
+      ]
+    },
+    {
+      "id": "raster-centreline-58c256b579d12b6e",
+      "page": 1,
+      "a": [
+        0.5634206,
+        0.8563291
+      ],
+      "b": [
+        0.5634206,
+        0.9531646
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b9bcb3c0d11bd2e7"
+      ]
+    },
+    {
+      "id": "raster-centreline-59f238d0709aaf38",
+      "page": 1,
+      "a": [
+        0.4414894,
+        0.6212026
+      ],
+      "b": [
+        0.4869067,
+        0.6212026
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5dda6a46391a4f43",
+        "raster-stroke-7c5f6e4897aeb16e",
+        "raster-stroke-c331a69fb5f153eb",
+        "raster-stroke-f97636bb882c4ecc"
+      ]
+    },
+    {
+      "id": "raster-centreline-5afaa50aaac1d5c4",
+      "page": 1,
+      "a": [
+        0.3576105,
+        0.9405063
+      ],
+      "b": [
+        0.4905892,
+        0.9405063
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-79e17e2f8b91eddc"
+      ]
+    },
+    {
+      "id": "raster-centreline-5b5790b41b8c3b91",
+      "page": 1,
+      "a": [
+        0.8494272,
+        0.143038
+      ],
+      "b": [
+        0.8494272,
+        0.1898734
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5711d1a997271b5a"
+      ]
+    },
+    {
+      "id": "raster-centreline-5c398ee21947a3dc",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.3246835
+      ],
+      "b": [
+        0.5151391,
+        0.3246835
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-15f30b5dc435ce46"
+      ]
+    },
+    {
+      "id": "raster-centreline-5cabbd9b2e02c16f",
+      "page": 1,
+      "a": [
+        0.4793371,
+        0.5278481
+      ],
+      "b": [
+        0.4793371,
+        0.5512658
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-c082596e3f942c87",
+        "raster-stroke-f6c22f6d1d269eeb"
+      ]
+    },
+    {
+      "id": "raster-centreline-5d1ba8bb373f8ca7",
+      "page": 1,
+      "a": [
+        0.0278276,
+        0.5514731
+      ],
+      "b": [
+        0.0527867,
+        0.5502073
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4144f40f5149cc3c",
+        "raster-stroke-c4efac7b323f7670"
+      ]
+    },
+    {
+      "id": "raster-centreline-5d81807f833d3716",
+      "page": 1,
+      "a": [
+        0.24509,
+        0.5531646
+      ],
+      "b": [
+        0.2635025,
+        0.5537975
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-15167ce7a470061c",
+        "raster-stroke-e4b2088d974ac44c"
+      ]
+    },
+    {
+      "id": "raster-centreline-5e8cb6c7ef543216",
+      "page": 1,
+      "a": [
+        0.8506547,
+        0.8221519
+      ],
+      "b": [
+        0.8678396,
+        0.8259494
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0dda0289652491b2"
+      ]
+    },
+    {
+      "id": "raster-centreline-5ea43be2d3de06b8",
+      "page": 1,
+      "a": [
+        0.4026187,
+        0.528481
+      ],
+      "b": [
+        0.4255319,
+        0.528481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-08d897d1f8f10132"
+      ]
+    },
+    {
+      "id": "raster-centreline-5f86dc8195142488",
+      "page": 1,
+      "a": [
+        0.3371522,
+        0.5139241
+      ],
+      "b": [
+        0.3510638,
+        0.5139241
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-94cd72dcf6d999b2"
+      ]
+    },
+    {
+      "id": "raster-centreline-6001f17c0fe0a780",
+      "page": 1,
+      "a": [
+        0.8506547,
+        0.8462025
+      ],
+      "b": [
+        0.8723404,
+        0.8462025
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-759e4977f2983236"
+      ]
+    },
+    {
+      "id": "raster-centreline-61066e7100e572ac",
+      "page": 1,
+      "a": [
+        0.3535188,
+        0.2696203
+      ],
+      "b": [
+        0.3535188,
+        0.3379747
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5347600f1e4fbcf7"
+      ]
+    },
+    {
+      "id": "raster-centreline-61eee003ed690de8",
+      "page": 1,
+      "a": [
+        0.0548282,
+        0.3658228
+      ],
+      "b": [
+        0.0548282,
+        0.4063291
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3243bc5ccc6eeaf0"
+      ]
+    },
+    {
+      "id": "raster-centreline-623c0c14fb9a8132",
+      "page": 1,
+      "a": [
+        0.0630115,
+        0.6962025
+      ],
+      "b": [
+        0.0630115,
+        0.8208861
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b5eb354a44936ac0"
+      ]
+    },
+    {
+      "id": "raster-centreline-62e054d9a24c2e81",
+      "page": 1,
+      "a": [
+        0.4828151,
+        0.9392405
+      ],
+      "b": [
+        0.5658756,
+        0.9392405
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f7bf110b44ea5891"
+      ]
+    },
+    {
+      "id": "raster-centreline-62f944ad101341d6",
+      "page": 1,
+      "a": [
+        0.292144,
+        0.7
+      ],
+      "b": [
+        0.3150573,
+        0.7
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2de1be348d67f799"
+      ]
+    },
+    {
+      "id": "raster-centreline-6323d6313b2ee0cf",
+      "page": 1,
+      "a": [
+        0.5789689,
+        0.4702532
+      ],
+      "b": [
+        0.6227496,
+        0.4702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-77a224286cb90332"
+      ]
+    },
+    {
+      "id": "raster-centreline-6331111a8a3fb690",
+      "page": 1,
+      "a": [
+        0.0628069,
+        0.5012658
+      ],
+      "b": [
+        0.0628069,
+        0.7588608
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b70b1f32cd6ba9f6",
+        "raster-stroke-c012db2d926e3521",
+        "raster-stroke-d219cb261317d645",
+        "raster-stroke-ea699bde9e216676"
+      ]
+    },
+    {
+      "id": "raster-centreline-634d1237475f6b10",
+      "page": 1,
+      "a": [
+        0.3379705,
+        0.535443
+      ],
+      "b": [
+        0.3551555,
+        0.535443
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-c21ca82a7dd2f8b2"
+      ]
+    },
+    {
+      "id": "raster-centreline-643b4ff4e0c27dfa",
+      "page": 1,
+      "a": [
+        0.3649755,
+        0.6803797
+      ],
+      "b": [
+        0.3854337,
+        0.6803797
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-265238dcf0db8f32"
+      ]
+    },
+    {
+      "id": "raster-centreline-66a05c19a2ca68eb",
+      "page": 1,
+      "a": [
+        0.3858429,
+        0.1949367
+      ],
+      "b": [
+        0.4860884,
+        0.1949367
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0090d75a7cc54fea"
+      ]
+    },
+    {
+      "id": "raster-centreline-677cf19b2872342a",
+      "page": 1,
+      "a": [
+        0.0286416,
+        0.6303797
+      ],
+      "b": [
+        0.0531915,
+        0.6297468
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a55a049333f07b61"
+      ]
+    },
+    {
+      "id": "raster-centreline-681a48ea68b2ca28",
+      "page": 1,
+      "a": [
+        0.5679214,
+        0.5272152
+      ],
+      "b": [
+        0.5818331,
+        0.5272152
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-c5ab31e3b76900ba"
+      ]
+    },
+    {
+      "id": "raster-centreline-695b8d0715ff5ebb",
+      "page": 1,
+      "a": [
+        0.8506547,
+        0.8405063
+      ],
+      "b": [
+        0.8698854,
+        0.8424051
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-aa120474e177e4b0"
+      ]
+    },
+    {
+      "id": "raster-centreline-69b504d0f1054825",
+      "page": 1,
+      "a": [
+        0.2144026,
+        0.4487342
+      ],
+      "b": [
+        0.3228314,
+        0.4487342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-d95b420a199708af"
+      ]
+    },
+    {
+      "id": "raster-centreline-6a1a5f7fe7c0371f",
+      "page": 1,
+      "a": [
+        0.0278232,
+        0.55
+      ],
+      "b": [
+        0.0474632,
+        0.55
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-d61e781258fdd84c"
+      ]
+    },
+    {
+      "id": "raster-centreline-6a2125d673ff5295",
+      "page": 1,
+      "a": [
+        0.5102291,
+        0.8544304
+      ],
+      "b": [
+        0.6808511,
+        0.8544304
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9025aa61244147c2"
+      ]
+    },
+    {
+      "id": "raster-centreline-6ab1c577e1a53b68",
+      "page": 1,
+      "a": [
+        0.3387889,
+        0.4791139
+      ],
+      "b": [
+        0.3551555,
+        0.478481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a30acc1aa6167cb5"
+      ]
+    },
+    {
+      "id": "raster-centreline-6b7fdf8bca6b9f8f",
+      "page": 1,
+      "a": [
+        0.7892799,
+        0.6170886
+      ],
+      "b": [
+        0.8064648,
+        0.6170886
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-982560928a4e1ed4"
+      ]
+    },
+    {
+      "id": "raster-centreline-6bb90dc58e03e6b9",
+      "page": 1,
+      "a": [
+        0.4697218,
+        0.6379747
+      ],
+      "b": [
+        0.4697218,
+        0.6734177
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2bbf54b69a3d579d"
+      ]
+    },
+    {
+      "id": "raster-centreline-6c6153ab823b2fad",
+      "page": 1,
+      "a": [
+        0.4459902,
+        0.4721519
+      ],
+      "b": [
+        0.460311,
+        0.4721519
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-42b7a580e381799b"
+      ]
+    },
+    {
+      "id": "raster-centreline-6d42efff28267c71",
+      "page": 1,
+      "a": [
+        0.6542553,
+        0.4693038
+      ],
+      "b": [
+        0.7139935,
+        0.4693038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3010db7f716acf41",
+        "raster-stroke-54653d3c6b95c296"
+      ]
+    },
+    {
+      "id": "raster-centreline-6d751340efe35cfa",
+      "page": 1,
+      "a": [
+        0.4279869,
+        0.6987342
+      ],
+      "b": [
+        0.4509002,
+        0.6987342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-83ddff001f88e579"
+      ]
+    },
+    {
+      "id": "raster-centreline-6d79e197cc686000",
+      "page": 1,
+      "a": [
+        0.6755319,
+        0.9164557
+      ],
+      "b": [
+        0.7937807,
+        0.9164557
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-979e592d4f0cc61c"
+      ]
+    },
+    {
+      "id": "raster-centreline-6ebc793cfe69a701",
+      "page": 1,
+      "a": [
+        0.443126,
+        0.6981013
+      ],
+      "b": [
+        0.4905892,
+        0.6981013
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7801bba03265205c"
+      ]
+    },
+    {
+      "id": "raster-centreline-6ec025b9569e7630",
+      "page": 1,
+      "a": [
+        0.8351064,
+        0.9272152
+      ],
+      "b": [
+        0.913257,
+        0.9272152
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-bdb34e182f7f6f02"
+      ]
+    },
+    {
+      "id": "raster-centreline-6ee9a2c1783dc4a5",
+      "page": 1,
+      "a": [
+        0.1833061,
+        0.0392405
+      ],
+      "b": [
+        0.3207856,
+        0.0392405
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-d6322d5d43e10e30"
+      ]
+    },
+    {
+      "id": "raster-centreline-6f7acb49f56a6477",
+      "page": 1,
+      "a": [
+        0.7229951,
+        0.8708861
+      ],
+      "b": [
+        0.7839607,
+        0.8708861
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8c3385bee31a5368"
+      ]
+    },
+    {
+      "id": "raster-centreline-707487f8dad76813",
+      "page": 1,
+      "a": [
+        0.306874,
+        0.8829114
+      ],
+      "b": [
+        0.3248773,
+        0.8829114
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-14684d5b8085d3d6"
+      ]
+    },
+    {
+      "id": "raster-centreline-70d061708648fdb2",
+      "page": 1,
+      "a": [
+        0.5781506,
+        0.5259494
+      ],
+      "b": [
+        0.5781506,
+        0.55
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-54acc2eacdb1606a"
+      ]
+    },
+    {
+      "id": "raster-centreline-7118bc65f5fd33b6",
+      "page": 1,
+      "a": [
+        0.6440262,
+        0.6952531
+      ],
+      "b": [
+        0.7528642,
+        0.6952531
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-36790c986f8e3ecd",
+        "raster-stroke-82e9e28d665ff8f4"
+      ]
+    },
+    {
+      "id": "raster-centreline-742f084656a2da1b",
+      "page": 1,
+      "a": [
+        0.2135843,
+        0.9582278
+      ],
+      "b": [
+        0.2287234,
+        0.9588608
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f0ff0453c011d5b8"
+      ]
+    },
+    {
+      "id": "raster-centreline-75e38e9deb194fea",
+      "page": 1,
+      "a": [
+        0.0605565,
+        0.0405063
+      ],
+      "b": [
+        0.0605565,
+        0.2987342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-385a8d5a01a04886"
+      ]
+    },
+    {
+      "id": "raster-centreline-75e587b59c7e284e",
+      "page": 1,
+      "a": [
+        0.2786416,
+        0.3386076
+      ],
+      "b": [
+        0.3011457,
+        0.3386076
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-c43616cfcdffaa07"
+      ]
+    },
+    {
+      "id": "raster-centreline-75fe9cdaa32deb28",
+      "page": 1,
+      "a": [
+        0.3371522,
+        0.8582278
+      ],
+      "b": [
+        0.3371522,
+        0.8974684
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a919930df68c03b1"
+      ]
+    },
+    {
+      "id": "raster-centreline-7659424846e2db0c",
+      "page": 1,
+      "a": [
+        0.4496727,
+        0.3246835
+      ],
+      "b": [
+        0.4905892,
+        0.3246835
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-dfdcfafc86033a6e"
+      ]
+    },
+    {
+      "id": "raster-centreline-768e297d15087d81",
+      "page": 1,
+      "a": [
+        0.2712766,
+        0.8582278
+      ],
+      "b": [
+        0.3171031,
+        0.8582278
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e85d4757fc23e150"
+      ]
+    },
+    {
+      "id": "raster-centreline-76c9ab111b2d1bcd",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.8560126
+      ],
+      "b": [
+        0.5638298,
+        0.8560126
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-6bab6185c9438721",
+        "raster-stroke-8130b9fcdbb5cf45"
+      ]
+    },
+    {
+      "id": "raster-centreline-7902e2a4d7d3604c",
+      "page": 1,
+      "a": [
+        0.4537643,
+        0.1943038
+      ],
+      "b": [
+        0.4905892,
+        0.1943038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-92b6abc863f233cd"
+      ]
+    },
+    {
+      "id": "raster-centreline-790a67259023fc8c",
+      "page": 1,
+      "a": [
+        0.599018,
+        0.6740506
+      ],
+      "b": [
+        0.599018,
+        0.6962025
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0079ed4e255d5347"
+      ]
+    },
+    {
+      "id": "raster-centreline-79880b72aef8e4e8",
+      "page": 1,
+      "a": [
+        0.6665303,
+        0.4917722
+      ],
+      "b": [
+        0.6828969,
+        0.4917722
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8930e2acac89ff94"
+      ]
+    },
+    {
+      "id": "raster-centreline-799cfbc71441d105",
+      "page": 1,
+      "a": [
+        0.1055646,
+        0.45
+      ],
+      "b": [
+        0.1419804,
+        0.45
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2b092f98fad5da86"
+      ]
+    },
+    {
+      "id": "raster-centreline-7aaaa19146039a2f",
+      "page": 1,
+      "a": [
+        0.289689,
+        0.514557
+      ],
+      "b": [
+        0.289689,
+        0.5493671
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5f927a569626987c"
+      ]
+    },
+    {
+      "id": "raster-centreline-7bb1ebc19d0b531e",
+      "page": 1,
+      "a": [
+        0.9105974,
+        0.0310127
+      ],
+      "b": [
+        0.9105974,
+        0.2556962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b9c81ab00d013b47",
+        "raster-stroke-bba184bc63f51e8e"
+      ]
+    },
+    {
+      "id": "raster-centreline-7e069dd24abfabe6",
+      "page": 1,
+      "a": [
+        0.6133388,
+        0.9386076
+      ],
+      "b": [
+        0.6399345,
+        0.9386076
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-70a81bd5a0384cab"
+      ]
+    },
+    {
+      "id": "raster-centreline-7e8ec12c0426b0c1",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.9405063
+      ],
+      "b": [
+        0.5270049,
+        0.9405063
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-88a061d50e3e08a2"
+      ]
+    },
+    {
+      "id": "raster-centreline-7fb8ab21a675ddee",
+      "page": 1,
+      "a": [
+        0.4693126,
+        0.9227848
+      ],
+      "b": [
+        0.4693126,
+        0.9544304
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-dd066d1da03c6eb6"
+      ]
+    },
+    {
+      "id": "raster-centreline-7fc1ba1ac1422614",
+      "page": 1,
+      "a": [
+        0.6080196,
+        0.6189873
+      ],
+      "b": [
+        0.6084288,
+        0.6462025
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5a2c3db7f05e2871"
+      ]
+    },
+    {
+      "id": "raster-centreline-8249eb5865ee8c96",
+      "page": 1,
+      "a": [
+        0.1575286,
+        0.4816456
+      ],
+      "b": [
+        0.1714403,
+        0.4816456
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7cd572ed51a2a2c5"
+      ]
+    },
+    {
+      "id": "raster-centreline-82c0f0965cb2a3c9",
+      "page": 1,
+      "a": [
+        0.9185761,
+        0.4044304
+      ],
+      "b": [
+        0.9185761,
+        0.4398734
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-06cf6f13bf33d9c3",
+        "raster-stroke-3b5ad46e03b83a0a"
+      ]
+    },
+    {
+      "id": "raster-centreline-83a74dad5acbb855",
+      "page": 1,
+      "a": [
+        0.4230769,
+        0.9398734
+      ],
+      "b": [
+        0.4905892,
+        0.9398734
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a2f006ac92f49d0f"
+      ]
+    },
+    {
+      "id": "raster-centreline-83ad2d8138b41775",
+      "page": 1,
+      "a": [
+        0.7148118,
+        0.6183544
+      ],
+      "b": [
+        0.7311784,
+        0.6183544
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-687445aeff86b3b8"
+      ]
+    },
+    {
+      "id": "raster-centreline-83c4a5e1fccb7e9b",
+      "page": 1,
+      "a": [
+        0.2839607,
+        0.5867089
+      ],
+      "b": [
+        0.3387889,
+        0.5867089
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1dcdc5cd79c87a53"
+      ]
+    },
+    {
+      "id": "raster-centreline-85f87b7eecd12c29",
+      "page": 1,
+      "a": [
+        0.262275,
+        0.2386076
+      ],
+      "b": [
+        0.262275,
+        0.2740506
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9ebf81bf8c0ed67e"
+      ]
+    },
+    {
+      "id": "raster-centreline-8685f13c29d11f2f",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.5278481
+      ],
+      "b": [
+        0.4864975,
+        0.5278481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-838e4a566d20e743"
+      ]
+    },
+    {
+      "id": "raster-centreline-86b804d2f7001732",
+      "page": 1,
+      "a": [
+        0.4169394,
+        0.6746835
+      ],
+      "b": [
+        0.4169394,
+        0.6981013
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-87108b840dfcf148"
+      ]
+    },
+    {
+      "id": "raster-centreline-86dac43fbbdfc61a",
+      "page": 1,
+      "a": [
+        0.0540098,
+        0.1278481
+      ],
+      "b": [
+        0.0540098,
+        0.1898734
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-303352519e0489e9"
+      ]
+    },
+    {
+      "id": "raster-centreline-878d6ceebc07ee0b",
+      "page": 1,
+      "a": [
+        0.301964,
+        0.9420886
+      ],
+      "b": [
+        0.4075286,
+        0.9420886
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-105cb6789cd67c47",
+        "raster-stroke-482097612af69846"
+      ]
+    },
+    {
+      "id": "raster-centreline-8b3b4fc9c7a6df0c",
+      "page": 1,
+      "a": [
+        0.0315057,
+        0.5253165
+      ],
+      "b": [
+        0.0486907,
+        0.5240506
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-496effecd65cb046"
+      ]
+    },
+    {
+      "id": "raster-centreline-8b789a4102834b84",
+      "page": 1,
+      "a": [
+        0.1288871,
+        0.0398734
+      ],
+      "b": [
+        0.2671849,
+        0.0398734
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-cf84fc1119de0a6c"
+      ]
+    },
+    {
+      "id": "raster-centreline-8e35cf7589ce3003",
+      "page": 1,
+      "a": [
+        0.405892,
+        0.5037975
+      ],
+      "b": [
+        0.4255319,
+        0.5037975
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-fbbb0cbce891e18d"
+      ]
+    },
+    {
+      "id": "raster-centreline-8ef5e29ec12c2d36",
+      "page": 1,
+      "a": [
+        0.2900982,
+        0.514557
+      ],
+      "b": [
+        0.2900982,
+        0.5835443
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-119ce94137ee7ef1"
+      ]
+    },
+    {
+      "id": "raster-centreline-8f0f0a5aca914c58",
+      "page": 1,
+      "a": [
+        0.3473813,
+        0.0373418
+      ],
+      "b": [
+        0.4414894,
+        0.0373418
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-48f6606f05985dbd"
+      ]
+    },
+    {
+      "id": "raster-centreline-8f601c658757b6b9",
+      "page": 1,
+      "a": [
+        0.8400164,
+        0.4670886
+      ],
+      "b": [
+        0.8580196,
+        0.4670886
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f69ba4e2a524639c"
+      ]
+    },
+    {
+      "id": "raster-centreline-8fa3535d61eac4da",
+      "page": 1,
+      "a": [
+        0.2712766,
+        0.464557
+      ],
+      "b": [
+        0.2712766,
+        0.5012658
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-33434340762c786e"
+      ]
+    },
+    {
+      "id": "raster-centreline-8fb7c25726133efc",
+      "page": 1,
+      "a": [
+        0.7663666,
+        0.9158228
+      ],
+      "b": [
+        0.8363339,
+        0.9158228
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-229632802664dc53"
+      ]
+    },
+    {
+      "id": "raster-centreline-901ff3afdaa961fa",
+      "page": 1,
+      "a": [
+        0.0278373,
+        0.5791343
+      ],
+      "b": [
+        0.0527823,
+        0.5778481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9e3652e45524b314",
+        "raster-stroke-a57d99c40fc74344",
+        "raster-stroke-f60e289814427fb5"
+      ]
+    },
+    {
+      "id": "raster-centreline-9086a788d3eaf72a",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.6984177
+      ],
+      "b": [
+        0.5184124,
+        0.6984177
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-815582165515520d",
+        "raster-stroke-82f9e040dea8a642"
+      ]
+    },
+    {
+      "id": "raster-centreline-91ae46bc80c66a8a",
+      "page": 1,
+      "a": [
+        0.3040098,
+        0.0379747
+      ],
+      "b": [
+        0.4095745,
+        0.0379747
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0efeb1e441539c6c"
+      ]
+    },
+    {
+      "id": "raster-centreline-91b48a45a0614674",
+      "page": 1,
+      "a": [
+        0.3743863,
+        0.4202532
+      ],
+      "b": [
+        0.3972995,
+        0.4202532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-82d21e6662fec64d"
+      ]
+    },
+    {
+      "id": "raster-centreline-93198459c7e55746",
+      "page": 1,
+      "a": [
+        0.8428805,
+        0.6943038
+      ],
+      "b": [
+        0.8682488,
+        0.6943038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5f9a87c04a982f1b"
+      ]
+    },
+    {
+      "id": "raster-centreline-93d2ed89ba0d2d9d",
+      "page": 1,
+      "a": [
+        0.4165303,
+        0.6341772
+      ],
+      "b": [
+        0.4165303,
+        0.6987342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4f9bcb672db23a6d"
+      ]
+    },
+    {
+      "id": "raster-centreline-9407e552582e713d",
+      "page": 1,
+      "a": [
+        0.3531097,
+        0.1955696
+      ],
+      "b": [
+        0.3531097,
+        0.3139241
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-12c5a759b9ecd29c"
+      ]
+    },
+    {
+      "id": "raster-centreline-94226318494538f7",
+      "page": 1,
+      "a": [
+        0.6391162,
+        0.8550633
+      ],
+      "b": [
+        0.6391162,
+        0.9518987
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1a35018f9dbc042f"
+      ]
+    },
+    {
+      "id": "raster-centreline-94cdcfdfd1cc6a4e",
+      "page": 1,
+      "a": [
+        0.6542553,
+        0.4702532
+      ],
+      "b": [
+        0.6693944,
+        0.4702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f148fc79f2aa0d61"
+      ]
+    },
+    {
+      "id": "raster-centreline-955612a53b7629c2",
+      "page": 1,
+      "a": [
+        0.6927169,
+        0.6183544
+      ],
+      "b": [
+        0.7070376,
+        0.6183544
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-61aebf14121be33f"
+      ]
+    },
+    {
+      "id": "raster-centreline-956053b31c083aee",
+      "page": 1,
+      "a": [
+        0.6689853,
+        0.3224684
+      ],
+      "b": [
+        0.7131751,
+        0.3224684
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1af2ce98fa440bac",
+        "raster-stroke-32bc6ae6013bba1a"
+      ]
+    },
+    {
+      "id": "raster-centreline-95ae3437f243d271",
+      "page": 1,
+      "a": [
+        0.0761047,
+        0.8607595
+      ],
+      "b": [
+        0.0928805,
+        0.8607595
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-6ee8ac276866fb42"
+      ]
+    },
+    {
+      "id": "raster-centreline-962078ea78b2bef2",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.9563291
+      ],
+      "b": [
+        0.4644026,
+        0.9563291
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-feab4686c8f33616"
+      ]
+    },
+    {
+      "id": "raster-centreline-96d13bca4765d04c",
+      "page": 1,
+      "a": [
+        0.7880524,
+        0.0468354
+      ],
+      "b": [
+        0.849018,
+        0.0468354
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-dd1167707adccda5"
+      ]
+    },
+    {
+      "id": "raster-centreline-970f7b63d89c8f11",
+      "page": 1,
+      "a": [
+        0.1055646,
+        0.4509493
+      ],
+      "b": [
+        0.1202946,
+        0.4509493
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-44e961eb182f776f",
+        "raster-stroke-63619467a95f459d"
+      ]
+    },
+    {
+      "id": "raster-centreline-9716fc405161cafb",
+      "page": 1,
+      "a": [
+        0.2062193,
+        0.1974684
+      ],
+      "b": [
+        0.242635,
+        0.1968354
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ec5cde5783960656"
+      ]
+    },
+    {
+      "id": "raster-centreline-975f790fb26be14b",
+      "page": 1,
+      "a": [
+        0.7049918,
+        0.4322785
+      ],
+      "b": [
+        0.7049918,
+        0.4702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-cb0e7fbba77d7baa"
+      ]
+    },
+    {
+      "id": "raster-centreline-97cb7802850d9c19",
+      "page": 1,
+      "a": [
+        0.5981997,
+        0.5272152
+      ],
+      "b": [
+        0.5981997,
+        0.5848101
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f566d20987f28a15"
+      ]
+    },
+    {
+      "id": "raster-centreline-991cb7d833041be2",
+      "page": 1,
+      "a": [
+        0.7925532,
+        0.9170886
+      ],
+      "b": [
+        0.7925532,
+        0.9525316
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a8d045dbe975dde5"
+      ]
+    },
+    {
+      "id": "raster-centreline-9999963dc828ab93",
+      "page": 1,
+      "a": [
+        0.4410802,
+        0.5278481
+      ],
+      "b": [
+        0.4864975,
+        0.5278481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-449a9cff96873e15"
+      ]
+    },
+    {
+      "id": "raster-centreline-9b093a962b10e2ec",
+      "page": 1,
+      "a": [
+        0.7189034,
+        0.0474684
+      ],
+      "b": [
+        0.8064648,
+        0.0474684
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5dca2d7bd87915ad"
+      ]
+    },
+    {
+      "id": "raster-centreline-9c5d90bf64163622",
+      "page": 1,
+      "a": [
+        0.1518003,
+        0.8588608
+      ],
+      "b": [
+        0.1722586,
+        0.8588608
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3b6aff99bc21d9ba"
+      ]
+    },
+    {
+      "id": "raster-centreline-9c85627e7bf0d98f",
+      "page": 1,
+      "a": [
+        0.1501637,
+        0.4493671
+      ],
+      "b": [
+        0.1726678,
+        0.4493671
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-cc8ead81e4254d90"
+      ]
+    },
+    {
+      "id": "raster-centreline-9cb58176b2f18424",
+      "page": 1,
+      "a": [
+        0.0601473,
+        0.9607595
+      ],
+      "b": [
+        0.1513912,
+        0.9588608
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0038c3be4973b5ef"
+      ]
+    },
+    {
+      "id": "raster-centreline-9da31a9fec7c61c5",
+      "page": 1,
+      "a": [
+        0.0597381,
+        0.0414557
+      ],
+      "b": [
+        0.1759411,
+        0.0414557
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-844e9914add9755d",
+        "raster-stroke-e27fa852be43586b"
+      ]
+    },
+    {
+      "id": "raster-centreline-9e0eb47e922a6d3b",
+      "page": 1,
+      "a": [
+        0.7226165,
+        0.8708854
+      ],
+      "b": [
+        0.7234349,
+        0.9512651
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7ebb821c18850def",
+        "raster-stroke-f7e5f0a82ae0167d"
+      ]
+    },
+    {
+      "id": "raster-centreline-9f293968f5c95484",
+      "page": 1,
+      "a": [
+        0.0621931,
+        0.393038
+      ],
+      "b": [
+        0.0621931,
+        0.678481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-56aee4ee569c95ac"
+      ]
+    },
+    {
+      "id": "raster-centreline-9fad060607f68a53",
+      "page": 1,
+      "a": [
+        0.2718903,
+        0.55
+      ],
+      "b": [
+        0.2718903,
+        0.5873418
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0ebaaa052e7e3a30",
+        "raster-stroke-366dd78f894c6b75"
+      ]
+    },
+    {
+      "id": "raster-centreline-9fd865dcd293b5c3",
+      "page": 1,
+      "a": [
+        0.9181669,
+        0.2911392
+      ],
+      "b": [
+        0.9181669,
+        0.3272152
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-06f2241f95a4c7d7"
+      ]
+    },
+    {
+      "id": "raster-centreline-9fe12aa8344cf25d",
+      "page": 1,
+      "a": [
+        0.2880524,
+        0.7
+      ],
+      "b": [
+        0.3559738,
+        0.7
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0331fee29611409e"
+      ]
+    },
+    {
+      "id": "raster-centreline-a03855c816ff9c35",
+      "page": 1,
+      "a": [
+        0.6243863,
+        0.9151899
+      ],
+      "b": [
+        0.6243863,
+        0.9525316
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-bb6fb455f0191633"
+      ]
+    },
+    {
+      "id": "raster-centreline-a055128110252ad7",
+      "page": 1,
+      "a": [
+        0.0613748,
+        0.1772152
+      ],
+      "b": [
+        0.0613748,
+        0.4702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ce1fc41d38959803"
+      ]
+    },
+    {
+      "id": "raster-centreline-a08206af404f22d9",
+      "page": 1,
+      "a": [
+        0.2729133,
+        0.4025316
+      ],
+      "b": [
+        0.351473,
+        0.4025316
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5efb8ddceb89a1df"
+      ]
+    },
+    {
+      "id": "raster-centreline-a099c7c19ebf708c",
+      "page": 1,
+      "a": [
+        0.7041735,
+        0.3860759
+      ],
+      "b": [
+        0.7041735,
+        0.4696203
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-920f4b64c08bff3c"
+      ]
+    },
+    {
+      "id": "raster-centreline-a0a0c0ab23f481af",
+      "page": 1,
+      "a": [
+        0.2254501,
+        0.8582278
+      ],
+      "b": [
+        0.2716858,
+        0.8588608
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-235203832f0904fd"
+      ]
+    },
+    {
+      "id": "raster-centreline-a0c1b9c4b3e98e2d",
+      "page": 1,
+      "a": [
+        0.6730769,
+        0.9518987
+      ],
+      "b": [
+        0.8756137,
+        0.9518987
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-da7205702a6656f5"
+      ]
+    },
+    {
+      "id": "raster-centreline-a16554751c0e35dc",
+      "page": 1,
+      "a": [
+        0.3731588,
+        0.3493671
+      ],
+      "b": [
+        0.3739771,
+        0.3272152
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-bfe4ff31160e0f26"
+      ]
+    },
+    {
+      "id": "raster-centreline-a2b7a23c913cd3ac",
+      "page": 1,
+      "a": [
+        0.3252864,
+        0.314557
+      ],
+      "b": [
+        0.3527005,
+        0.3139241
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-13e20a293e0c9a46"
+      ]
+    },
+    {
+      "id": "raster-centreline-a42769c516d59a00",
+      "page": 1,
+      "a": [
+        0.5851064,
+        0.8537975
+      ],
+      "b": [
+        0.705401,
+        0.8537975
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-6bc15dabcc1fce17"
+      ]
+    },
+    {
+      "id": "raster-centreline-a4acd93a939b35a5",
+      "page": 1,
+      "a": [
+        0.8527005,
+        0.6164557
+      ],
+      "b": [
+        0.8678396,
+        0.6164557
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-42d430d019c8cd0c"
+      ]
+    },
+    {
+      "id": "raster-centreline-a62654912262806c",
+      "page": 1,
+      "a": [
+        0.4791326,
+        0.9544304
+      ],
+      "b": [
+        0.6043372,
+        0.9544304
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-154e1347543c6cde"
+      ]
+    },
+    {
+      "id": "raster-centreline-a6cc68a26128c7cc",
+      "page": 1,
+      "a": [
+        0.2618658,
+        0.2398734
+      ],
+      "b": [
+        0.2630933,
+        0.3841772
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1d7768ed7b376c9f",
+        "raster-stroke-376f84aba583fb75"
+      ]
+    },
+    {
+      "id": "raster-centreline-a8d609614e9f75f8",
+      "page": 1,
+      "a": [
+        0.3899345,
+        0.5810127
+      ],
+      "b": [
+        0.3899345,
+        0.6037975
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-8165afe6c790f92e"
+      ]
+    },
+    {
+      "id": "raster-centreline-aa0da94fb8dce08f",
+      "page": 1,
+      "a": [
+        0.49018,
+        0.9227848
+      ],
+      "b": [
+        0.5090016,
+        0.9227848
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-419755538cd31bb8"
+      ]
+    },
+    {
+      "id": "raster-centreline-aa8a24844560a847",
+      "page": 1,
+      "a": [
+        0.5536007,
+        0.193038
+      ],
+      "b": [
+        0.6202946,
+        0.193038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1ae31c739a181e1c"
+      ]
+    },
+    {
+      "id": "raster-centreline-aaec47e029a34d76",
+      "page": 1,
+      "a": [
+        0.5936989,
+        0.8556962
+      ],
+      "b": [
+        0.5936989,
+        0.9525316
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-496afb5a57f659bd"
+      ]
+    },
+    {
+      "id": "raster-centreline-ac201d71a9b9f0db",
+      "page": 1,
+      "a": [
+        0.6284779,
+        0.1917722
+      ],
+      "b": [
+        0.7512275,
+        0.1917722
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f9592ab371e1bc64"
+      ]
+    },
+    {
+      "id": "raster-centreline-ac7fba19129bce0e",
+      "page": 1,
+      "a": [
+        0.5278232,
+        0.5272152
+      ],
+      "b": [
+        0.5278232,
+        0.55
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-d0040aea95be5942"
+      ]
+    },
+    {
+      "id": "raster-centreline-ae57141e0b740639",
+      "page": 1,
+      "a": [
+        0.7418167,
+        0.8512658
+      ],
+      "b": [
+        0.9140753,
+        0.8512658
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-94b2efeee8ca8efc",
+        "raster-stroke-afdcd3c4c67605e6",
+        "raster-stroke-f3a85dc0a65fd99f"
+      ]
+    },
+    {
+      "id": "raster-centreline-af19363dd4554dbb",
+      "page": 1,
+      "a": [
+        0.7671849,
+        0.0322785
+      ],
+      "b": [
+        0.9099836,
+        0.0322785
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4e90f48ef73c8bb1"
+      ]
+    },
+    {
+      "id": "raster-centreline-af3da0b88a65c1e4",
+      "page": 1,
+      "a": [
+        0.2639116,
+        0.656962
+      ],
+      "b": [
+        0.289689,
+        0.656962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-baf423466a9831b8"
+      ]
+    },
+    {
+      "id": "raster-centreline-affed622739a9076",
+      "page": 1,
+      "a": [
+        0.6239771,
+        0.8563291
+      ],
+      "b": [
+        0.6239771,
+        0.9468354
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7122a9a23e9f41e0"
+      ]
+    },
+    {
+      "id": "raster-centreline-b0d99b6aac89d28f",
+      "page": 1,
+      "a": [
+        0.2900982,
+        0.5949367
+      ],
+      "b": [
+        0.2905074,
+        0.6531646
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e747e8c6796ce314"
+      ]
+    },
+    {
+      "id": "raster-centreline-b1207bca8a12bd38",
+      "page": 1,
+      "a": [
+        0.742635,
+        0.9398734
+      ],
+      "b": [
+        0.7626841,
+        0.9398734
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a08b782310d25086"
+      ]
+    },
+    {
+      "id": "raster-centreline-b1299e05b4da26d4",
+      "page": 1,
+      "a": [
+        0.9128478,
+        0.435443
+      ],
+      "b": [
+        0.9128478,
+        0.7424051
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-02f09125396e462b"
+      ]
+    },
+    {
+      "id": "raster-centreline-b15a149b202460a6",
+      "page": 1,
+      "a": [
+        0.747545,
+        0.9278481
+      ],
+      "b": [
+        0.8576105,
+        0.9278481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3cc95cda4986eb72"
+      ]
+    },
+    {
+      "id": "raster-centreline-b163d22afd873dbb",
+      "page": 1,
+      "a": [
+        0.3113748,
+        0.3379747
+      ],
+      "b": [
+        0.3424714,
+        0.3379747
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5a81e39d0d24c603"
+      ]
+    },
+    {
+      "id": "raster-centreline-b2ac08e2fa636711",
+      "page": 1,
+      "a": [
+        0.8261047,
+        0.1898734
+      ],
+      "b": [
+        0.849018,
+        0.1898734
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3bf7a21aa87545d9"
+      ]
+    },
+    {
+      "id": "raster-centreline-b3498a32d807ceb3",
+      "page": 1,
+      "a": [
+        0.5949264,
+        0.5259494
+      ],
+      "b": [
+        0.6624386,
+        0.5259494
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f182e07bee3ef2bb"
+      ]
+    },
+    {
+      "id": "raster-centreline-b3e7b0cff84b188e",
+      "page": 1,
+      "a": [
+        0.3731588,
+        0.3265823
+      ],
+      "b": [
+        0.4296236,
+        0.3265823
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-08f72c43140f2041"
+      ]
+    },
+    {
+      "id": "raster-centreline-b69a8dda8cd2b7dd",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.9553797
+      ],
+      "b": [
+        0.5830606,
+        0.9553797
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-17d76bf998064b3f",
+        "raster-stroke-260eb5975d8da31b"
+      ]
+    },
+    {
+      "id": "raster-centreline-b75c8933b35fc27e",
+      "page": 1,
+      "a": [
+        0.3130115,
+        0.6556962
+      ],
+      "b": [
+        0.3318331,
+        0.6556962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-54d31f8ff76d097d"
+      ]
+    },
+    {
+      "id": "raster-centreline-b7de3c3f95740971",
+      "page": 1,
+      "a": [
+        0.4697218,
+        0.8550633
+      ],
+      "b": [
+        0.6027005,
+        0.8550633
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-0ccf43203d3cb3a1"
+      ]
+    },
+    {
+      "id": "raster-centreline-b87fc4f308db5169",
+      "page": 1,
+      "a": [
+        0.3031915,
+        0.9082278
+      ],
+      "b": [
+        0.3187398,
+        0.9082278
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-4c8f30aba155d9ac"
+      ]
+    },
+    {
+      "id": "raster-centreline-b8e5c3cad9542b8f",
+      "page": 1,
+      "a": [
+        0.4623568,
+        0.25
+      ],
+      "b": [
+        0.4623568,
+        0.271519
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-277751b1b80157c9"
+      ]
+    },
+    {
+      "id": "raster-centreline-bccc71b47fbeb8d0",
+      "page": 1,
+      "a": [
+        0.3670213,
+        0.9556962
+      ],
+      "b": [
+        0.4905892,
+        0.9556962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-05025657fdac4da5"
+      ]
+    },
+    {
+      "id": "raster-centreline-bf8024de3b240c05",
+      "page": 1,
+      "a": [
+        0.4537643,
+        0.1943038
+      ],
+      "b": [
+        0.5167758,
+        0.1943038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-68401f2f12383c1c"
+      ]
+    },
+    {
+      "id": "raster-centreline-c06fa2d1ac6ef692",
+      "page": 1,
+      "a": [
+        0.9120295,
+        0.2594937
+      ],
+      "b": [
+        0.9120295,
+        0.5424051
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1aee08665d6c0f86"
+      ]
+    },
+    {
+      "id": "raster-centreline-c37e96aa3f2e8e37",
+      "page": 1,
+      "a": [
+        0.601473,
+        0.0341772
+      ],
+      "b": [
+        0.6984452,
+        0.0341772
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7216d8db65b38ed1"
+      ]
+    },
+    {
+      "id": "raster-centreline-c4678ab1a095ff8a",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.4727848
+      ],
+      "b": [
+        0.4885434,
+        0.4727848
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-6208fe29959269f7"
+      ]
+    },
+    {
+      "id": "raster-centreline-c548fe684d775d90",
+      "page": 1,
+      "a": [
+        0.638707,
+        0.9525316
+      ],
+      "b": [
+        0.7782324,
+        0.9525316
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2b4fb8afc1c5a402"
+      ]
+    },
+    {
+      "id": "raster-centreline-c601cb228f2b3dd5",
+      "page": 1,
+      "a": [
+        0.4304419,
+        0.8556962
+      ],
+      "b": [
+        0.4304419,
+        0.9544304
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-035ce95a8ab3cb02",
+        "raster-stroke-83869d7bfd188aae",
+        "raster-stroke-a339b37a731b8ebb"
+      ]
+    },
+    {
+      "id": "raster-centreline-c6f230d07ff01bb2",
+      "page": 1,
+      "a": [
+        0.8387889,
+        0.0462025
+      ],
+      "b": [
+        0.9095745,
+        0.0462025
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7203e244304dbd27"
+      ]
+    },
+    {
+      "id": "raster-centreline-c7dc9f140cdec946",
+      "page": 1,
+      "a": [
+        0.5912439,
+        0.9531646
+      ],
+      "b": [
+        0.7328151,
+        0.9531646
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-693a2ce0131bf04d"
+      ]
+    },
+    {
+      "id": "raster-centreline-c868b256176c0f5d",
+      "page": 1,
+      "a": [
+        0.2479542,
+        0.956962
+      ],
+      "b": [
+        0.4198036,
+        0.956962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-19f0a18c9c6bb334"
+      ]
+    },
+    {
+      "id": "raster-centreline-c9d25ec33e7443cd",
+      "page": 1,
+      "a": [
+        0.5671031,
+        0.9221519
+      ],
+      "b": [
+        0.5863339,
+        0.9221519
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7b5cc3b27242bb47"
+      ]
+    },
+    {
+      "id": "raster-centreline-c9f1b20bb26e9156",
+      "page": 1,
+      "a": [
+        0.898527,
+        0.9246835
+      ],
+      "b": [
+        0.898527,
+        0.9518987
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-48ea6cdd499d3e96"
+      ]
+    },
+    {
+      "id": "raster-centreline-ca0b8a6f6c991a2a",
+      "page": 1,
+      "a": [
+        0.0728314,
+        0.0405063
+      ],
+      "b": [
+        0.2135843,
+        0.0405063
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-61dd5b482025166a"
+      ]
+    },
+    {
+      "id": "raster-centreline-ca32f0fd0b6153d5",
+      "page": 1,
+      "a": [
+        0.2066285,
+        0.1981013
+      ],
+      "b": [
+        0.2066285,
+        0.2202532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9b1ec5f8f760b327"
+      ]
+    },
+    {
+      "id": "raster-centreline-cb3eaa7a30cbac5a",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.0360759
+      ],
+      "b": [
+        0.5630115,
+        0.0360759
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2dc22c25a080d312"
+      ]
+    },
+    {
+      "id": "raster-centreline-cb48ac93d60b7f49",
+      "page": 1,
+      "a": [
+        0.9202128,
+        0.7797468
+      ],
+      "b": [
+        0.9202128,
+        0.8177215
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-bfe730845afbfa11"
+      ]
+    },
+    {
+      "id": "raster-centreline-cd13bca0384f2714",
+      "page": 1,
+      "a": [
+        0.9124386,
+        0.3594937
+      ],
+      "b": [
+        0.9124386,
+        0.6120253
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3ab941bba14ac8c7"
+      ]
+    },
+    {
+      "id": "raster-centreline-d1d1aeb1b24a6ce6",
+      "page": 1,
+      "a": [
+        0.6051555,
+        0.6196203
+      ],
+      "b": [
+        0.6747136,
+        0.6183544
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-2b4209c937898811"
+      ]
+    },
+    {
+      "id": "raster-centreline-d3a7bde5a86f1ac3",
+      "page": 1,
+      "a": [
+        0.7585925,
+        0.9158228
+      ],
+      "b": [
+        0.7590016,
+        0.9392405
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f7ff6f740006b20a"
+      ]
+    },
+    {
+      "id": "raster-centreline-d3f00779c359d844",
+      "page": 1,
+      "a": [
+        0.8506547,
+        0.8227848
+      ],
+      "b": [
+        0.8670213,
+        0.8272152
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3efe47bdb884f940"
+      ]
+    },
+    {
+      "id": "raster-centreline-d6556b29d4bd071e",
+      "page": 1,
+      "a": [
+        0.9099836,
+        0.0291139
+      ],
+      "b": [
+        0.9099836,
+        0.1246835
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-24188034029fd2b4"
+      ]
+    },
+    {
+      "id": "raster-centreline-d666e20f6c855dba",
+      "page": 1,
+      "a": [
+        0.9177578,
+        0.2392405
+      ],
+      "b": [
+        0.9177578,
+        0.2683544
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-d396f6679e5b0f33",
+        "raster-stroke-d83c6b0369fd85ce"
+      ]
+    },
+    {
+      "id": "raster-centreline-d7386dd655ccabde",
+      "page": 1,
+      "a": [
+        0.1624386,
+        0.45
+      ],
+      "b": [
+        0.1804419,
+        0.45
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7c0e454b5dd8a50f"
+      ]
+    },
+    {
+      "id": "raster-centreline-d976e966814803f2",
+      "page": 1,
+      "a": [
+        0.5838789,
+        0.471519
+      ],
+      "b": [
+        0.5981997,
+        0.471519
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-85c7faab06d9e25f"
+      ]
+    },
+    {
+      "id": "raster-centreline-d983b12bc9f4fd64",
+      "page": 1,
+      "a": [
+        0.7205401,
+        0.1911392
+      ],
+      "b": [
+        0.8134206,
+        0.1911392
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b26f214937fb4280"
+      ]
+    },
+    {
+      "id": "raster-centreline-da0368f53391ab6f",
+      "page": 1,
+      "a": [
+        0.8506547,
+        0.8398734
+      ],
+      "b": [
+        0.8531097,
+        0.8183544
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-96750bc3068a4aa4"
+      ]
+    },
+    {
+      "id": "raster-centreline-daf1ddc773b1ff15",
+      "page": 1,
+      "a": [
+        0.0609656,
+        0.0886076
+      ],
+      "b": [
+        0.0609656,
+        0.3563291
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-32bed6a7258a282f"
+      ]
+    },
+    {
+      "id": "raster-centreline-db73fa56da0f752c",
+      "page": 1,
+      "a": [
+        0.5781506,
+        0.8575949
+      ],
+      "b": [
+        0.5785597,
+        0.9291139
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ddf7c2903938b475",
+        "raster-stroke-e34fb7b25cfcaa2f"
+      ]
+    },
+    {
+      "id": "raster-centreline-db7b55701633f0d2",
+      "page": 1,
+      "a": [
+        0.6260229,
+        0.4702532
+      ],
+      "b": [
+        0.646072,
+        0.4702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1772f882f016f86f"
+      ]
+    },
+    {
+      "id": "raster-centreline-db91741cc57538f0",
+      "page": 1,
+      "a": [
+        0.7557283,
+        0.6949367
+      ],
+      "b": [
+        0.7815057,
+        0.6949367
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-50563a2ba07c842b"
+      ]
+    },
+    {
+      "id": "raster-centreline-dbe599c10a2fec5f",
+      "page": 1,
+      "a": [
+        0.2786416,
+        0.3158228
+      ],
+      "b": [
+        0.2786416,
+        0.3379747
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-31e006c95e8cbe80"
+      ]
+    },
+    {
+      "id": "raster-centreline-dcda0b8805babc0e",
+      "page": 1,
+      "a": [
+        0.4026187,
+        0.621519
+      ],
+      "b": [
+        0.4255319,
+        0.621519
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-91b7e204abce59d9"
+      ]
+    },
+    {
+      "id": "raster-centreline-df90d1ac74497970",
+      "page": 1,
+      "a": [
+        0.0282372,
+        0.6010758
+      ],
+      "b": [
+        0.0527871,
+        0.6004429
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3dfcb57dfdca0546",
+        "raster-stroke-404db7bb7dce43a6",
+        "raster-stroke-4ebaf27b70714a25"
+      ]
+    },
+    {
+      "id": "raster-centreline-df90db74db73f5b5",
+      "page": 1,
+      "a": [
+        0.849018,
+        0.143038
+      ],
+      "b": [
+        0.849018,
+        0.1765823
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-c837ac4eeff221b8"
+      ]
+    },
+    {
+      "id": "raster-centreline-dfc3f70bf55825e0",
+      "page": 1,
+      "a": [
+        0.913257,
+        0.4860759
+      ],
+      "b": [
+        0.913257,
+        0.9518987
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-393c5e3c50507368",
+        "raster-stroke-42bdfca3b161f65f",
+        "raster-stroke-44308c49d55051ac",
+        "raster-stroke-70f145a398ef84c9",
+        "raster-stroke-c555454ab6accc11"
+      ]
+    },
+    {
+      "id": "raster-centreline-e09e687f45f2d78d",
+      "page": 1,
+      "a": [
+        0.6698036,
+        0.4702532
+      ],
+      "b": [
+        0.6886252,
+        0.4702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e7aa544081e8097a"
+      ]
+    },
+    {
+      "id": "raster-centreline-e1162d5a50f2128a",
+      "page": 1,
+      "a": [
+        0.5793781,
+        0.2481013
+      ],
+      "b": [
+        0.5793781,
+        0.2702532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-ebbcacfe05c29c0a"
+      ]
+    },
+    {
+      "id": "raster-centreline-e195c649c296f591",
+      "page": 1,
+      "a": [
+        0.5998363,
+        0.1924051
+      ],
+      "b": [
+        0.6571195,
+        0.1924051
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-c07cbfbe607096cb"
+      ]
+    },
+    {
+      "id": "raster-centreline-e1b81fc283fa063f",
+      "page": 1,
+      "a": [
+        0.3375614,
+        0.8607595
+      ],
+      "b": [
+        0.3375614,
+        0.9556962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-eb16843a9995a2dc"
+      ]
+    },
+    {
+      "id": "raster-centreline-e2c4ad6179aee7e1",
+      "page": 1,
+      "a": [
+        0.4697218,
+        0.8550633
+      ],
+      "b": [
+        0.4905892,
+        0.8550633
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e2a9d810c4141f45"
+      ]
+    },
+    {
+      "id": "raster-centreline-e2e49928d6b484ba",
+      "page": 1,
+      "a": [
+        0.6309329,
+        0.5253165
+      ],
+      "b": [
+        0.695581,
+        0.5253165
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1b0686ff694f224d"
+      ]
+    },
+    {
+      "id": "raster-centreline-e3e0cbdd67b9938a",
+      "page": 1,
+      "a": [
+        0.5280278,
+        0.6196203
+      ],
+      "b": [
+        0.5280278,
+        0.643038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b2d3cbb1a905163f",
+        "raster-stroke-cb8424aa9973a3c9"
+      ]
+    },
+    {
+      "id": "raster-centreline-e4606efd25645ead",
+      "page": 1,
+      "a": [
+        0.5630115,
+        0.6968354
+      ],
+      "b": [
+        0.6256137,
+        0.6968354
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-705d1a16dc7791df"
+      ]
+    },
+    {
+      "id": "raster-centreline-e4990426b69f97d2",
+      "page": 1,
+      "a": [
+        0.0572831,
+        0.8525316
+      ],
+      "b": [
+        0.0572831,
+        0.8848101
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-bbeecc52ec380b9d"
+      ]
+    },
+    {
+      "id": "raster-centreline-e499b7e4dc6db259",
+      "page": 1,
+      "a": [
+        0.4828151,
+        0.035443
+      ],
+      "b": [
+        0.5957447,
+        0.035443
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-79c50b8a9fe69114"
+      ]
+    },
+    {
+      "id": "raster-centreline-e60bba7ccc2c1016",
+      "page": 1,
+      "a": [
+        0.4779051,
+        0.0582278
+      ],
+      "b": [
+        0.4938625,
+        0.0582278
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-f321cf4349411b0d"
+      ]
+    },
+    {
+      "id": "raster-centreline-e61be1224dd4d642",
+      "page": 1,
+      "a": [
+        0.9116203,
+        0.2082278
+      ],
+      "b": [
+        0.9116203,
+        0.4177215
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-30afae79dccdadef"
+      ]
+    },
+    {
+      "id": "raster-centreline-e61e89e9d2f8509b",
+      "page": 1,
+      "a": [
+        0.7291326,
+        0.4689873
+      ],
+      "b": [
+        0.7900982,
+        0.4689873
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-12596b0c5d3a8c19"
+      ]
+    },
+    {
+      "id": "raster-centreline-e6d45223b067543c",
+      "page": 1,
+      "a": [
+        0.9169394,
+        0.0594937
+      ],
+      "b": [
+        0.9169394,
+        0.0936709
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a92f4edd7b2466da"
+      ]
+    },
+    {
+      "id": "raster-centreline-e7663ac660db6eb3",
+      "page": 1,
+      "a": [
+        0.4693126,
+        0.543038
+      ],
+      "b": [
+        0.4693126,
+        0.5689873
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-bc4d067210e27c66"
+      ]
+    },
+    {
+      "id": "raster-centreline-e7fbff94808c7e08",
+      "page": 1,
+      "a": [
+        0.3207856,
+        0.9411392
+      ],
+      "b": [
+        0.4566285,
+        0.9411392
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-fc3e6101b16936f8"
+      ]
+    },
+    {
+      "id": "raster-centreline-e853046f57859141",
+      "page": 1,
+      "a": [
+        0.301964,
+        0.864557
+      ],
+      "b": [
+        0.3027823,
+        0.9582278
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-241f47989c80804d"
+      ]
+    },
+    {
+      "id": "raster-centreline-e8ea803ebb691b65",
+      "page": 1,
+      "a": [
+        0.3527005,
+        0.1968354
+      ],
+      "b": [
+        0.3527005,
+        0.2240506
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-d3b4f765953f988c"
+      ]
+    },
+    {
+      "id": "raster-centreline-e94e25fc5f84037e",
+      "page": 1,
+      "a": [
+        0.5499182,
+        0.9310127
+      ],
+      "b": [
+        0.5638298,
+        0.9310127
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-894627590c292c46"
+      ]
+    },
+    {
+      "id": "raster-centreline-eac9ab82dc209be7",
+      "page": 1,
+      "a": [
+        0.5781506,
+        0.3234177
+      ],
+      "b": [
+        0.6207038,
+        0.3240506
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a3466288fa0b8820"
+      ]
+    },
+    {
+      "id": "raster-centreline-eb42c8ed2e9f0143",
+      "page": 1,
+      "a": [
+        0.2606383,
+        0.8582278
+      ],
+      "b": [
+        0.289689,
+        0.8588608
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-efdff40c52dd380d"
+      ]
+    },
+    {
+      "id": "raster-centreline-eb72f5fbef71aa0d",
+      "page": 1,
+      "a": [
+        0.5216858,
+        0.3968354
+      ],
+      "b": [
+        0.5216858,
+        0.4183544
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e5523c6dc52e316e"
+      ]
+    },
+    {
+      "id": "raster-centreline-ec3e931b0fc7aad3",
+      "page": 1,
+      "a": [
+        0.3731588,
+        0.3259494
+      ],
+      "b": [
+        0.4905892,
+        0.3259494
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-010a047624993372"
+      ]
+    },
+    {
+      "id": "raster-centreline-ec466c4c32b3fb6c",
+      "page": 1,
+      "a": [
+        0.7225859,
+        0.9405063
+      ],
+      "b": [
+        0.7651391,
+        0.9405063
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1c18d4c7d1343561"
+      ]
+    },
+    {
+      "id": "raster-centreline-ec640ca97dc22978",
+      "page": 1,
+      "a": [
+        0.6031097,
+        0.6962025
+      ],
+      "b": [
+        0.6710311,
+        0.6962025
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-09ca652732ff03e5"
+      ]
+    },
+    {
+      "id": "raster-centreline-ecc18d8166766fea",
+      "page": 1,
+      "a": [
+        0.789689,
+        0.6943038
+      ],
+      "b": [
+        0.804419,
+        0.6943038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3f6ac63bbda2567a"
+      ]
+    },
+    {
+      "id": "raster-centreline-ecc7f2de68b057f2",
+      "page": 1,
+      "a": [
+        0.3997545,
+        0.9550633
+      ],
+      "b": [
+        0.4905892,
+        0.9550633
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-c7fb6d82603ad5f9"
+      ]
+    },
+    {
+      "id": "raster-centreline-f00086cf214f02ef",
+      "page": 1,
+      "a": [
+        0.0646452,
+        0.861076
+      ],
+      "b": [
+        0.1223433,
+        0.8598101
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-416cfd5693b87007",
+        "raster-stroke-433d88d65e7f3aba"
+      ]
+    },
+    {
+      "id": "raster-centreline-f08c9f8272ce55ce",
+      "page": 1,
+      "a": [
+        0.3457447,
+        0.8560126
+      ],
+      "b": [
+        0.4905892,
+        0.8560126
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-31db37f9760a3f10",
+        "raster-stroke-d3a461d62a76185d"
+      ]
+    },
+    {
+      "id": "raster-centreline-f17ca90a53cf7097",
+      "page": 1,
+      "a": [
+        0.8498363,
+        0.143038
+      ],
+      "b": [
+        0.8649755,
+        0.143038
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9d08e46c9b346a79"
+      ]
+    },
+    {
+      "id": "raster-centreline-f1c513a01a9a19af",
+      "page": 1,
+      "a": [
+        0.8179214,
+        0.914557
+      ],
+      "b": [
+        0.9144845,
+        0.914557
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-7db57144777c2630",
+        "raster-stroke-965fa519b5f51c1a",
+        "raster-stroke-f20ceeb1331fe686"
+      ]
+    },
+    {
+      "id": "raster-centreline-f1ccf277a0e488aa",
+      "page": 1,
+      "a": [
+        0.8232406,
+        0.4677215
+      ],
+      "b": [
+        0.8383797,
+        0.4670886
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-dc0ca958074ec30b"
+      ]
+    },
+    {
+      "id": "raster-centreline-f1fb4dcb3d6396b3",
+      "page": 1,
+      "a": [
+        0.0351882,
+        0.6018987
+      ],
+      "b": [
+        0.0490998,
+        0.6018987
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-5df26fa3cb4c7d0b"
+      ]
+    },
+    {
+      "id": "raster-centreline-f20fbf41300fbaf0",
+      "page": 1,
+      "a": [
+        0.5834697,
+        0.6196203
+      ],
+      "b": [
+        0.6047463,
+        0.6196203
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-b5b492f1d9668793"
+      ]
+    },
+    {
+      "id": "raster-centreline-f2a9deb3bb8b0b5e",
+      "page": 1,
+      "a": [
+        0.3993453,
+        0.6987342
+      ],
+      "b": [
+        0.4218494,
+        0.6987342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9b65b25eb902cfd2"
+      ]
+    },
+    {
+      "id": "raster-centreline-f2ce0fef297511fd",
+      "page": 1,
+      "a": [
+        0.3236498,
+        0.9164557
+      ],
+      "b": [
+        0.3379705,
+        0.9164557
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9b9183b09ba994cc"
+      ]
+    },
+    {
+      "id": "raster-centreline-f4c77a2460abe7ce",
+      "page": 1,
+      "a": [
+        0.1984452,
+        0.8588608
+      ],
+      "b": [
+        0.2135843,
+        0.8594937
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e417504830c65e65"
+      ]
+    },
+    {
+      "id": "raster-centreline-f5129b3f51b281ac",
+      "page": 1,
+      "a": [
+        0.7229951,
+        0.8537975
+      ],
+      "b": [
+        0.7234043,
+        0.9113924
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-66788ee67baecdbc"
+      ]
+    },
+    {
+      "id": "raster-centreline-f98071460830dedf",
+      "page": 1,
+      "a": [
+        0.7356792,
+        0.3227848
+      ],
+      "b": [
+        0.7585925,
+        0.3227848
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-c1ec933e6489a182"
+      ]
+    },
+    {
+      "id": "raster-centreline-f99dbcf4ec215e28",
+      "page": 1,
+      "a": [
+        0.3293781,
+        0.4632911
+      ],
+      "b": [
+        0.344108,
+        0.4632911
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-912b66731d63c658"
+      ]
+    },
+    {
+      "id": "raster-centreline-f9ef205c0c50c7ee",
+      "page": 1,
+      "a": [
+        0.2643208,
+        0.656962
+      ],
+      "b": [
+        0.2643208,
+        0.6924051
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-6454ba379e94ee84"
+      ]
+    },
+    {
+      "id": "raster-centreline-f9fa78d66a7d77f0",
+      "page": 1,
+      "a": [
+        0.1996727,
+        0.4493671
+      ],
+      "b": [
+        0.2815057,
+        0.4493671
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-614b741ccf8f1e33"
+      ]
+    },
+    {
+      "id": "raster-centreline-fa67b11439ce73a1",
+      "page": 1,
+      "a": [
+        0.4500818,
+        0.528481
+      ],
+      "b": [
+        0.4652209,
+        0.528481
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e7c1a0103d7e9266"
+      ]
+    },
+    {
+      "id": "raster-centreline-fa97b3c43ae06d38",
+      "page": 1,
+      "a": [
+        0.4063011,
+        0.9240506
+      ],
+      "b": [
+        0.4202128,
+        0.9240506
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-157048f34ce22752"
+      ]
+    },
+    {
+      "id": "raster-centreline-fb0d0d28a5485290",
+      "page": 1,
+      "a": [
+        0.301964,
+        0.856962
+      ],
+      "b": [
+        0.4345336,
+        0.856962
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-e4cd1adf78fba023"
+      ]
+    },
+    {
+      "id": "raster-centreline-fbc012fac808a3cb",
+      "page": 1,
+      "a": [
+        0.5986088,
+        0.5575949
+      ],
+      "b": [
+        0.5986088,
+        0.6158228
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1f62f6c7f1067fb3"
+      ]
+    },
+    {
+      "id": "raster-centreline-fbf4540e3bc06796",
+      "page": 1,
+      "a": [
+        0.2815057,
+        0.1968354
+      ],
+      "b": [
+        0.3445172,
+        0.1968354
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-11d6479ec267e0d1"
+      ]
+    },
+    {
+      "id": "raster-centreline-fc3cc0c47365ebd0",
+      "page": 1,
+      "a": [
+        0.3797054,
+        0.6987342
+      ],
+      "b": [
+        0.4672668,
+        0.6987342
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1c25aa360ab71452"
+      ]
+    },
+    {
+      "id": "raster-centreline-fe35567449c09bc5",
+      "page": 1,
+      "a": [
+        0.4693126,
+        0.5753165
+      ],
+      "b": [
+        0.4693126,
+        0.6177215
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-87ad592730d1f226",
+        "raster-stroke-a96b50cb0989b16f",
+        "raster-stroke-f051f2fd6bd31625"
+      ]
+    },
+    {
+      "id": "raster-centreline-fed2ba337db13213",
+      "page": 1,
+      "a": [
+        0.4124386,
+        0.6341772
+      ],
+      "b": [
+        0.4574468,
+        0.6341772
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-a65cf2685802a03d"
+      ]
+    },
+    {
+      "id": "raster-centreline-fee42c03bce0a74c",
+      "page": 1,
+      "a": [
+        0.4451718,
+        0.3392405
+      ],
+      "b": [
+        0.4451718,
+        0.4734177
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-3dbdbac02675cad2",
+        "raster-stroke-d4410f16f3279685",
+        "raster-stroke-dd7e5bdaa93fa1f8"
+      ]
+    },
+    {
+      "id": "raster-centreline-ffbc5d320d51028d",
+      "page": 1,
+      "a": [
+        0.2630933,
+        0.3151899
+      ],
+      "b": [
+        0.2909165,
+        0.3151899
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-1ea39d72372940bc"
+      ]
+    },
+    {
+      "id": "raster-centreline-fff48be174766f1d",
+      "page": 1,
+      "a": [
+        0.3600655,
+        0.5601266
+      ],
+      "b": [
+        0.3600655,
+        0.585443
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-9242632adad35afd"
+      ]
+    },
+    {
+      "id": "raster-centreline-ffff56c810ea78ad",
+      "page": 1,
+      "a": [
+        0.5204583,
+        0.6202532
+      ],
+      "b": [
+        0.5347791,
+        0.6202532
+      ],
+      "line_kind": "UNKNOWN",
+      "evidence_ids": [
+        "raster-stroke-bba6da2e4c683bb4"
+      ]
+    }
+  ],
+  "ports": [],
+  "junctions": []
+}

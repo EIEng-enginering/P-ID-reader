@@ -1,0 +1,92 @@
+DEVELOP AND INTEGRATE WP04–06 INTO THE CURRENT P&ID READER
+
+The owner has authorised implementing this pack in the program. Work on a local
+feature branch and continue through merge, checks and concrete acceptance
+results. Do not stop after describing a plan. No push is authorised by this
+pack. Do not overwrite unrelated work or replace old whole source files.
+
+TARGET
+Windows directory:
+C:\Users\Admin\OneDrive - Enhance Integration Engineering\Company\006 Calculation Methods\26 P&ID reader
+Repository: https://github.com/EIEng-enginering/P-ID-reader.git
+Retain the owner's exact spelling of the path and repository owner.
+
+READ FIRST
+README.md, docs/DEVELOPMENT_STATUS.md, docs/ACCEPTANCE_AND_MERGE.md,
+contracts/README.md, patches/0001-add-wp456-tab.patch, then new modules and tests.
+
+DISTINGUISH THREE STATES
+1. The actual current repository: inspect git status and its current HEAD.
+2. Attached prior WP123 source snapshot, reportedly main c0908b9. This pack's
+   three GUI hunks target that snapshot, not necessarily today's main.
+3. New WP04–06 development source in this pack, not yet integrated on Windows.
+Never claim (3) is already live or qualified. Do not copy the replay reference
+wp123_recovery.py into the program; it is only evidence of the tested baseline.
+
+CONSTRAINTS
+Python 3.12, PySide6 6.12.0, Windows 11, offline/CPU-only target. Preserve frozen
+Worksheet R1 API/worker/schema v1 and standalone schema v13. New SQLite review
+storage stays separate (%LOCALAPPDATA%\PIDReader\wp456\review.sqlite or the
+explicit PID_WP456_STORE override), outside the repository and synced folders.
+Every output is a proposal. Text reading acceptance is not engineering
+verification. Supporting a drawing hypothesis is not plant connectivity. No
+HAZOP/LOPA/SIL/IPL credit or automatic host writes. No DEXPI conformance claims.
+
+MERGE
+- Preserve the owner's current changes. Create an isolated local feature branch
+  or worktree if needed. Do not reset the user's branch or clean their files.
+- Compare the source snapshot hashes and current files. Inspect existing task
+  lifecycle, database schema and coordinate frame helpers.
+- Run install_wp456.py --check. If clean, apply the additive files and small GUI
+  hook using --apply. If not clean, merge the named new package and three GUI
+  hunks manually. Do not replace main_window.py wholesale.
+- Add repository-native tests and documentation as necessary. Copy additive
+  contracts/examples/tools into suitable nonconflicting paths; preserve their
+  ROOT-relative paths or adapt them deliberately.
+- Check that the tab uses the actual run_task task.result/error/stopped signals
+  and releases busy state on success, failure and cancellation. Check that
+  opening a new drawing resets it and old worker results cannot populate a
+  different drawing/page. No Qt objects or open host SQLite connections are
+  passed into OCR workers; gather stored evidence on the GUI thread first.
+- Verify geometry_from_project against current table/JSON schemas. It is
+  read-only and preserves UNKNOWN stroke classes. Do not silently infer pipe
+  service from solid lines, title-block rules or pixel proximity.
+
+MEASURE AND CORRECT
+- Run the supplied new tests, then the full actual repository suite. Resolve
+  failures, preserving all previous tests. Record exact command, Python/Qt/
+  Tesseract versions, counts, skips and durations.
+- Replay the supplied S418 evidence. The measured new result is deduplication
+  of the duplicate NTS scale field; the bounded experimental OCR did not yet
+  improve the known line/bubble misreads. Do not represent it as an accuracy
+  improvement. The 353 geometry edges are UNKNOWN input centrelines, NOT 353
+  pipes, discovered process connections or a completed P&ID graph.
+- Use the scorer with independently checked, exhaustive-per-class references.
+  examples/S418_annotation_DRAFT.json is only an incomplete seed from prior
+  analyst observations. Leave it DRAFT until a named reviewer verifies all
+  objects in each declared scope. Do not self-approve it or fill missing
+  truth from this program's own output. Keep held-out drawings separate.
+- The training threshold study cannot lower the runtime .65 detector gate and
+  cannot use HOLDOUT rows. General boxes remain unknown/withheld. Reviewer class
+  proposals are explicit separate drawing evidence, not detector calibration.
+- Actual S418 line repairs, reliable FR/720201 reading and wider automatic
+  equipment classification remain performance targets. Improve and remeasure
+  them honestly; never invent an H, a digit or an instrument function merely
+  because a grammar or neighbouring string suggests it.
+
+WINDOWS ACCEPTANCE
+Follow docs/ACCEPTANCE_AND_MERGE.md. Test installed and absent Tesseract, Cancel,
+large/empty crops, all PDF rotations and cropped pages, multiple pages, stale
+worker completion, CSV safety, review chain, unresolved geometry, and errors.
+Run host G4–G7 and independent engineering benchmark when the real fixtures and
+host are available. Mark unavailable checks NOT_RUN/BLOCKED with a reason.
+Do not alter the R1 payload just to make it appear that the raster refusal has
+been solved: this pack intentionally exports a separate proposal envelope.
+Any future R1 mapping must preserve its exact contract and host acceptance.
+
+RETURN TO OWNER
+Give a concise integration report and a downloadable return ZIP containing
+actual merged diffs, new source, exact test logs, S418 before/after outputs,
+Windows acceptance findings and unresolved issues. Report code implementation,
+measured extraction performance and engineering qualification separately.
+Do not commit/push/publish unless the owner has separately authorised that step.

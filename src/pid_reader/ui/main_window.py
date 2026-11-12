@@ -28,6 +28,7 @@ from .tabs import AuditTab, BatchTab, LibraryTab, QualityTab, ReportTab, Revisio
 from .tasks import CallbackCancelToken, Task
 from .viewer import LAYER_COLOURS, LAYER_LABELS, DrawingView
 from .wp123_tab import Wp123Tab
+from .wp456_tab import Wp456Tab
 
 ORG, APP = "EnhanceIntegrationEngineering", "PIDReader"
 LIMITS_TEXT = (
@@ -387,6 +388,7 @@ class MainWindow(QMainWindow):
         gl.addWidget(self.path_table)
         self.tabs.addTab(gw, "Graph")
         self.wp123_tab = Wp123Tab(self); self.tabs.addTab(self.wp123_tab, "WP-01–03 proposals")
+        self.wp456_tab = Wp456Tab(self); self.tabs.addTab(self.wp456_tab, "WP-04–06 proposals")
 
         self.sheet_tab = SheetInfoTab(self); self.tabs.addTab(self.sheet_tab, "Sheet info")
         self.quality_tab = QualityTab(self); self.tabs.addTab(self.quality_tab, "Quality")
@@ -660,6 +662,7 @@ class MainWindow(QMainWindow):
         self.page_label.setText(f"/ {self.page_count}")
         self.findings = {layer: F.list_findings(self.db, extraction_id, layer, limit=2000) for layer in F.LAYERS}
         self.wp123_tab.reset()
+        self.wp456_tab.reset()
         self.tabs.setCurrentIndex(0)
         self.goto_page(page)
         self.show_findings()
