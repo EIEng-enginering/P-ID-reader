@@ -1,0 +1,2235 @@
+{
+  "algorithm": "wp123-evidence-recovery-0.1",
+  "associations": [
+    {
+      "association_state": "NO_ELIGIBLE_NEARBY_SYMBOL",
+      "candidate_detector_id": null,
+      "detector_id": null,
+      "options": [],
+      "review_state": "PROPOSED_UNVERIFIED",
+      "tag_id": "reading-3028a153cfc86e9a59ef0615"
+    },
+    {
+      "association_state": "NO_ELIGIBLE_NEARBY_SYMBOL",
+      "candidate_detector_id": null,
+      "detector_id": null,
+      "options": [],
+      "review_state": "PROPOSED_UNVERIFIED",
+      "tag_id": "reading-30e7fab70366c1ef339e0122"
+    },
+    {
+      "association_state": "NO_ELIGIBLE_NEARBY_SYMBOL",
+      "candidate_detector_id": null,
+      "detector_id": null,
+      "options": [],
+      "review_state": "PROPOSED_UNVERIFIED",
+      "tag_id": "reading-67f3b65f11376923803f1b7a"
+    },
+    {
+      "association_state": "NO_ELIGIBLE_NEARBY_SYMBOL",
+      "candidate_detector_id": null,
+      "detector_id": null,
+      "options": [],
+      "review_state": "PROPOSED_UNVERIFIED",
+      "tag_id": "reading-e411e463e53d8aeff7e2b132"
+    }
+  ],
+  "bubble_candidates": [
+    {
+      "bbox": {
+        "x0": 0.2422717,
+        "x1": 0.2513034,
+        "y0": 0.1786788,
+        "y1": 0.1926481
+      },
+      "code_candidates": [
+        "PSV"
+      ],
+      "id": "circle-a95b46ef890eb8bf1ddcb9ef",
+      "number_candidates": [],
+      "ocr_ids": [
+        "ocr-8baf9473e8aa8069",
+        "ocr-98952e387fbf467f"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.75,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "CODE_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.5519367,
+        "x1": 0.5619625,
+        "y0": 0.1963611,
+        "y1": 0.2118679
+      },
+      "code_candidates": [],
+      "id": "circle-3cf415835ab1b8f1bbe37cdb",
+      "number_candidates": [
+        "720201"
+      ],
+      "ocr_ids": [
+        "ocr-28ff6cf27c0144f7",
+        "ocr-80b55b99de730f65"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.917,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.5536267,
+        "x1": 0.5602725,
+        "y0": 0.2058941,
+        "y1": 0.2161731
+      },
+      "code_candidates": [],
+      "id": "circle-3e04d45d2f591407b0ffbebc",
+      "number_candidates": [
+        "720201"
+      ],
+      "ocr_ids": [
+        "ocr-28ff6cf27c0144f7"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.792,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.4785714,
+        "x1": 0.4891937,
+        "y0": 0.213582,
+        "y1": 0.2300114
+      },
+      "code_candidates": [],
+      "id": "circle-d147735f9b3ab7b5f349995d",
+      "number_candidates": [
+        "22020Y"
+      ],
+      "ocr_ids": [
+        "ocr-f217e43b718832cd"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.667,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.5528811,
+        "x1": 0.5630063,
+        "y0": 0.2224231,
+        "y1": 0.2380837
+      },
+      "code_candidates": [
+        "FQ"
+      ],
+      "id": "circle-b53a2caf510fa445e223141a",
+      "number_candidates": [],
+      "ocr_ids": [
+        "ocr-42d91c35972b5512"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.667,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "CODE_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.5520858,
+        "x1": 0.5618133,
+        "y0": 0.228881,
+        "y1": 0.2439265
+      },
+      "code_candidates": [
+        "FQ"
+      ],
+      "id": "circle-686f5b9292a5748792684d25",
+      "number_candidates": [
+        "77701"
+      ],
+      "ocr_ids": [
+        "ocr-42d91c35972b5512",
+        "ocr-721660aad6bf98ce"
+      ],
+      "page": 1,
+      "raster_ring_support": 1.0,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "CODE_AND_NUMBER_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.4796153,
+        "x1": 0.489144,
+        "y0": 0.2298035,
+        "y1": 0.2445416
+      },
+      "code_candidates": [],
+      "id": "circle-88afa572d4e7f39c24593f85",
+      "number_candidates": [
+        "77020"
+      ],
+      "ocr_ids": [
+        "ocr-29222ce91ec0e22d",
+        "ocr-690d19ada4000e07"
+      ],
+      "page": 1,
+      "raster_ring_support": 1.0,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.6328571,
+        "x1": 0.6430817,
+        "y0": 0.2976879,
+        "y1": 0.3135023
+      },
+      "code_candidates": [],
+      "id": "circle-35b662b888caf9a6f5c7d77e",
+      "number_candidates": [
+        "27070Y"
+      ],
+      "ocr_ids": [
+        "ocr-6f6fd724b8e4db80"
+      ],
+      "page": 1,
+      "raster_ring_support": 1.0,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.5665998,
+        "x1": 0.5771226,
+        "y0": 0.3335906,
+        "y1": 0.3498662
+      },
+      "code_candidates": [],
+      "id": "circle-191a72bc9cdc0474f25992ee",
+      "number_candidates": [
+        "72070R"
+      ],
+      "ocr_ids": [
+        "ocr-0ea830d1f0c65495"
+      ],
+      "page": 1,
+      "raster_ring_support": 1.0,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.3790114,
+        "x1": 0.3849613,
+        "y0": 0.3448149,
+        "y1": 0.3540177
+      },
+      "code_candidates": [],
+      "id": "circle-8edb1cc270faa4ee15dcaaad",
+      "number_candidates": [
+        "1683"
+      ],
+      "ocr_ids": [
+        "ocr-e79064a562f50df9"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.833,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.4683321,
+        "x1": 0.4785567,
+        "y0": 0.3484283,
+        "y1": 0.3642426
+      },
+      "code_candidates": [
+        "PIC"
+      ],
+      "id": "circle-3792616379e335f1d474e984",
+      "number_candidates": [],
+      "ocr_ids": [
+        "ocr-4d6fc72ced2a5e5f"
+      ],
+      "page": 1,
+      "raster_ring_support": 1.0,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "CODE_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.493831,
+        "x1": 0.5047515,
+        "y0": 0.359422,
+        "y1": 0.3763127
+      },
+      "code_candidates": [],
+      "id": "circle-5d8c569b5e89a3013530d003",
+      "number_candidates": [
+        "22050Y"
+      ],
+      "ocr_ids": [
+        "ocr-6fcbab125a632f1c"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.708,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.6429971,
+        "x1": 0.6548122,
+        "y0": 0.3710308,
+        "y1": 0.3893052
+      },
+      "code_candidates": [],
+      "id": "circle-cc51a0fd44b60ea4dee58591",
+      "number_candidates": [
+        "22602"
+      ],
+      "ocr_ids": [
+        "ocr-e76db4407df7121f"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.625,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.5526326,
+        "x1": 0.5622607,
+        "y0": 0.3750285,
+        "y1": 0.3899203
+      },
+      "code_candidates": [],
+      "id": "circle-0a5aae2786881945d4ef995e",
+      "number_candidates": [
+        "2200"
+      ],
+      "ocr_ids": [
+        "ocr-6b856a090e516da4",
+        "ocr-b8956041a5463975"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.958,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.6675515,
+        "x1": 0.677975,
+        "y0": 0.4143907,
+        "y1": 0.4305125
+      },
+      "code_candidates": [],
+      "id": "circle-df21e7de65b02bd0fc042e08",
+      "number_candidates": [
+        "2025"
+      ],
+      "ocr_ids": [
+        "ocr-a6209737f4ef19ef"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.833,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.1880431,
+        "x1": 0.1991624,
+        "y0": 0.4153901,
+        "y1": 0.4325883
+      },
+      "code_candidates": [],
+      "id": "circle-c83919c0de9e909f3dfb5ba7",
+      "number_candidates": [
+        "2662"
+      ],
+      "ocr_ids": [
+        "ocr-6188cc516fc575be",
+        "ocr-b9505f37f5153af4"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.667,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.3690703,
+        "x1": 0.3799908,
+        "y0": 0.4839664,
+        "y1": 0.5008571
+      },
+      "code_candidates": [],
+      "id": "circle-09656d91b8333fc6f9e4e434",
+      "number_candidates": [
+        "77510"
+      ],
+      "ocr_ids": [
+        "ocr-8366fc614e94f18b"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.833,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.3163329,
+        "x1": 0.3263586,
+        "y0": 0.5461617,
+        "y1": 0.5616686
+      },
+      "code_candidates": [],
+      "id": "circle-4f912257e6547cee53a6675e",
+      "number_candidates": [
+        "270101"
+      ],
+      "ocr_ids": [
+        "ocr-15f606cdbc6ac368"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.875,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.3884555,
+        "x1": 0.4172699,
+        "y0": 0.5854471,
+        "y1": 0.6300143
+      },
+      "code_candidates": [],
+      "id": "circle-279281140ec5a7279124ad2e",
+      "number_candidates": [
+        "50170"
+      ],
+      "ocr_ids": [
+        "ocr-460659758c35ab5a",
+        "ocr-acf51797fd95de57",
+        "ocr-c2225c095f0226c3",
+        "ocr-f30096ec260e79ec"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.625,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.5180376,
+        "x1": 0.5272681,
+        "y0": 0.586754,
+        "y1": 0.6010308
+      },
+      "code_candidates": [],
+      "id": "circle-840fe7db6818e840c34ff689",
+      "number_candidates": [
+        "170109"
+      ],
+      "ocr_ids": [
+        "ocr-3be88cd4b7eec3a5",
+        "ocr-ebdd7e4b3a3af750"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.75,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.5589949,
+        "x1": 0.5688218,
+        "y0": 0.5901367,
+        "y1": 0.605336
+      },
+      "code_candidates": [],
+      "id": "circle-3c256c94fe8d041719d38b8f",
+      "number_candidates": [
+        "220101"
+      ],
+      "ocr_ids": [
+        "ocr-49a9e64925e28efe",
+        "ocr-7f310b7a7d9889f9"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.917,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.4073435,
+        "x1": 0.4162758,
+        "y0": 0.5946726,
+        "y1": 0.608488
+      },
+      "code_candidates": [],
+      "id": "circle-df89e9e8e6c981cd480a59c5",
+      "number_candidates": [
+        "50170"
+      ],
+      "ocr_ids": [
+        "ocr-c2225c095f0226c3",
+        "ocr-f30096ec260e79ec"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.625,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    },
+    {
+      "bbox": {
+        "x0": 0.404063,
+        "x1": 0.4285033,
+        "y0": 0.5965177,
+        "y1": 0.6343195
+      },
+      "code_candidates": [],
+      "id": "circle-58c36781c777ffd31ea7a705",
+      "number_candidates": [
+        "50170"
+      ],
+      "ocr_ids": [
+        "ocr-f30096ec260e79ec"
+      ],
+      "page": 1,
+      "raster_ring_support": 0.625,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "state": "NUMBER_ONLY_EVIDENCE"
+    }
+  ],
+  "bubble_text_links": [
+    {
+      "association_state": "OCR_CLUES_WITH_CIRCLE_GEOMETRY",
+      "bubble_id": "circle-a95b46ef890eb8bf1ddcb9ef",
+      "code_options": [
+        "PSV"
+      ],
+      "id": "bubble-text-79e5e3c95cdaa1864c29000c",
+      "joined_tag_options": [],
+      "notice": "Circle and OCR proximity only; not a validated instrument identifier.",
+      "number_options": [],
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "association_state": "OCR_CLUES_WITH_CIRCLE_GEOMETRY",
+      "bubble_id": "circle-686f5b9292a5748792684d25",
+      "code_options": [
+        "FQ"
+      ],
+      "id": "bubble-text-860be973f2a033156ac20851",
+      "joined_tag_options": [
+        "FQ-77701"
+      ],
+      "notice": "Circle and OCR proximity only; not a validated instrument identifier.",
+      "number_options": [
+        "77701"
+      ],
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "association_state": "OCR_CLUES_WITH_CIRCLE_GEOMETRY",
+      "bubble_id": "circle-b53a2caf510fa445e223141a",
+      "code_options": [
+        "FQ"
+      ],
+      "id": "bubble-text-a76149f8be47d896f8efe620",
+      "joined_tag_options": [],
+      "notice": "Circle and OCR proximity only; not a validated instrument identifier.",
+      "number_options": [],
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "association_state": "OCR_CLUES_WITH_CIRCLE_GEOMETRY",
+      "bubble_id": "circle-3792616379e335f1d474e984",
+      "code_options": [
+        "PIC"
+      ],
+      "id": "bubble-text-e810b059e870e307c36a1c91",
+      "joined_tag_options": [],
+      "notice": "Circle and OCR proximity only; not a validated instrument identifier.",
+      "number_options": [],
+      "review_state": "PROPOSED_UNVERIFIED"
+    }
+  ],
+  "detector_decisions": [
+    {
+      "bbox": {
+        "x0": 0.256855,
+        "x1": 0.366452,
+        "y0": 0.194936,
+        "y1": 0.398057
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "UNVERIFIED_GENERAL_CLASS",
+      "id": "frc-ac786e70a05b3b2c74124035",
+      "model_confidence_status": "LEADING",
+      "page": 1,
+      "raw_score": 0.9464,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.239323,
+        "x1": 0.279608,
+        "y0": 0.4879,
+        "y1": 0.561598
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "UNVERIFIED_GENERAL_CLASS",
+      "id": "frc-006bdedea1d6fda2efe7e763",
+      "model_confidence_status": "LEADING",
+      "page": 1,
+      "raw_score": 0.8934,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.295642,
+        "x1": 0.435366,
+        "y0": 0.854052,
+        "y1": 0.959779
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-d8a85959c446999c8d87d24a",
+      "model_confidence_status": "LEADING",
+      "page": 1,
+      "raw_score": 0.8737,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.669214,
+        "x1": 0.914232,
+        "y0": 0.842124,
+        "y1": 0.961368
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-3b800ddb48803c5f9f591986",
+      "model_confidence_status": "LEADING",
+      "page": 1,
+      "raw_score": 0.862,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.556568,
+        "x1": 0.645113,
+        "y0": 0.852018,
+        "y1": 0.961816
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-c7eb6b55b95bf69d03e9b4b4",
+      "model_confidence_status": "LEADING",
+      "page": 1,
+      "raw_score": 0.8282,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.269922,
+        "x1": 0.359153,
+        "y0": 0.306639,
+        "y1": 0.344053
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-14797cb7d742ddceb905bbaa",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.6478,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.408546,
+        "x1": 0.481169,
+        "y0": 0.618171,
+        "y1": 0.697065
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-6e00f6ce150b5c52ede95f72",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.6308,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.028228,
+        "x1": 0.058728,
+        "y0": 0.594937,
+        "y1": 0.638854
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DRAWING_FRAME",
+      "id": "frc-c74de3812e30315b9ec0a56a",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.5745,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.458502,
+        "x1": 0.511193,
+        "y0": 0.221386,
+        "y1": 0.287293
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-3429f48e1bcd9b77348db23a",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.4997,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.631448,
+        "x1": 0.69348,
+        "y0": 0.358773,
+        "y1": 0.405063
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-4a0149e37a07507d8ff1f8d9",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.4966,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.392799,
+        "x1": 0.485283,
+        "y0": 0.858741,
+        "y1": 0.965006
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-46a8b3f3f8608417e1b751dd",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.4716,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.850223,
+        "x1": 0.871961,
+        "y0": 0.81443,
+        "y1": 0.84896
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-bc29facb71f538200a3492dc",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.4451,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.444133,
+        "x1": 0.652296,
+        "y0": 0.846179,
+        "y1": 0.970822
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-537424ce8f3678af757e5a9f",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.3984,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.727554,
+        "x1": 0.749514,
+        "y0": 0.600508,
+        "y1": 0.627038
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-5b1635380bfb433258708820",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.3488,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.227939,
+        "x1": 0.347673,
+        "y0": 0.435948,
+        "y1": 0.599735
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-8395ea902bf9f297f867b456",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.3416,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.319539,
+        "x1": 0.575046,
+        "y0": 0.85332,
+        "y1": 0.964133
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-1295271f5d16db11447f5708",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.3217,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.301006,
+        "x1": 0.365198,
+        "y0": 0.856907,
+        "y1": 0.958462
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-47e3ca3d8e8321f0f9995876",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.3021,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.777768,
+        "x1": 0.791559,
+        "y0": 0.60538,
+        "y1": 0.630044
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-5eb05f6ac8d65698a0ecbdf6",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.2826,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.275633,
+        "x1": 0.305343,
+        "y0": 0.310085,
+        "y1": 0.341575
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-e15a9ff6f24570821defd66f",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.2808,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.238292,
+        "x1": 0.258739,
+        "y0": 0.495474,
+        "y1": 0.558103
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-08a345c334586258177f39ad",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.2462,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.856761,
+        "x1": 0.87474,
+        "y0": 0.611549,
+        "y1": 0.647874
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-a68274c2d2aae8d68a4aa90c",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.2273,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.050408,
+        "x1": 0.064202,
+        "y0": 0.307023,
+        "y1": 0.402263
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-77ed4fe4122e8c7cc2c118c4",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.2179,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.356927,
+        "x1": 0.39086,
+        "y0": 0.355457,
+        "y1": 0.392944
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-c16b1fc2cfc20955d484c9eb",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.2171,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.408531,
+        "x1": 0.440761,
+        "y0": 0.599667,
+        "y1": 0.634246
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-b9438e74e507e0cf21fc4532",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.2148,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.407668,
+        "x1": 0.454775,
+        "y0": 0.616229,
+        "y1": 0.636747
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-5f9b7c146baeaf86417670c6",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.2017,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.64464,
+        "x1": 0.663749,
+        "y0": 0.229082,
+        "y1": 0.282863
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-dfb55049ffb89364eeaae7df",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1946,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.628231,
+        "x1": 0.705829,
+        "y0": 0.326116,
+        "y1": 0.405063
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-2dd5a197bee3a6d4a40cdc50",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1829,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.531239,
+        "x1": 0.584426,
+        "y0": 0.237426,
+        "y1": 0.28611
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-4b521bac2c93f1fff4f000c3",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1825,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.702103,
+        "x1": 0.851064,
+        "y0": 0.018081,
+        "y1": 0.04973
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-b05d7b99fb256e5f1c898e9d",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1774,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.570425,
+        "x1": 0.72487,
+        "y0": 0.850214,
+        "y1": 0.963135
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-3bfe0045f62f47699906e850",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1713,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.84856,
+        "x1": 0.873335,
+        "y0": 0.813451,
+        "y1": 0.85085
+      },
+      "coarse_class": "arrow",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-3dceb7d9cbbe93499b8af3d6",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1639,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.483267,
+        "x1": 0.551983,
+        "y0": 0.296734,
+        "y1": 0.328286
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-7790f9defd92c2b3d3d63ef3",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1574,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.62842,
+        "x1": 0.705139,
+        "y0": 0.353675,
+        "y1": 0.481657
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-a7155a5e30771b711cab5f38",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1501,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.594161,
+        "x1": 0.779602,
+        "y0": 0.135593,
+        "y1": 0.193765
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-86c18bdfa9754400031a12d8",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1476,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.051838,
+        "x1": 0.06598,
+        "y0": 0.598111,
+        "y1": 0.732301
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-04952dd4cec7cf0a19079b3d",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1467,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.203499,
+        "x1": 0.253428,
+        "y0": 0.194113,
+        "y1": 0.224915
+      },
+      "coarse_class": "instrumentation",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-3ffd878e41f5a3efa8e38b8d",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1441,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.742459,
+        "x1": 0.787575,
+        "y0": 0.600215,
+        "y1": 0.66176
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-734cd10b369f40a1a47415cd",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1413,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.421064,
+        "x1": 0.435786,
+        "y0": 0.453007,
+        "y1": 0.508799
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-ce1779a3fa853785823547ba",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1384,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.237505,
+        "x1": 0.280673,
+        "y0": 0.488051,
+        "y1": 0.561183
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-2e46bd7602386228dbb00e1e",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1349,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.740071,
+        "x1": 0.773697,
+        "y0": 0.557188,
+        "y1": 0.608656
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-b5d1a3ab520b76013377a037",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1339,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.72879,
+        "x1": 0.746161,
+        "y0": 0.606698,
+        "y1": 0.623434
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-19b78007be5decfce44f0f90",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1278,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.637801,
+        "x1": 0.693101,
+        "y0": 0.356804,
+        "y1": 0.403152
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-7d71ad6a93329497a6608370",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1151,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.908842,
+        "x1": 0.921118,
+        "y0": 0.306239,
+        "y1": 0.37834
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-1164df938be4b8831ffa7e92",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.1104,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.232552,
+        "x1": 0.305921,
+        "y0": 0.49632,
+        "y1": 0.564258
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-8878631a4b2bc7ce6f75131e",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0985,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.711209,
+        "x1": 0.782419,
+        "y0": 0.603931,
+        "y1": 0.664393
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-eed221af88a1dcbabeaeb06f",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0902,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.200195,
+        "x1": 0.312756,
+        "y0": 0.858665,
+        "y1": 0.978927
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-0309ef29b3f9254263820a29",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0897,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.720972,
+        "x1": 0.846732,
+        "y0": 0.849915,
+        "y1": 0.87727
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-93937501c0b4483b3a1a8857",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0877,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.692996,
+        "x1": 0.848036,
+        "y0": 0.910403,
+        "y1": 0.964419
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-7be17d4a119e36b31d2d95f2",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0868,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.205916,
+        "x1": 0.254376,
+        "y0": 0.192518,
+        "y1": 0.225038
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-7f25d6568c939f134c3b9b45",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0866,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.739948,
+        "x1": 0.784444,
+        "y0": 0.60943,
+        "y1": 0.660221
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-bedc8722bc2c99186940d076",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0772,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.406417,
+        "x1": 0.482736,
+        "y0": 0.537219,
+        "y1": 0.693524
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-711a3f1f3a77117eca065d98",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0744,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.633502,
+        "x1": 0.720551,
+        "y0": 0.832303,
+        "y1": 0.97348
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-118549cd69bb5a86c0a37278",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.07,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.851695,
+        "x1": 0.872554,
+        "y0": 0.690542,
+        "y1": 0.740732
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-37e8672020e5a1526e9e67e7",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0694,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.637553,
+        "x1": 0.663441,
+        "y0": 0.36079,
+        "y1": 0.403549
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-311339e0c60b55ea95e60c95",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.065,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.050439,
+        "x1": 0.064001,
+        "y0": 0.050447,
+        "y1": 0.220636
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-0aacaf1119764f7f5fdbd7af",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0636,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.795975,
+        "x1": 0.911225,
+        "y0": 0.019793,
+        "y1": 0.049127
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-f954356a46d22c545614441c",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0615,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.709241,
+        "x1": 0.778229,
+        "y0": 0.611251,
+        "y1": 0.660138
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-479517f71071591d3d29b178",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0599,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.107119,
+        "x1": 0.178392,
+        "y0": 0.442666,
+        "y1": 0.489565
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-45f3cf45837ce7758bd9f0e7",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0596,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.336428,
+        "x1": 0.426925,
+        "y0": 0.858674,
+        "y1": 0.933045
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "DOCUMENT_METADATA_REGION",
+      "id": "frc-38f52e7ba947dd497d288663",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0567,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.780359,
+        "x1": 0.801657,
+        "y0": 0.686767,
+        "y1": 0.702075
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-f85a34f7cf7752fe05f2c857",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0533,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.475745,
+        "x1": 0.490794,
+        "y0": 0.391859,
+        "y1": 0.425116
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-1f27925ca1133f57b5b43aea",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0523,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.238408,
+        "x1": 0.260065,
+        "y0": 0.490244,
+        "y1": 0.556823
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-533a938f3c6a66543a0a8b52",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0522,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.543086,
+        "x1": 0.57061,
+        "y0": 0.594937,
+        "y1": 0.624809
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-0abdfb82eec38faa89dbca81",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0508,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.568885,
+        "x1": 0.589314,
+        "y0": 0.319832,
+        "y1": 0.354991
+      },
+      "coarse_class": "valve",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-4e49890be3818db92619f477",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0504,
+      "review_state": "PROPOSED_UNVERIFIED"
+    },
+    {
+      "bbox": {
+        "x0": 0.285745,
+        "x1": 0.350013,
+        "y0": 0.505628,
+        "y1": 0.589246
+      },
+      "coarse_class": "general",
+      "eligibility": "WITHHELD_NOT_DELETED",
+      "filter_reason": "BELOW_UNCALIBRATED_DETECTOR_GATE",
+      "id": "frc-7b367998200ecb3664a79705",
+      "model_confidence_status": "WEAK_CLASS_WITHHELD",
+      "page": 1,
+      "raw_score": 0.0501,
+      "review_state": "PROPOSED_UNVERIFIED"
+    }
+  ],
+  "document_fields": [
+    {
+      "bbox": {
+        "x0": 0.8814433,
+        "x1": 0.9067256,
+        "y0": 0.919514,
+        "y1": 0.928246
+      },
+      "field": "DATE_CANDIDATE",
+      "id": "docfield-5bab2d1e0379b0b38f862d6c",
+      "ocr_ids": [
+        "ocr-84021f17ace818be"
+      ],
+      "page": 1,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "value_candidate": "2007/02/08"
+    },
+    {
+      "bbox": {
+        "x0": 0.4474718,
+        "x1": 0.4688267,
+        "y0": 0.9164768,
+        "y1": 0.9229309
+      },
+      "field": "DATE_CANDIDATE",
+      "id": "docfield-a8e53b248e0e4032572b1d12",
+      "ocr_ids": [
+        "ocr-7b4e80b4bb8dab1e"
+      ],
+      "page": 1,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "value_candidate": "2007/02/26"
+    },
+    {
+      "bbox": {
+        "x0": 0.8399008,
+        "x1": 0.8512785,
+        "y0": 0.936677,
+        "y1": 0.9498454
+      },
+      "field": "DRAWING_NUMBER_CANDIDATE",
+      "id": "docfield-1ee7352442fe1ece2cb58607",
+      "ocr_ids": [
+        "wp123-roi-ocr-2ee0cc4666967a39"
+      ],
+      "page": 1,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "value_candidate": "030"
+    },
+    {
+      "bbox": {
+        "x0": 0.7790869,
+        "x1": 0.8583702,
+        "y0": 0.8933181,
+        "y1": 0.904328
+      },
+      "field": "LOCATION_REFERENCE_CANDIDATE",
+      "id": "docfield-709c6b03c2823004fb0f95d6",
+      "ocr_ids": [
+        "ocr-98e33c3350b3322d"
+      ],
+      "page": 1,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "value_candidate": "LSD02~25-80-15W6M"
+    },
+    {
+      "bbox": {
+        "x0": 0.8490427,
+        "x1": 0.8578792,
+        "y0": 0.9198937,
+        "y1": 0.928246
+      },
+      "field": "SCALE_CANDIDATE",
+      "id": "docfield-224f305c68e6e6fa6913be08",
+      "ocr_ids": [
+        "ocr-1aff5f50cc66161f"
+      ],
+      "page": 1,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "value_candidate": "NTS"
+    },
+    {
+      "bbox": {
+        "x0": 0.8499347,
+        "x1": 0.8565642,
+        "y0": 0.921152,
+        "y1": 0.9264194
+      },
+      "field": "SCALE_CANDIDATE",
+      "id": "docfield-2b3c48043f9cc2e6a368b33f",
+      "ocr_ids": [
+        "wp123-roi-ocr-41a3ff168d554212"
+      ],
+      "page": 1,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "value_candidate": "NTS"
+    },
+    {
+      "bbox": {
+        "x0": 0.8080511,
+        "x1": 0.8215513,
+        "y0": 0.0345482,
+        "y1": 0.0455581
+      },
+      "field": "SHEET_MARK_CANDIDATE",
+      "id": "docfield-ff8c4b7c332f33d82b80b698",
+      "ocr_ids": [
+        "ocr-0a6580aacccbf4e7"
+      ],
+      "page": 1,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "value_candidate": "012"
+    }
+  ],
+  "inputs": {
+    "bubble_evidence_sha256": "c183269ab6383ae316614c5c2dba1171d86fdf114b56cc9eb9839a1e7c04e82a",
+    "detection_evidence_sha256": "4e74b5e86beb3ce84ddb17d7c9b14db5deaa336365752c43a9489a9bd544430b",
+    "ocr_evidence_sha256": "248706c1df95f6182eef263a8858ab57a11309a71fc6f17e972a7b0ca1f97c9b",
+    "region_profile": "s418"
+  },
+  "line_number_fragments": [
+    {
+      "bbox": {
+        "x0": 0.460972,
+        "x1": 0.5171821,
+        "y0": 0.1860289,
+        "y1": 0.1943812
+      },
+      "id": "linefrag-721e4b93fa7f4a7bc34ccabe",
+      "ocr_ids": [
+        "ocr-95b968b017537def"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "HPF-22204-114.3--AS-40"
+    },
+    {
+      "bbox": {
+        "x0": 0.6936672,
+        "x1": 0.7503682,
+        "y0": 0.3006834,
+        "y1": 0.308656
+      },
+      "id": "linefrag-d81cc90a06fcc5b39a5af994",
+      "ocr_ids": [
+        "ocr-1126de677269ad66"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "GFS-22204--114.3-C.3S-50"
+    },
+    {
+      "bbox": {
+        "x0": 0.5883652,
+        "x1": 0.6448208,
+        "y0": 0.3629461,
+        "y1": 0.3712984
+      },
+      "id": "linefrag-50ccb0243d64c48342a625a1",
+      "ocr_ids": [
+        "ocr-2aaf73ab796eda38"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "CS-22206-33.4--C3S-xxS"
+    },
+    {
+      "bbox": {
+        "x0": 0.2535592,
+        "x1": 0.2933235,
+        "y0": 0.4400152,
+        "y1": 0.4491268
+      },
+      "id": "linefrag-85ef9b907c4b0aac28bbab3c",
+      "ocr_ids": [
+        "ocr-8a1027267064d415"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "GHS-22200~163.3-"
+    },
+    {
+      "bbox": {
+        "x0": 0.257732,
+        "x1": 0.3105056,
+        "y0": 0.4403948,
+        "y1": 0.4483675
+      },
+      "id": "linefrag-5eb49679c25fbbb054d33b8f",
+      "ocr_ids": [
+        "ocr-43f4afd63b58ff61"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "S-22200~163.3-C35-B0"
+    },
+    {
+      "bbox": {
+        "x0": 0.257732,
+        "x1": 0.3107511,
+        "y0": 0.4411541,
+        "y1": 0.4483675
+      },
+      "id": "linefrag-bd5802597d43f7da93123a5a",
+      "ocr_ids": [
+        "ocr-984337ea25d18687"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "IS-22200~163.3-C3S-B0"
+    },
+    {
+      "bbox": {
+        "x0": 0.7081492,
+        "x1": 0.7638684,
+        "y0": 0.4483675,
+        "y1": 0.4548216
+      },
+      "id": "linefrag-9ad36459bcb71c5159d878b0",
+      "ocr_ids": [
+        "ocr-083cecb3c188476c"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "GS-22207-114.3-03S--80"
+    },
+    {
+      "bbox": {
+        "x0": 0.5009818,
+        "x1": 0.5520373,
+        "y0": 0.5512528,
+        "y1": 0.5592255
+      },
+      "id": "linefrag-b88805f7fc919f6e627c5a7c",
+      "ocr_ids": [
+        "ocr-0bd563f9384c4113"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "9C.-22702-33.4-C35-Xx"
+    },
+    {
+      "bbox": {
+        "x0": 0.622975,
+        "x1": 0.6777123,
+        "y0": 0.610858,
+        "y1": 0.618451
+      },
+      "id": "linefrag-2e08454807a801773b4f58c6",
+      "ocr_ids": [
+        "ocr-99a6b5d269b88b51"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "Wp.22203-33.4-C3S-xxS"
+    },
+    {
+      "bbox": {
+        "x0": 0.6354934,
+        "x1": 0.6902307,
+        "y0": 0.6385725,
+        "y1": 0.6461655
+      },
+      "id": "linefrag-3b47630713101ca4f8d9e49a",
+      "ocr_ids": [
+        "ocr-cc4074e24fc42640"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "R--22203--33.4-C3S-XXS"
+    },
+    {
+      "bbox": {
+        "x0": 0.8014237,
+        "x1": 0.8738341,
+        "y0": 0.643508,
+        "y1": 0.6518603
+      },
+      "id": "linefrag-c772cd751f362a64e1b2ac49",
+      "ocr_ids": [
+        "ocr-9e67f033f6bc4ba6"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "WP00005-60.3-A15-40-25H--C1"
+    },
+    {
+      "bbox": {
+        "x0": 0.5019637,
+        "x1": 0.5520373,
+        "y0": 0.6438876,
+        "y1": 0.6522399
+      },
+      "id": "linefrag-6cb5911b8e9f5e022cfa6514",
+      "ocr_ids": [
+        "ocr-8d325ffc19205eae"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "W-22201-33.4-C3S-x"
+    },
+    {
+      "bbox": {
+        "x0": 0.7140403,
+        "x1": 0.7690231,
+        "y0": 0.6446469,
+        "y1": 0.6533789
+      },
+      "id": "linefrag-832be5bbd9dcb7f879ef85af",
+      "ocr_ids": [
+        "ocr-f697783cb8f9e092"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "-22204-33.4-C35-xxS"
+    },
+    {
+      "bbox": {
+        "x0": 0.2933235,
+        "x1": 0.344379,
+        "y0": 0.6909643,
+        "y1": 0.7000759
+      },
+      "id": "linefrag-09eb3cf1323080a224a453e3",
+      "ocr_ids": [
+        "ocr-422e0f1b86cc4285"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "DR--22200-33.4--41S-80"
+    },
+    {
+      "bbox": {
+        "x0": 0.7366225,
+        "x1": 0.8058419,
+        "y0": 0.7289294,
+        "y1": 0.7372817
+      },
+      "id": "linefrag-98ae1e41bad877e7e190e138",
+      "ocr_ids": [
+        "ocr-75b9823d537d135e"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "OR-00021-60.3.A1S-.40-25H-GI"
+    },
+    {
+      "bbox": {
+        "x0": 0.7992145,
+        "x1": 0.8689249,
+        "y0": 0.7369021,
+        "y1": 0.7452544
+      },
+      "id": "linefrag-f309157800ec1a19a5eb8030",
+      "ocr_ids": [
+        "ocr-9c5dbd085ae0cdfd"
+      ],
+      "page": 1,
+      "reason": "LINE_STYLE_STRING_FAILS_COMPLETE_GRAMMAR",
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_observed": "DR.00022--60.3-A3S-80-251-CT"
+    }
+  ],
+  "notice": "All records are unverified source-linked proposals. No plant, pipe, tag or connection is accepted.",
+  "page_regions": [
+    {
+      "bbox": {
+        "x0": 0.0,
+        "x1": 1.0,
+        "y0": 0.822,
+        "y1": 1.0
+      },
+      "page": 1,
+      "reason": "BOTTOM_TITLE_INDICATORS",
+      "type": "DOCUMENT_METADATA_REGION"
+    },
+    {
+      "bbox": {
+        "x0": 0.0,
+        "x1": 0.055,
+        "y0": 0.0,
+        "y1": 0.822
+      },
+      "page": 1,
+      "reason": "EXPLICIT_S418_PROFILE",
+      "type": "DRAWING_FRAME"
+    },
+    {
+      "bbox": {
+        "x0": 0.945,
+        "x1": 1.0,
+        "y0": 0.0,
+        "y1": 0.822
+      },
+      "page": 1,
+      "reason": "EXPLICIT_S418_PROFILE",
+      "type": "DRAWING_FRAME"
+    }
+  ],
+  "readings": [
+    {
+      "association_state": "UNLINKED",
+      "bbox": {
+        "x0": 0.5628375,
+        "x1": 0.5891016,
+        "y0": 0.0493546,
+        "y1": 0.0592255
+      },
+      "components": {
+        "number": "2206",
+        "prefix": "FE"
+      },
+      "id": "reading-30e7fab70366c1ef339e0122",
+      "kind": "INSTRUMENT_TAG",
+      "ocr_ids": [
+        "ocr-839b2c9cef14ff00"
+      ],
+      "page": 1,
+      "raw_ocr_score": 0.9554,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_candidate": "FE-2206"
+    },
+    {
+      "association_state": "UNLINKED",
+      "bbox": {
+        "x0": 0.4695631,
+        "x1": 0.4948454,
+        "y0": 0.0516325,
+        "y1": 0.0592255
+      },
+      "components": {
+        "number": "2202",
+        "prefix": "FE"
+      },
+      "id": "reading-e411e463e53d8aeff7e2b132",
+      "kind": "INSTRUMENT_TAG",
+      "ocr_ids": [
+        "ocr-481b1a728dc5f32d"
+      ],
+      "page": 1,
+      "raw_ocr_score": 0.9374,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_candidate": "FE-2202"
+    },
+    {
+      "association_state": "UNLINKED",
+      "bbox": {
+        "x0": 0.7881689,
+        "x1": 0.8436426,
+        "y0": 0.1829916,
+        "y1": 0.190205
+      },
+      "components": {
+        "nominal_size_observed": "14.3",
+        "schedule": "40",
+        "sequence": "00019",
+        "service": "PF",
+        "spec": "A3S"
+      },
+      "id": "reading-ebccb61a568ffb9a748cb5f9",
+      "kind": "PIPE_LINE_NUMBER",
+      "ocr_ids": [
+        "ocr-20c3df9e337cbed5"
+      ],
+      "page": 1,
+      "raw_ocr_score": 0.8501,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_candidate": "PF-00019-14.3-A3S-40"
+    },
+    {
+      "association_state": "UNLINKED",
+      "bbox": {
+        "x0": 0.4614629,
+        "x1": 0.518164,
+        "y0": 0.3166287,
+        "y1": 0.3257403
+      },
+      "components": {
+        "nominal_size_observed": "168.3",
+        "schedule": "80",
+        "sequence": "22203",
+        "service": "GS",
+        "spec": "C3S"
+      },
+      "id": "reading-306c755014657e780b795181",
+      "kind": "PIPE_LINE_NUMBER",
+      "ocr_ids": [
+        "ocr-d7e238ed2ce362ca"
+      ],
+      "page": 1,
+      "raw_ocr_score": 0.8982,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_candidate": "GS-22203-168.3-C3S-80"
+    },
+    {
+      "association_state": "UNLINKED",
+      "bbox": {
+        "x0": 0.5270005,
+        "x1": 0.5527737,
+        "y0": 0.4578588,
+        "y1": 0.4677297
+      },
+      "components": {
+        "number": "2206",
+        "prefix": "FE"
+      },
+      "id": "reading-3028a153cfc86e9a59ef0615",
+      "kind": "INSTRUMENT_TAG",
+      "ocr_ids": [
+        "ocr-33682047b57adf9f"
+      ],
+      "page": 1,
+      "raw_ocr_score": 0.8972,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_candidate": "FE-2206"
+    },
+    {
+      "association_state": "UNLINKED",
+      "bbox": {
+        "x0": 0.5922926,
+        "x1": 0.5986745,
+        "y0": 0.5288535,
+        "y1": 0.6165528
+      },
+      "components": {
+        "nominal_size_observed": "33.4",
+        "schedule": "XXS",
+        "sequence": "22202",
+        "service": "DR",
+        "spec": "C3S"
+      },
+      "id": "reading-cca106c21a61f628670ff6bb",
+      "kind": "PIPE_LINE_NUMBER",
+      "ocr_ids": [
+        "ocr-5b30ab5cc80dd8fa"
+      ],
+      "page": 1,
+      "raw_ocr_score": 0.8726,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_candidate": "DR-22202-33.4-C3S-XXS"
+    },
+    {
+      "association_state": "UNLINKED",
+      "bbox": {
+        "x0": 0.365705,
+        "x1": 0.3856156,
+        "y0": 0.6734758,
+        "y1": 0.6810182
+      },
+      "components": {
+        "number": "2201",
+        "prefix": "V"
+      },
+      "id": "reading-67f3b65f11376923803f1b7a",
+      "kind": "EQUIPMENT_TAG",
+      "ocr_ids": [
+        "wp123-roi-ocr-f1e858c5890b105e"
+      ],
+      "page": 1,
+      "raw_ocr_score": 0.65,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_candidate": "V-2201"
+    },
+    {
+      "association_state": "UNLINKED",
+      "bbox": {
+        "x0": 0.54811,
+        "x1": 0.565783,
+        "y0": 0.714123,
+        "y1": 0.7232346
+      },
+      "components": {
+        "number": "2200",
+        "prefix": "Q"
+      },
+      "id": "reading-480aa838d17e478d5d423354",
+      "kind": "PACKAGE_REFERENCE",
+      "ocr_ids": [
+        "ocr-dae2e3cdfc54659b"
+      ],
+      "page": 1,
+      "raw_ocr_score": 0.9285,
+      "review_state": "PROPOSED_UNVERIFIED",
+      "text_candidate": "Q-2200"
+    }
+  ],
+  "result_sha256": "2c81e8cb746c8a47648b1a58630b66f842017a83eb0f201fb0f47000aca472a6",
+  "schema": "pid-reader-wp123-recovery-v1",
+  "source_sha256": "b6b338335a3fc728adac8e631e44b43a56ec485a7403a349c2ca5a3f7621fd51",
+  "summary": {
+    "associations_proposed": 0,
+    "detectors_reviewable": 0,
+    "detectors_total": 65,
+    "document_fields_proposed": 7,
+    "instrument_bubble_ocr_links": 4,
+    "line_number_fragments": 16,
+    "line_numbers_proposed": 3,
+    "ocr_observations": 762,
+    "raster_bubble_candidates": 23,
+    "raster_bubbles_with_code_and_number": 1,
+    "readings_proposed": 8,
+    "reviewed_engineering_objects": 0,
+    "tags_proposed": 5
+  },
+  "withheld_ocr": [
+    {
+      "ocr_id": "ocr-393256a84b98a08b",
+      "reason": "OCR_SUBSTRING_OF_PIPE_LINE",
+      "text": "P-00019"
+    }
+  ]
+}

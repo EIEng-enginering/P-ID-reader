@@ -1,0 +1,5 @@
+[
+  {"page":1,"id":"visible-top-vessel-header","bbox":{"x0":0.345,"y0":0.045,"x1":0.415,"y1":0.09}},
+  {"page":1,"id":"visible-bottom-vessel-label","bbox":{"x0":0.335,"y0":0.635,"x1":0.415,"y1":0.725}},
+  {"page":1,"id":"visible-bottom-title-block","bbox":{"x0":0.72,"y0":0.825,"x1":0.965,"y1":0.985}}
+]

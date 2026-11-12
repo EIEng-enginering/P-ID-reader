@@ -1,0 +1,5 @@
+tag_id,detector_id,candidate_detector_id,association_state
+reading-3028a153cfc86e9a59ef0615,None,None,NO_ELIGIBLE_NEARBY_SYMBOL
+reading-30e7fab70366c1ef339e0122,None,None,NO_ELIGIBLE_NEARBY_SYMBOL
+reading-67f3b65f11376923803f1b7a,None,None,NO_ELIGIBLE_NEARBY_SYMBOL
+reading-e411e463e53d8aeff7e2b132,None,None,NO_ELIGIBLE_NEARBY_SYMBOL

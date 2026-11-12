@@ -1,0 +1,15 @@
+{
+  "associations_proposed": 0,
+  "detectors_reviewable": 0,
+  "detectors_total": 65,
+  "document_fields_proposed": 7,
+  "instrument_bubble_ocr_links": 4,
+  "line_number_fragments": 16,
+  "line_numbers_proposed": 3,
+  "ocr_observations": 762,
+  "raster_bubble_candidates": 23,
+  "raster_bubbles_with_code_and_number": 1,
+  "readings_proposed": 8,
+  "reviewed_engineering_objects": 0,
+  "tags_proposed": 5
+}

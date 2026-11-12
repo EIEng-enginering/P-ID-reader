@@ -1,3 +1,9 @@
+# CURRENT INSTRUCTIONS — WP-01..03 INTEGRATION (adds to R5 and Rev X; supersedes nothing)
+
+WP-01..03 (ChatGPT package) is merged selectively on branch `claude/wp123-integration` (from main c2935a8). Read `docs/wp123/WP123_INTEGRATION_STATUS.md`. WP123 output is PROPOSED_UNVERIFIED, stored only in its own sidecar; no automatic acceptance; the S418 manual ROI profile is drawing-specific; Tesseract is optional and may be absent. All earlier rules still hold.
+
+---
+
 # CURRENT INSTRUCTIONS — R5 UPDATE (adds to Rev X; supersedes nothing)
 
 R5 update is on branch `claude/r5-program-update` (0.19.0-dev0, standalone DB still v13). Read `docs/r5_update/R5_UPDATE_STATUS.md`. Three new switches (`PID_R5_DEXPI`, `PID_R5_PAGE_FRAME`, `PID_R5_REVIEW_LEDGER`) are OFF by default; failed R5 research items (crowded matching, optical stacked OCR, general port/signal recognition) stay disabled; the DEXPI export is a proposal and never a conformance claim. All Rev X rules still hold.

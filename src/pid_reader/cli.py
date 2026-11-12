@@ -188,6 +188,24 @@ def main(argv: list[str] | None = None) -> int:
     report.add_argument("--extraction-ids",nargs="*");report.add_argument("--max-records",type=int,default=20000)
     report.add_argument("--overwrite",action="store_true")
     backup=sub.add_parser("backup-project");backup.add_argument("database");backup.add_argument("destination")
+    wp=sub.add_parser('recover-wp123',help='WP01-03 additive OCR-register, detector triage and tag matching (sidecars only)')
+    wp.add_argument('pdf');wp.add_argument('--ocr-csv',help='Previously exported source OCR words CSV')
+    wp.add_argument('--ocr-source-sha256',help='Expected source SHA for external OCR CSV evidence')
+    wp.add_argument('--detections-json',help='Existing model detections JSON; optional')
+    wp.add_argument('--rois-json',help='Optional manual-review ROI manifest for offline high-resolution Tesseract')
+    wp.add_argument('--scan-bubbles',action='store_true',help='Optional OCR-anchored raster circle proposals')
+    wp.add_argument('--ocr-engine',choices=['auto','tesseract','rapidocr'],default='auto')
+    wp.add_argument('--region-profile',choices=['auto','none','s418'],default='auto')
+    wp.add_argument('--page',type=int,default=1,help='PDF page the detections (and an OCR CSV) belong to (default 1)')
+    wp.add_argument('--output-dir',required=True)
+    wp.add_argument('--store-database',help='Optional independent WP123 SQLite sidecar (never Worksheet DB)')
+    wpr=sub.add_parser('wp123-review',help='Append named human decision to isolated WP123 sidecar')
+    wpr.add_argument('database');wpr.add_argument('analysis_id');wpr.add_argument('target_id')
+    wpr.add_argument('--actor',required=True);wpr.add_argument('--reason',required=True)
+    wpr.add_argument('--decision',required=True,choices=['ACCEPTED_AS_READING','CORRECTED_READING','REJECTED','UNRESOLVED'])
+    wpr.add_argument('--corrected-text')
+    wpv=sub.add_parser('wp123-audit',help='Validate independent WP123 append-only review chain')
+    wpv.add_argument('database')
     aa=sub.add_parser("analyze-all",help="Run every analysis layer on a stored drawing (proposals only)")
     aa.add_argument("database");aa.add_argument("extraction_id")
     aa.add_argument("--ocr",choices=("auto","tesseract","rapidocr","off"),default="auto")
@@ -228,6 +246,61 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("gui-legacy",help="Original Rev Q development viewer (kept for audit)").add_argument("database")
     args=p.parse_args(argv)
     try:
+        if args.cmd=='wp123-review':
+            from .engineering.wp123_store import WP123Store
+            with WP123Store(args.database) as store:
+                event_id=store.review(args.analysis_id,args.target_id,actor=args.actor,decision=args.decision,
+                                      reason=args.reason,corrected_text=args.corrected_text)
+                print(canonical_json({'review_id':event_id,'audit_errors':store.verify_audit()}))
+            return 0
+        if args.cmd=='wp123-audit':
+            from .engineering.wp123_store import WP123Store
+            with WP123Store(args.database) as store:
+                errors=store.verify_audit()
+                print(canonical_json({'audit_ok':not errors,'errors':errors}))
+            return 0 if not errors else 2
+        if args.cmd=='recover-wp123':
+            from .engineering.wp123_recovery import read_ocr_csv,read_detectors,recover_wp123,save_wp123
+            from .engineering.wp123_roi import supplemental_ocr
+            source=Path(args.pdf).read_bytes()
+            if args.ocr_csv:
+                from hashlib import sha256
+                if args.ocr_source_sha256 and args.ocr_source_sha256!=sha256(source).hexdigest():
+                    raise ValueError('External OCR declared source SHA does not match PDF')
+                words=read_ocr_csv(args.ocr_csv,page=args.page)
+            else:
+                from .formats.ocr_source import ocr_pdf_preview
+                preview=ocr_pdf_preview(source,engine=args.ocr_engine)
+                words=[{'id':w['id'],'text':w['text'],'page':w['page'],
+                        'bbox':w['bbox'],'raw_score':w['raw_ocr_score'],
+                        'review_state':'PROPOSED_UNVERIFIED'}
+                       for page in preview['pages'] for w in page['words']]
+            if args.rois_json:
+                rois=json.loads(Path(args.rois_json).read_text(encoding='utf-8'))
+                words+=supplemental_ocr(source,rois)
+            if args.detections_json:
+                from hashlib import sha256
+                import pdfplumber
+                from io import BytesIO
+                from .formats.page_coordinates import frame_from_pdfplumber
+                with pdfplumber.open(BytesIO(source)) as _pl:
+                    _frame=frame_from_pdfplumber(_pl.pages[args.page-1])
+                detections=read_detectors(args.detections_json,expected_source_sha256=sha256(source).hexdigest(),page_frame=_frame)
+            else:detections=[]
+            if args.scan_bubbles:
+                from .engineering.wp123_bubbles import scan_pdf_bubbles
+                from .engineering.wp123_recovery import infer_regions
+                bubbles=scan_pdf_bubbles(source,words,infer_regions(words,profile=args.region_profile),page=args.page)
+            else:bubbles=[]
+            result=recover_wp123(source,words,detections,profile=args.region_profile,bubbles=bubbles)
+            save_wp123(result,args.output_dir)
+            analysis_id=None
+            if args.store_database:
+                from .engineering.wp123_store import WP123Store
+                with WP123Store(args.store_database) as store:analysis_id=store.add(result)
+            print(canonical_json({'analysis_id':analysis_id,'result_sha256':result['result_sha256'],
+                                   'summary':result['summary'],'output_dir':args.output_dir}))
+            return 0
         if args.cmd=="raster-preview":
             from .engineering.raster_geometry import analyze_raster_geometry
             result=analyze_raster_geometry(Path(args.pdf).read_bytes(),
@@ -636,6 +709,10 @@ def main(argv: list[str] | None = None) -> int:
     except (RefusedInput,LimitExceeded,ValueError,KeyError,OSError) as e:
         print(f"Operation refused: {type(e).__name__}",file=sys.stderr)
         return 2
+    except RuntimeError as e:
+        if type(e).__name__!="TesseractUnavailable":raise
+        print(f"Operation not run: {e}",file=sys.stderr)
+        return 3
 
 if __name__=="__main__":
     raise SystemExit(main())
