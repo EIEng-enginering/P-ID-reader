@@ -18,7 +18,9 @@ def clip_xyxy(box,size):
     if x1-x0<1.0 or y1-y0<1.0:return None
     return [x0,y0,x1,y1]
 
-def infer(engine, image, root, manifest):
+ALLOWLISTS = {'letters': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'digits': '0123456789'}
+
+def infer(engine, image, root, manifest, options=None):
     key=(engine,str(root),hashlib.sha256(json.dumps(manifest,sort_keys=True).encode()).hexdigest())
     if engine=='easyocr':
         import easyocr
@@ -31,7 +33,9 @@ def infer(engine, image, root, manifest):
         if image.width*image.height>EASYOCR_MAX_PIXELS:
             factor=(EASYOCR_MAX_PIXELS/(image.width*image.height))**.5
             source=image.resize((max(1,int(image.width*factor)),max(1,int(image.height*factor))))
-        rows=reader.readtext(np.asarray(source),detail=1,paragraph=False)
+        allow=ALLOWLISTS[options['allowlist']] if options and options.get('allowlist') else None
+        # A decoding constraint, applied while recognising. Strings are never repaired afterwards.
+        rows=reader.readtext(np.asarray(source),detail=1,paragraph=False,**({'allowlist':allow} if allow else {}))
         out=[]
         for poly,text,score in rows:
             box=clip_xyxy([min(p[0] for p in poly)/factor,min(p[1] for p in poly)/factor,max(p[0] for p in poly)/factor,max(p[1] for p in poly)/factor],image.size)

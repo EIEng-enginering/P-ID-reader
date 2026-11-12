@@ -34,7 +34,7 @@ def execute(request):
             if source.width*source.height>4_000_000:raise ValueError('Crop pixel budget exceeded')
             image=source.convert('RGB')
             try:
-                with deny_network():raw=infer(manifest['engine'],image,root,manifest)
+                with deny_network():raw=infer(manifest['engine'],image,root,manifest,request.get('options'))
                 if len(raw)>1000:raise ValueError('Output record budget exceeded')
                 result['records']=[record(row,request,manifest,image.size,i) for i,row in enumerate(raw)]
             finally:image.close()

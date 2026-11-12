@@ -73,6 +73,8 @@ def validate_request(request):
     if len(sha)!=64 or any(c not in '0123456789abcdef' for c in sha): raise ValueError('Source SHA256 required')
     if digest(request['image_path'])!=request['image_sha256']: raise ValueError('Crop bytes changed')
     if request.get('rotation',0) not in (0,90,180,270): raise ValueError('Unsupported crop rotation')
+    options=request.get('options')
+    if options is not None and (not isinstance(options,dict) or set(options)-{'allowlist'} or options.get('allowlist') not in (None,'letters','digits')): raise ValueError('Unsupported recogniser option')
 
 def benchmark(reference, predictions):
     """Fixed-crop OCR comparison. Not page detection accuracy or graph accuracy."""

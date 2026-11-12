@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased - long-term phase 1 (branch claude/longterm-phase1, merged into main)
+### Added
+- Strict omission-aware scorer, corpus provenance/adjudication/split checks, blind review package generator, baseline-only evaluation with prediction cache, readiness gates, predeclared target in the ledger, bubble geometry, vertical-text budget, EasyOCR letters/digits allowlist option, text-layer proxy data (TRAIN-only) and tools.
+### Fixed
+- TrOCR training objective: the built-in loss double-shifted labels (transformers 4.57.1) and a leading <s> was prepended; loss is now computed explicitly (`objective.py`).
+- `prepare_crops.py` no longer imports the missing WP08 module; native-dpi detection for vector pages; vertical crop direction is stated by the reviewer.
+### Not changed
+- Worksheet R1 contract/API/worker, DB v13, detector gate (.65). No scheduled task registered; no human-reviewed corpus exists yet; no authoritative accuracy claimed.
+
 ## Unreleased - WP-07 model comparison (branch claude/wp07-integration, not committed)
 ### Added
 - `engineering/model_lab/` and tab "Model comparison": isolated, cancellable CPU workers for EasyOCR, TrOCR small printed and RF-DETR P&ID; per-crop cache; audited review sidecar; frozen-build worker archive.

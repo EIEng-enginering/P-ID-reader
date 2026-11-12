@@ -16,6 +16,7 @@ import time
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 from pid_reader.engineering.model_lab import pipeline  # noqa: E402
+from pid_reader.engineering.longterm import vertical as vertical_budget  # noqa: E402
 
 
 def iou(a, b):
@@ -161,6 +162,7 @@ def main():
     p.add_argument("--timeout", type=int, default=280)
     p.add_argument("--baseline-db", type=Path)
     p.add_argument("--max-line-crops", type=int, default=80)
+    p.add_argument("--max-vertical", type=int, default=6, help="vertical-text regions (each read at 90 and 270 degrees), at most 6")
     p.add_argument("--no-cache", action="store_true")
     p.add_argument("--variants", default="base,small,large,binary", help="TrOCR re-renderings of each line crop")
     a = p.parse_args()
@@ -193,7 +195,7 @@ def main():
         per_call = max(1, 24 // len(variants))
         lines = text_line_regions(easy, base, frame=frame, budget=a.max_line_crops)
         horizontal = [r for r in lines if not r["vertical"]]
-        vertical = [r for r in lines if r["vertical"]]
+        vertical, vertical_omitted = vertical_budget.select([r for r in lines if r["vertical"]], a.max_vertical)
         tr_h = run_batches(pdf, a.page, horizontal, manifests["trocr"], a.python, batch=per_call, rotations=(0,),
                            cache=cache, timeout=a.timeout, label="trocr-horizontal", variants=variants) if horizontal else None
         tr_v = run_batches(pdf, a.page, vertical, manifests["trocr"], a.python, batch=max(1, per_call // 2), rotations=(90, 270),
@@ -205,7 +207,8 @@ def main():
                       peak_worker_rss_mib=max([x["peak_worker_rss_mib"] for x in (tr_h, tr_v) if x] or [0]),
                       completed_batches=sum(x["completed_batches"] for x in (tr_h, tr_v) if x),
                       total_batches=sum(x["total_batches"] for x in (tr_h, tr_v) if x),
-                      selection=[{k: v for k, v in r.items()} for r in lines])
+                      selection=[{k: v for k, v in r.items()} for r in lines if not r["vertical"]] + [{k: v for k, v in r.items()} for r in vertical],
+                      vertical=vertical_budget.report(vertical, vertical_omitted, {x["roi_id"].rsplit("-rot", 1)[0] for x in (tr_v["records"] if tr_v else [])}))
         results["trocr"] = merged
     for engine, res in results.items():
         summary["engines"].pop(engine, None)

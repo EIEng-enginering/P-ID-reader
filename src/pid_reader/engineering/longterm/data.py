@@ -24,6 +24,12 @@ def validate(path,*,purpose='train'):
             mapping[key]=split
         if r['origin']=='SYNTHETIC':
             if split!='TRAIN':raise ValueError('Synthetic samples cannot be validation evidence')
+        elif r['origin']=='VECTOR_TEXT_LAYER':
+            # Exact string from the document's own CAD text layer rendered and degraded to look like a scan: PROXY training data only.
+            if split!='TRAIN':raise ValueError('Text-layer proxy samples can only be TRAIN (never validation evidence)')
+            if r.get('review_status')!='EXACT_FROM_DOCUMENT_TEXT_LAYER':raise ValueError('Text-layer samples must declare their provenance')
+            if type(r.get('page')) is not int or r['page']<1 or r.get('coordinate_frame')!='MEDIA_NORMALIZED_TOP_LEFT':raise ValueError('Text-layer crops need source page and explicit coordinate frame')
+            if sha(Path(r['source_path']))!=r['source_sha256']:raise ValueError('Source drawing bytes changed')
         elif r['origin']=='HUMAN_SOURCE_PIXELS':
             if r.get('review_status')!='VERIFIED_DEVELOPMENT' or not r.get('reviewer','').strip():raise ValueError('Real labels need source-pixel review; OCR output is not a training label')
             if type(r.get('page')) is not int or r['page']<1 or r.get('coordinate_frame')!='MEDIA_NORMALIZED_TOP_LEFT':raise ValueError('Real crops need source page and explicit coordinate frame')
