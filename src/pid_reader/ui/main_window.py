@@ -27,6 +27,7 @@ from .graphview import GraphView
 from .tabs import AuditTab, BatchTab, LibraryTab, QualityTab, ReportTab, RevisionTab, SheetInfoTab, _fill, _table
 from .tasks import CallbackCancelToken, Task
 from .viewer import LAYER_COLOURS, LAYER_LABELS, DrawingView
+from .wp123_tab import Wp123Tab
 
 ORG, APP = "EnhanceIntegrationEngineering", "PIDReader"
 LIMITS_TEXT = (
@@ -385,6 +386,7 @@ class MainWindow(QMainWindow):
         self.path_table.setMaximumHeight(170)
         gl.addWidget(self.path_table)
         self.tabs.addTab(gw, "Graph")
+        self.wp123_tab = Wp123Tab(self); self.tabs.addTab(self.wp123_tab, "WP-01–03 proposals")
 
         self.sheet_tab = SheetInfoTab(self); self.tabs.addTab(self.sheet_tab, "Sheet info")
         self.quality_tab = QualityTab(self); self.tabs.addTab(self.quality_tab, "Quality")
@@ -657,6 +659,7 @@ class MainWindow(QMainWindow):
         self.page_spin.blockSignals(False)
         self.page_label.setText(f"/ {self.page_count}")
         self.findings = {layer: F.list_findings(self.db, extraction_id, layer, limit=2000) for layer in F.LAYERS}
+        self.wp123_tab.reset()
         self.tabs.setCurrentIndex(0)
         self.goto_page(page)
         self.show_findings()
@@ -729,12 +732,17 @@ class MainWindow(QMainWindow):
             self.viewer.set_overlay(layer, items)
         if getattr(self, "tr1_dialog", None) is not None:
             self.tr1_dialog.load_saved()
+        if getattr(self, "wp123_tab", None) is not None:
+            self.wp123_tab._refresh_overlay()
 
     def _overlay_clicked(self, layer: str, item_id: str) -> None:
         if layer == "readings":
             o = next((x for x in self.current_result["objects"] if x["id"] == item_id), None)
             if o:
                 self.details.setPlainText(json.dumps({"reading": o, "note": "Unverified reading from the drawing."}, indent=2))
+            return
+        if layer == "wp123":
+            self.wp123_tab.select_id(item_id)
             return
         idx = self.layer_combo.findData(layer)
         self.layer_combo.setCurrentIndex(idx)

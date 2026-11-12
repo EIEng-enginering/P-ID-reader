@@ -9,13 +9,13 @@ LAYER_COLOURS = {
     "readings": "#1f77d4", "symbols": "#9c27b0", "linework": "#e67e22", "catalogue": "#009688",
     "text_links": "#2e9e5b", "geometry": "#d32f2f", "signals": "#e91e8c",
     "raster": "#7a3dc0", "examples": "#00acc1", "search": "#f2c200", "intelligence": "#2f7d32",
-    "tr1_frcnn": "#ff6f00",
+    "tr1_frcnn": "#ff6f00", "wp123": "#c2185b",
 }
 LAYER_LABELS = {
     "readings": "Text readings", "symbols": "Outline symbols", "linework": "Valves / lines",
     "catalogue": "Template matches", "text_links": "Tag links", "geometry": "Line contacts",
     "signals": "Signal strokes", "raster": "Raster valve glyphs", "examples": "Taught symbols", "search": "Search hits", "intelligence": "Library symbols",
-    "tr1_frcnn": "Learned detector (proposed)",
+    "tr1_frcnn": "Learned detector (proposed)", "wp123": "WP-01–03 proposals (unverified)",
 }
 MAX_RENDER_SIDE = 4200
 

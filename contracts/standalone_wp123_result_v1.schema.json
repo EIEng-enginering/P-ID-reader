@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.pid-reader.invalid/schema/wp123-recovery-v1.json",
+  "title": "Standalone WP01-03 source-linked proposal result",
+  "type": "object",
+  "required": ["schema", "algorithm", "source_sha256", "inputs", "page_regions", "readings", "bubble_candidates", "document_fields", "bubble_text_links", "line_number_fragments", "withheld_ocr", "detector_decisions", "associations", "summary", "notice", "result_sha256"],
+  "properties": {
+    "schema": {"const": "pid-reader-wp123-recovery-v1"},
+    "algorithm": {"const": "wp123-evidence-recovery-0.1"},
+    "source_sha256": {"$ref": "#/$defs/sha"},
+    "result_sha256": {"$ref": "#/$defs/sha"},
+    "inputs": {
+      "type": "object", "required": ["ocr_evidence_sha256", "detection_evidence_sha256", "bubble_evidence_sha256", "region_profile"],
+      "properties": {
+        "ocr_evidence_sha256": {"$ref": "#/$defs/sha"},
+        "detection_evidence_sha256": {"$ref": "#/$defs/sha"},
+        "bubble_evidence_sha256": {"$ref": "#/$defs/sha"},
+        "region_profile": {"enum": ["auto", "none", "s418"]}
+      }, "additionalProperties": false
+    },
+    "page_regions": {"type":"array","maxItems":100,"items":{"type":"object","required":["type","page","bbox","reason"],"properties":{"type":{"type":"string"},"page":{"type":"integer","minimum":1},"bbox":{"$ref":"#/$defs/bbox"},"reason":{"type":"string"}},"additionalProperties":false}},
+    "readings": {"type":"array","maxItems":5000,"items":{"type":"object","required":["id","kind","text_candidate","page","bbox","raw_ocr_score","ocr_ids","components","review_state","association_state"],"properties":{"id":{"type":"string"},"kind":{"enum":["EQUIPMENT_TAG","INSTRUMENT_TAG","PACKAGE_REFERENCE","PIPE_LINE_NUMBER"]},"text_candidate":{"type":"string","maxLength":200},"page":{"type":"integer","minimum":1},"bbox":{"$ref":"#/$defs/bbox"},"raw_ocr_score":{"type":"number","minimum":0,"maximum":1},"ocr_ids":{"type":"array","minItems":1,"items":{"type":"string"}},"components":{"type":"object"},"review_state":{"const":"PROPOSED_UNVERIFIED"},"association_state":{"const":"UNLINKED"}},"additionalProperties":false}},
+    "bubble_candidates":{"type":"array","maxItems":500,"items":{"type":"object"}},
+    "document_fields":{"type":"array","maxItems":5000,"items":{"type":"object"}},
+    "bubble_text_links":{"type":"array","maxItems":500,"items":{"type":"object"}},
+    "line_number_fragments":{"type":"array","maxItems":5000,"items":{"type":"object"}},
+    "withheld_ocr":{"type":"array","maxItems":50000,"items":{"type":"object"}},
+    "detector_decisions":{"type":"array","maxItems":15000,"items":{"type":"object","required":["id","bbox","page","coarse_class","raw_score","eligibility","filter_reason","review_state"]}},
+    "associations":{"type":"array","maxItems":5000,"items":{"type":"object","required":["tag_id","detector_id","candidate_detector_id","association_state","options","review_state"]}},
+    "summary":{"type":"object","required":["ocr_observations","readings_proposed","document_fields_proposed","tags_proposed","line_numbers_proposed","line_number_fragments","detectors_total","detectors_reviewable","associations_proposed","reviewed_engineering_objects","raster_bubble_candidates","raster_bubbles_with_code_and_number","instrument_bubble_ocr_links"],"additionalProperties":false,"patternProperties":{"^[a-z_]+$":{"type":"integer","minimum":0}}},
+    "notice":{"type":"string","minLength":10}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "bbox":{"type":"object","required":["x0","y0","x1","y1"],"properties":{"x0":{"type":"number","minimum":0,"maximum":1},"y0":{"type":"number","minimum":0,"maximum":1},"x1":{"type":"number","minimum":0,"maximum":1},"y1":{"type":"number","minimum":0,"maximum":1}},"additionalProperties":false}
+  }
+}

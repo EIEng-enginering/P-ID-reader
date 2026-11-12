@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased - WP-01..03 text-to-engineering proposals (branch claude/wp123-integration)
+### Added
+- `engineering/wp123_*`: OCR-to-tag/line-number/title-block proposals, detector triage (withheld, never deleted), OCR-anchored circle evidence, abstaining tag-to-detector association, isolated append-only review sidecar; schema `contracts/standalone_wp123_result_v1.schema.json`, `tools/check_wp123.py`.
+- CLI `recover-wp123` (with `--page`), `wp123-review`, `wp123-audit`.
+- Windows tab "WP-01-03 proposals" with evidence-to-sheet navigation, named/reasoned decisions, triage summary, CSV export; viewer layer `wp123`; `engineering/wp123_session.py`.
+### Changed (in the supplied code)
+- Regions inferred per page; TR1 render-frame boxes mapped to the media frame; clear error when Tesseract is missing.
+### Not changed
+- Worksheet R1 contract/API/worker, standalone DB v13, all switches. No proposal is accepted automatically.
+
 ## Unreleased - R3 components (branch claude/r3-integration; every switch OFF by default)
 ### Added
 - `PIDLAB_TILE_MERGE_R3` (r1_drop_inner_edge default | edge_safe | edge_safe+coarse): Grok `tiled_r3` seam-merge policies; the default still runs the unchanged R1 rule.
