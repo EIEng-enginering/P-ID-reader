@@ -7,6 +7,7 @@ MediaBox-normalized and transformation-aware for CropBox and rotation.
 from __future__ import annotations
 
 from hashlib import sha256
+from pathlib import Path
 from io import BytesIO
 import math
 from ..api import stable_id
@@ -21,9 +22,24 @@ class TesseractUnavailable(RuntimeError):
     """The optional Tesseract program is not installed or not on PATH (the Python package alone is not enough)."""
 
 
+def locate_tesseract() -> str | None:
+    """Tesseract program path: TESSERACT_CMD, then PATH, then the standard Windows install folders. Only the region re-read uses this;
+    the general OCR engine selection and the machine PATH are not touched."""
+    import os
+    import shutil
+    cand = [os.environ.get("TESSERACT_CMD"), shutil.which("tesseract"),
+            "C:/Program Files/Tesseract-OCR/tesseract.exe", "C:/Program Files (x86)/Tesseract-OCR/tesseract.exe",
+            str(Path(os.environ.get("LOCALAPPDATA", "")) / "Programs" / "Tesseract-OCR" / "tesseract.exe")]
+    return next((c for c in cand if c and Path(c).is_file()), None)
+
+
 def tesseract_available() -> bool:
     try:
         import pytesseract
+        cmd = locate_tesseract()
+        if not cmd:
+            return False
+        pytesseract.pytesseract.tesseract_cmd = cmd
         pytesseract.get_tesseract_version()
         return True
     except Exception:
