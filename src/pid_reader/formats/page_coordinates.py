@@ -101,5 +101,11 @@ def frame_from_pdfplumber(page) -> PageFrame:
     if not crop:
         crop = (0., 0., page.width, page.height)
     x0, top, x1, bottom = [float(v) for v in crop]
+    rotation = int(getattr(page, "rotation", 0) or 0) % 360
+    if rotation in (180, 270):
+        # pdfplumber reports the same CropBox for 0/180 and for 90/270, but the visible rectangle of a page turned by 180/270 degrees
+        # is that box mirrored in the rotated page (an asymmetric CropBox otherwise shifts every box by the margin difference;
+        # checked against PDFium in tests/test_wp456_frames.py).
+        x0, top, x1, bottom = float(page.width) - x1, float(page.height) - bottom, float(page.width) - x0, float(page.height) - top
     return PageFrame(float(page.width), float(page.height), x0, top,
-                     x1-x0, bottom-top, int(getattr(page,"rotation",0) or 0) % 360)
+                     x1-x0, bottom-top, rotation)

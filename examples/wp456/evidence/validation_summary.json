@@ -1,0 +1,28 @@
+{
+  "date_utc": "2026-11-12",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "independent_unit_tests": {
+    "status": "PASS",
+    "count": 80,
+    "seconds": 0.125,
+    "skipped": 0
+  },
+  "real_local_tesseract_test": "PASS",
+  "tesseract_version": "tesseract 5.5.0",
+  "python_compile": "PASS",
+  "json_schema_checks": "PASS",
+  "cli_build_and_audit": "PASS",
+  "installer_snapshot_smoke": "PASS",
+  "draft_reference_score": "NOT_RUN_AS_REQUIRED",
+  "s418_replay": "PASS_EXECUTION_NOT_ACCURACY",
+  "full_live_repository_suite": "NOT_RUN_FULL_REPOSITORY_NOT_AVAILABLE",
+  "target_python_312_windows": "NOT_RUN",
+  "pyside6_6120_runtime": "NOT_RUN",
+  "crop_rotation_host_adapter_runtime": "NOT_RUN_FULL_HOST_PAGEFRAME_NOT_AVAILABLE",
+  "windows_dpi_installer": "NOT_RUN",
+  "worksheet_host_G4_G7": "NOT_RUN",
+  "independent_engineering_benchmark": "NOT_RUN",
+  "approved_ground_truth": "NOT_AVAILABLE",
+  "new_ocr_s418_quality_gain": "NOT_DEMONSTRATED"
+}

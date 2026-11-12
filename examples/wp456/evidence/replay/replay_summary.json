@@ -1,0 +1,19 @@
+{
+  "source_sha256": "b6b338335a3fc728adac8e631e44b43a56ec485a7403a349c2ca5a3f7621fd51",
+  "baseline_readings": 8,
+  "wp04_readings": 8,
+  "document_fields_before": 7,
+  "document_fields_after": 6,
+  "symbol_links_proposed": 0,
+  "geometry_edges": 353,
+  "geometry_line_kinds": [
+    "UNKNOWN"
+  ],
+  "accuracy_status": "NOT_RUN_NO_APPROVED_REFERENCE",
+  "new_ocr_status": "PARTIAL",
+  "new_ocr_words": 188,
+  "new_ocr_seconds": 5.557704461999947,
+  "experimental_readings": 8,
+  "line_alternatives": [],
+  "bubble_options": []
+}

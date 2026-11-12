@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pid-reader:wp456-proposals:v1",
+  "title": "WP04\u201306 standalone drawing proposals",
+  "type": "object",
+  "required": [
+    "schema",
+    "algorithm",
+    "source_sha256",
+    "frame",
+    "review_state",
+    "upstream_wp123_sha256",
+    "inputs",
+    "wp04",
+    "wp05",
+    "wp06",
+    "metrics",
+    "notice",
+    "result_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pid-reader-wp456-proposals-v1"
+    },
+    "algorithm": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "upstream_wp123_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "result_sha256": {
+      "$ref": "#/$defs/hash"
+    },
+    "frame": {
+      "const": "MEDIA_NORMALIZED_TOP_LEFT"
+    },
+    "review_state": {
+      "const": "PROPOSED_UNVERIFIED"
+    },
+    "inputs": {
+      "type": "object"
+    },
+    "wp04": {
+      "type": "object",
+      "required": [
+        "readings",
+        "document_fields",
+        "line_reviews",
+        "bubble_readings",
+        "automatic_regions",
+        "line_number_fragments"
+      ]
+    },
+    "wp05": {
+      "type": "object",
+      "required": [
+        "symbols",
+        "associations",
+        "calibration_status"
+      ]
+    },
+    "wp06": {
+      "type": "object",
+      "required": [
+        "graph",
+        "geometry_input_status",
+        "worksheet_r1_status"
+      ],
+      "properties": {
+        "worksheet_r1_status": {
+          "const": "UNCHANGED_NOT_EXPORTED"
+        }
+      }
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "notice": {
+      "type": "string"
+    },
+    "ocr_run": {
+      "type": "object"
+    },
+    "ocr_evidence": {
+      "type": "array"
+    },
+    "upstream_wp123_result": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

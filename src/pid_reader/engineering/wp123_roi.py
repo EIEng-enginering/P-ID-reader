@@ -6,6 +6,7 @@ MediaBox-normalized and transformation-aware for CropBox and rotation.
 """
 from __future__ import annotations
 
+from contextlib import contextmanager
 from hashlib import sha256
 from pathlib import Path
 from io import BytesIO
@@ -33,20 +34,39 @@ def locate_tesseract() -> str | None:
     return next((c for c in cand if c and Path(c).is_file()), None)
 
 
+@contextmanager
+def _tesseract_cmd():
+    """Point pytesseract at the located program for the duration of a call only, then restore it. Leaving the module-level
+    command changed made the general OCR engine selection (ocr_source.tesseract_available) see Tesseract as installed."""
+    import pytesseract
+    previous = pytesseract.pytesseract.tesseract_cmd
+    cmd = locate_tesseract()
+    if cmd:
+        pytesseract.pytesseract.tesseract_cmd = cmd
+    try:
+        yield cmd
+    finally:
+        pytesseract.pytesseract.tesseract_cmd = previous
+
+
 def tesseract_available() -> bool:
     try:
         import pytesseract
-        cmd = locate_tesseract()
-        if not cmd:
-            return False
-        pytesseract.pytesseract.tesseract_cmd = cmd
-        pytesseract.get_tesseract_version()
-        return True
+        with _tesseract_cmd() as cmd:
+            if not cmd:
+                return False
+            pytesseract.get_tesseract_version()
+            return True
     except Exception:
         return False
 
 
 def supplemental_ocr(pdf_bytes:bytes, roi_manifest: list[dict], *, dpi:int=290, timeout_seconds:int=20) -> list[dict]:
+    with _tesseract_cmd():
+        return _supplemental_ocr(pdf_bytes, roi_manifest, dpi=dpi, timeout_seconds=timeout_seconds)
+
+
+def _supplemental_ocr(pdf_bytes:bytes, roi_manifest: list[dict], *, dpi:int, timeout_seconds:int) -> list[dict]:
     if not isinstance(pdf_bytes,bytes) or not pdf_bytes.startswith(b'%PDF-') or len(pdf_bytes)>16*1024*1024:
         raise ValueError('Invalid source PDF')
     if type(dpi) is not int or not 120<=dpi<=450 or type(timeout_seconds) is not int or not 1<=timeout_seconds<=60:

@@ -1,0 +1,13 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "type": "object",
+ "required": ["status", "source_sha256", "reviewer", "reviewed_utc", "coverage", "items"],
+ "properties": {
+  "status": {"enum": ["DRAFT", "APPROVED_REFERENCE", "SYNTHETIC_REFERENCE"]},
+  "source_sha256": {"type":"string", "pattern":"^[0-9a-f]{64}$"},
+  "reviewer": {"type":"string"},
+  "reviewed_utc": {"type":"string"},
+  "coverage": {"type":"array", "items": {"type":"object", "required":["page","kind","exhaustive"], "properties":{"page":{"type":"integer","minimum":1},"kind":{"type":"string"},"exhaustive":{"type":"boolean"}}}},
+  "items": {"type":"array", "maxItems":5000, "items":{"type":"object","required":["id","page","kind","text","bbox"],"properties":{"id":{"type":"string"},"page":{"type":"integer","minimum":1},"kind":{"type":"string"},"text":{"type":"string"},"bbox":{"type":"object","required":["x0","y0","x1","y1"],"properties":{"x0":{"type":"number","minimum":0,"maximum":1},"y0":{"type":"number","minimum":0,"maximum":1},"x1":{"type":"number","minimum":0,"maximum":1},"y1":{"type":"number","minimum":0,"maximum":1}}}}}}
+ }
+}
