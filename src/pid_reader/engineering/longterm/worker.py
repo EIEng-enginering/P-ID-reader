@@ -14,10 +14,21 @@ def execute(job,out):
     if job['kind']=='TRAIN_OCR':
         from .train import train
         return train(payload,out)
+    if job['kind']=='EVALUATE_BASELINE_OCR':
+        from .evaluate import evaluate_baseline
+        return evaluate_baseline(payload,out)
     if job['kind']=='EVALUATE_OCR':
         from .evaluate import evaluate
         return evaluate(payload,out)
     if job['kind']=='EXPERIMENT_WP08':
+        import importlib.util
+        try:
+            wp08_missing=importlib.util.find_spec('pid_reader.engineering.wp08.pipeline') is None
+        except ModuleNotFoundError:
+            wp08_missing=True
+        if wp08_missing:
+            # Disabled on purpose: the WP08 delta is not installed. Never aliased to another pipeline.
+            return dict(status='BLOCKED',reason='WP08_UNAVAILABLE: pid_reader.engineering.wp08.pipeline is not installed; EXPERIMENT_WP08 is disabled',candidate_only=True)
         from ..wp08.pipeline import analyse
         manifests=[json.loads(Path(payload[name]).read_text()) for name in ('discovery_manifest','line_manifest')]
         if sha(payload['pdf_path'])!=payload['source_sha256']:raise ValueError('Drawing bytes changed')

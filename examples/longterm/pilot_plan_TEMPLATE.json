@@ -1,0 +1,39 @@
+[
+ {
+  "kind": "EVALUATE_BASELINE_OCR",
+  "payload": {
+   "dataset_path": "C:/PIDWork/phase1/corpus_v1_reviewed/validation/dataset.json",
+   "model_manifest_path": "%LOCALAPPDATA%/PIDReader/models/trocr.manifest.json"
+  }
+ },
+ {
+  "kind": "TRAIN_OCR",
+  "payload": {
+   "dataset_path": "C:/PIDWork/phase1/corpus_v1_reviewed/train/dataset.json",
+   "model_manifest_path": "%LOCALAPPDATA%/PIDReader/models/trocr.manifest.json",
+   "max_steps": 100,
+   "max_steps_per_slice": 25,
+   "slice_seconds": 1200,
+   "checkpoint_every": 5,
+   "last_layers": 1,
+   "seed": 20261112,
+   "lr": 1e-05,
+   "candidate_label": "A"
+  }
+ },
+ {
+  "kind": "TRAIN_OCR",
+  "payload": {
+   "dataset_path": "C:/PIDWork/phase1/corpus_v1_reviewed/train/dataset.json",
+   "model_manifest_path": "%LOCALAPPDATA%/PIDReader/models/trocr.manifest.json",
+   "max_steps": 100,
+   "max_steps_per_slice": 25,
+   "slice_seconds": 1200,
+   "checkpoint_every": 5,
+   "last_layers": 1,
+   "seed": 20261112,
+   "lr": 3e-06,
+   "candidate_label": "B"
+  }
+ }
+]

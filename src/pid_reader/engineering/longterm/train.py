@@ -2,6 +2,7 @@
 import hashlib,json,os,random,shutil,time,sys,importlib.metadata
 from pathlib import Path
 from .data import validate,sha
+from .objective import label_ids,sequence_loss
 from .store import canonical,digest
 
 def atomic_json(path,value):
@@ -86,9 +87,9 @@ def train(payload,out):
             with Image.open(row['image_path']) as image:
                 if image.width*image.height>4_000_000:raise ValueError('Training crop exceeds pixel budget')
                 pixels=processor(images=image.convert('RGB'),return_tensors='pt').pixel_values
-            labels=processor.tokenizer(row['text'],return_tensors='pt',truncation=False).input_ids
-            if labels.shape[1]>96:raise ValueError('Label token budget exceeded')
-            optimizer.zero_grad(set_to_none=True);loss=model(pixel_values=pixels,labels=labels).loss
+            ids=label_ids(processor.tokenizer,row['text'])
+            optimizer.zero_grad(set_to_none=True)
+            loss=sequence_loss(model,pixels,ids,pad_token_id=model.config.pad_token_id,decoder_start_token_id=model.config.decoder_start_token_id)
             if not torch.isfinite(loss):raise ValueError('Nonfinite training loss')
             loss.backward();torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad],1.)
             optimizer.step();step+=1;value=float(loss.detach());losses.append(value)
@@ -102,7 +103,7 @@ def train(payload,out):
     atomic_json(immutable_manifest,candidate)
     result=dict(status='SUCCEEDED' if step==steps else 'PARTIAL',steps=step,target_steps=steps,
                 candidate_manifest=str(immutable_manifest),candidate_only=True,promoted=False,
-                data_origin='SYNTHETIC_ONLY' if all(r['origin']=='SYNTHETIC' for r in rows) else 'REVIEWED_TRAINING',
+                data_origin=('SYNTHETIC_ONLY' if all(r['origin']=='SYNTHETIC' for r in rows) else 'PROXY_TEXT_LAYER_AND_SYNTHETIC_ONLY' if all(r['origin'] in ('SYNTHETIC','VECTOR_TEXT_LAYER') for r in rows) else 'REVIEWED_TRAINING_WITH_PROXY' if any(r['origin']!='HUMAN_SOURCE_PIXELS' for r in rows) else 'REVIEWED_TRAINING'),
                 trainable_parameters=names,losses_this_slice=losses,elapsed_seconds=time.monotonic()-start,
                 recognition_accuracy='NOT_MEASURED',dataset_sha256=dataset_sha,runtime=runtime)
     atomic_json(out/'training_summary.json',result);return result

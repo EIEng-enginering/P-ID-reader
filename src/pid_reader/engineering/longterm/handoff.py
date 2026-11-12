@@ -4,6 +4,25 @@ import hashlib,json,zipfile
 from pathlib import Path
 from .store import canonical,digest
 
+def pilot_summary(jobs,store):
+    verdicts=[];baselines=0;trains=0
+    for row in jobs:
+        res=row['result'] or {}
+        if row['kind']=='EVALUATE_BASELINE_OCR' and row['status']=='SUCCEEDED':baselines+=1
+        if row['kind']=='TRAIN_OCR' and row['status'] in ('SUCCEEDED','PARTIAL'):trains+=1
+        if row['kind']=='EVALUATE_OCR' and res.get('verdict'):verdicts.append(dict(job=row['id'],**{k:res['verdict'][k] for k in ('verdict','relative_strict_error_reduction','lost_easy_controls','baseline_strict_errors','candidate_strict_errors')}))
+    targets=[]
+    for ev in store.db.execute('SELECT seq,payload FROM events'):
+        entry=json.loads(ev[1])
+        if entry.get('kind')=='PREDECLARED_TARGET':targets.append(dict(seq=ev[0],target_sha256=entry['target_sha256'],target=entry['target']))
+    if not baselines:nxt='Human review of the blind corpus, then a baseline-only evaluation. No candidate has been trained or compared.'
+    elif not trains:nxt='Run the two pilot candidates (A: lr 1e-5, B: lr 3e-6; <=100 steps, 25 per slice) after the baseline is frozen.'
+    elif verdicts and not any(v['verdict']=='TARGET_MET_DEVELOPMENT_ONLY' for v in verdicts):nxt='Neither candidate met the predeclared target: diagnose source quality, data, crop geometry and recogniser limits. Do not extend steps or search automatically.'
+    elif verdicts:nxt='Hand the candidate and evidence to Claude for controlled review. Promotion is a separate named-human decision.'
+    else:nxt='Wait for paired evaluation of the finished slices.'
+    return dict(baseline_evaluations=baselines,training_jobs=trains,paired_verdicts=verdicts,predeclared_targets=targets,next_finite_experiment=nxt,
+                note='Development evaluation only; not final-test accuracy. Every model is CANDIDATE-only.')
+
 def export(store,*,force=False):
     root=store.root/'handoffs';root.mkdir(exist_ok=True)
     day=datetime.now(timezone(timedelta(hours=8))).strftime('%Y%m%d')
@@ -12,7 +31,7 @@ def export(store,*,force=False):
         row['payload']=json.loads(row['payload']);row['result']=json.loads(row['result']) if row['result'] else None
     summary=dict(schema='pid-longterm-results-v1',generated_utc=datetime.now(timezone.utc).isoformat(),jobs=jobs,
                  audit_problems=store.verify(),automatic_promotion=False,windows_activation='Requires local installation',
-                 latest_event=store.db.execute('SELECT COALESCE(MAX(seq),0) FROM events').fetchone()[0])
+                 latest_event=store.db.execute('SELECT COALESCE(MAX(seq),0) FROM events').fetchone()[0],pilot=pilot_summary(jobs,store))
     marker=root/'export_cursor.json'
     if not force and marker.exists():
         last=json.loads(marker.read_text())

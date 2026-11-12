@@ -6,8 +6,8 @@ from .runner import run_once
 from .handoff import export
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('command',choices=['once','enqueue','status','export']);p.add_argument('--config',type=Path,required=True)
-    p.add_argument('--kind',choices=['TRAIN_OCR','EVALUATE_OCR','EXPERIMENT_WP08']);p.add_argument('--payload',type=Path)
+    p=argparse.ArgumentParser();p.add_argument('command',choices=['once','enqueue','status','export','readiness']);p.add_argument('--config',type=Path,required=True)
+    p.add_argument('--kind',choices=['TRAIN_OCR','EVALUATE_OCR','EVALUATE_BASELINE_OCR','EXPERIMENT_WP08']);p.add_argument('--payload',type=Path)
     a=p.parse_args();config=json.loads(a.config.read_text(encoding='utf8'))
     if a.command=='once':
         result=run_once(config)
@@ -15,6 +15,9 @@ def main():
         try:result['claude_review']=review(config)
         except Exception as exc:result['claude_review']={'status':'FAILED','error':str(exc)}
         print(json.dumps(result,indent=2));return
+    if a.command=='readiness':
+        from .readiness import readiness
+        result=readiness(config);print(json.dumps(result,indent=2));raise SystemExit(0 if result['ready'] else 3)
     store=Store(config['state_dir'])
     try:
         if a.command=='enqueue':

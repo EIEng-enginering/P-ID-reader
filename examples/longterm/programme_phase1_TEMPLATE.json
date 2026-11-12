@@ -1,0 +1,25 @@
+{
+ "repository": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader",
+ "state_dir": "C:/PIDWork/PIDLongTerm",
+ "backend_python": "%LOCALAPPDATA%/PIDReader/models/runtime/Scripts/python.exe",
+ "core_python": "C:/PIDWork/venv312/Scripts/python.exe",
+ "plan_file": "C:/PIDWork/PIDLongTerm/plan.json",
+ "train_dataset": "C:/PIDWork/phase1/corpus_v1_reviewed/train/dataset.json",
+ "validation_dataset": "C:/PIDWork/phase1/corpus_v1_reviewed/validation/dataset.json",
+ "require_ac": true,
+ "maximum_start_cpu_percent": 35,
+ "minimum_free_memory_mb": 3000,
+ "minimum_free_disk_mb": 8000,
+ "max_wall_seconds": 1800,
+ "max_tree_memory_mb": 4096,
+ "daily_compute_seconds": 7200,
+ "claude_review_enabled": false,
+ "claude_cli": null,
+ "claude_max_budget_usd": null,
+ "pilot_target": {
+  "min_relative_strict_error_reduction": 0.2,
+  "max_lost_easy_controls": 0,
+  "min_baseline_errors": 5,
+  "note": "Declared before any candidate score exists."
+ }
+}

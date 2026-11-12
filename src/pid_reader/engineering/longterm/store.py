@@ -20,7 +20,7 @@ class Store:
         value=dict(kind=kind,utc=datetime.now(timezone.utc).isoformat(),**fields)
         self.db.execute('INSERT INTO events(payload,previous,hash) VALUES(?,?,?)',(canonical(value),previous,digest([previous,value])))
     def enqueue(self,kind,payload):
-        if kind not in ('TRAIN_OCR','EVALUATE_OCR','EXPERIMENT_WP08'):raise ValueError('Unsupported fixed job kind')
+        if kind not in ('TRAIN_OCR','EVALUATE_OCR','EVALUATE_BASELINE_OCR','EXPERIMENT_WP08'):raise ValueError('Unsupported fixed job kind')
         jid=digest([kind,payload])[:24]
         with self.db:
             if not self.db.execute('SELECT 1 FROM jobs WHERE id=?',(jid,)).fetchone():

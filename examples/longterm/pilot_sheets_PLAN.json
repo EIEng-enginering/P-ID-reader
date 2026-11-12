@@ -1,0 +1,175 @@
+{
+ "note": "Pilot corpus v1: 4 TRAIN families, 2 VALIDATION families (Spectra West Doe holds S418; kept validation/diagnostic only). Excluded as TRAIN because of a shared corporate parent with the S418 family: Westcoast Sikanni (S035), Spectra Dawson (S059,S420). S337 excluded as a near-duplicate of S333 (same split anyway). S456 (Trans Mountain, 300 dpi scan) was tried first and excluded: its CropBox extends outside its MediaBox and the reader refuses that frame; replaced by S471 from the same operator.",
+ "sheets": [
+  {
+   "sheet_id": "S333",
+   "family_id": "PEMBINA_PRAIRIE",
+   "split": "TRAIN",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/pumps/S333_cer_2935633_p004.pdf",
+   "quota": {
+    "LINE_LABEL": 6,
+    "BUBBLE_CODE": 2,
+    "BUBBLE_NUMBER": 2,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 1,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": "C:/PIDWork/wp07_results/dev/S333_eval/rfdetr_records.json"
+  },
+  {
+   "sheet_id": "S025",
+   "family_id": "PEMBINA_PRAIRIE",
+   "split": "TRAIN",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/flare_relief_blowdown/S025_cer_2935633_p006.pdf",
+   "quota": {
+    "LINE_LABEL": 6,
+    "BUBBLE_CODE": 2,
+    "BUBBLE_NUMBER": 2,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 1,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": null
+  },
+  {
+   "sheet_id": "S294",
+   "family_id": "POUCE_COUPE",
+   "split": "TRAIN",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/pigging_launchers_receivers/S294_cer_2882796_p003.pdf",
+   "quota": {
+    "LINE_LABEL": 6,
+    "BUBBLE_CODE": 2,
+    "BUBBLE_NUMBER": 2,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 1,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": null
+  },
+  {
+   "sheet_id": "S119",
+   "family_id": "NOVA_NGTL",
+   "split": "TRAIN",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/metering/S119_cer_2819030_p007.pdf",
+   "quota": {
+    "LINE_LABEL": 6,
+    "BUBBLE_CODE": 2,
+    "BUBBLE_NUMBER": 2,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 1,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": null
+  },
+  {
+   "sheet_id": "S034",
+   "family_id": "NOVA_NGTL",
+   "split": "TRAIN",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/flare_relief_blowdown/S034_cer_3268777_p002.pdf",
+   "quota": {
+    "LINE_LABEL": 6,
+    "BUBBLE_CODE": 2,
+    "BUBBLE_NUMBER": 2,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 1,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": null
+  },
+  {
+   "sheet_id": "S471",
+   "family_id": "TRANS_MOUNTAIN",
+   "split": "TRAIN",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/vessels_tanks/S471_cer_4360906_p008.pdf",
+   "quota": {
+    "LINE_LABEL": 6,
+    "BUBBLE_CODE": 2,
+    "BUBBLE_NUMBER": 2,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 1,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": null
+  },
+  {
+   "sheet_id": "S418",
+   "family_id": "SPECTRA_WESTDOE",
+   "split": "VALIDATION",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/separators_scrubbers/S418_cer_455653_p003.pdf",
+   "quota": {
+    "LINE_LABEL": 6,
+    "BUBBLE_CODE": 3,
+    "BUBBLE_NUMBER": 3,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 1,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": "C:/PIDWork/wp07_results/s418_eval/rfdetr_records.json"
+  },
+  {
+   "sheet_id": "S296",
+   "family_id": "SPECTRA_WESTDOE",
+   "split": "VALIDATION",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/pigging_launchers_receivers/S296_cer_455653_p002.pdf",
+   "quota": {
+    "LINE_LABEL": 5,
+    "BUBBLE_CODE": 2,
+    "BUBBLE_NUMBER": 2,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 0,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": null
+  },
+  {
+   "sheet_id": "S067",
+   "family_id": "SPECTRA_WESTDOE",
+   "split": "VALIDATION",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/gas_treating/S067_cer_461697_p002.pdf",
+   "quota": {
+    "LINE_LABEL": 5,
+    "BUBBLE_CODE": 2,
+    "BUBBLE_NUMBER": 2,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 0,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": null
+  },
+  {
+   "sheet_id": "S084",
+   "family_id": "TALISMAN",
+   "split": "VALIDATION",
+   "pdf": "C:/Users/Admin/OneDrive - Enhance Integration Engineering/Company/006 Calculation Methods/26 P&ID reader/Example P&IDs/library/heat_exchangers_heaters/S084_cer_887175_p008.pdf",
+   "quota": {
+    "LINE_LABEL": 6,
+    "BUBBLE_CODE": 3,
+    "BUBBLE_NUMBER": 3,
+    "VERTICAL": 1,
+    "TITLE_BLOCK": 1,
+    "EASY_CONTROL": 1,
+    "NON_TEXT_CANDIDATE": 2,
+    "UNREADABLE_CANDIDATE": 2
+   },
+   "rfdetr_cache": null
+  }
+ ]
+}

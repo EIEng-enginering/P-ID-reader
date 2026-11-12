@@ -18,6 +18,19 @@ def policy(config):
     if (root/'PAUSE').exists():return 'PAUSED'
     return None
 
+def declare_targets(store,plan):
+    """Record every continuation target in the hash-chained ledger BEFORE its jobs are enqueued, so it provably precedes any candidate score."""
+    from .evaluate import target_sha
+    seen=set()
+    for row in store.db.execute('SELECT payload FROM events'):
+        entry=json.loads(row[0])
+        if entry.get('kind')=='PREDECLARED_TARGET':seen.add(entry['target_sha256'])
+    for entry in plan:
+        target=entry.get('payload',{}).get('target') if isinstance(entry,dict) else None
+        if target and target_sha(target) not in seen:
+            with store.db:store.event('PREDECLARED_TARGET',target_sha256=target_sha(target),target=target,job_kind=entry['kind'])
+            seen.add(target_sha(target))
+
 def run_once(config):
     root=Path(config['state_dir']).resolve();repo=Path(config['repository']).resolve()
     if root.is_relative_to(repo):raise ValueError('High-write state must be outside the source/OneDrive repository')
@@ -47,6 +60,8 @@ def run_once(config):
                     return dict(status='BLOCKED',reason='PLAN_FILE_MISSING',handoff=export(store))
                 plan=json.loads(plan_path.read_text(encoding='utf8'))
                 if not isinstance(plan,list) or len(plan)>10000:raise ValueError('Invalid finite experiment plan')
+                from .evaluate import PILOT_TARGET_DEFAULT
+                declare_targets(store,plan+[dict(kind='EVALUATE_OCR',payload=dict(target=config.get('pilot_target',PILOT_TARGET_DEFAULT)))])
                 for entry in plan:
                     try:store.enqueue(entry['kind'],freeze_payload(entry['payload']))
                     except (FileNotFoundError,ValueError) as exc:
@@ -83,7 +98,8 @@ def run_once(config):
                 try:
                     validate(config['validation_dataset'],purpose='validate')
                     evaluation=freeze_payload(dict(dataset_path=config['validation_dataset'],training_dataset_path=payload['dataset_path'],
-                        model_manifest_path=payload['model_manifest_path'],candidate_manifest_path=result['candidate_manifest']))
+                        model_manifest_path=payload['model_manifest_path'],candidate_manifest_path=result['candidate_manifest'],
+                        target=config.get('pilot_target',__import__('pid_reader.engineering.longterm.evaluate',fromlist=['PILOT_TARGET_DEFAULT']).PILOT_TARGET_DEFAULT)))
                     result['evaluation_job']=store.enqueue('EVALUATE_OCR',evaluation)
                 except (ValueError,OSError,KeyError) as exc:result['evaluation_blocked_by']=str(exc)
             result['guard']=guarded;store.finish(job['id'],status,result)
