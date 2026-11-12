@@ -1,0 +1,201 @@
+{
+ "schema": "wp07-bubble-code-reference-v1",
+ "status": "DRAFT_ANALYST_NOT_INDEPENDENT",
+ "source_sha256": "b6b338335a3fc728adac8e631e44b43a56ec485a7403a349c2ca5a3f7621fd51",
+ "scope": "Instrument CODE (letters above the divider) for 16 of 28 bubbles in a fixed sample (every 2nd RF-DETR Instrument_* box in reading order). Chosen where the letters were legible to the analyst; illegible bubbles are NOT in the reference, so this cannot measure the hard cases. Numbers (6 digits) were not legible enough to read and are NOT scored.",
+ "reviewer": "none (analyst reading by Claude Code from a 4x render)",
+ "items": [
+  {
+   "id": "bubble-bac5a594",
+   "detector_id": "bac5a5943ede958bf28d2c56280bb10a",
+   "code": "PSV",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.23978160737345455,
+    "y0": 0.1757359846495677,
+    "x1": 0.2530355115869359,
+    "y1": 0.19348515608594882
+   }
+  },
+  {
+   "id": "bubble-f28126bd",
+   "detector_id": "f28126bd9751e7a9616b45d519eb92ac",
+   "code": "PT",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.4785380615004474,
+    "y0": 0.21255824361440828,
+    "x1": 0.49108168629160154,
+    "y1": 0.23091053201415543
+   }
+  },
+  {
+   "id": "bubble-a172c568",
+   "detector_id": "a172c5687cdb013e930df0b57f180745",
+   "code": "FT",
+   "analyst_confidence": "medium",
+   "bbox": {
+    "x0": 0.47832205459882393,
+    "y0": 0.22691070537959382,
+    "x1": 0.4913452617315542,
+    "y1": 0.2457795165123748
+   }
+  },
+  {
+   "id": "bubble-960f82ef",
+   "detector_id": "960f82efbd1db0615c08115bf0ba15ba",
+   "code": "FY",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.6432192187371464,
+    "y0": 0.2265866381416858,
+    "x1": 0.6552656785316271,
+    "y1": 0.24373175530945684
+   }
+  },
+  {
+   "id": "bubble-a2f884bd",
+   "detector_id": "a2f884bd41fe641f6ce6c4b39b645260",
+   "code": "BDV",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.28805374507948467,
+    "y0": 0.28399421323448504,
+    "x1": 0.3016260800337567,
+    "y1": 0.30191033314432497
+   }
+  },
+  {
+   "id": "bubble-ec6e9c65",
+   "detector_id": "ec6e9c65fa3fb7255358230d14b0a1cd",
+   "code": "FCV",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.6325306095304342,
+    "y0": 0.2963218376684914,
+    "x1": 0.6452059861452794,
+    "y1": 0.31406167122338524
+   }
+  },
+  {
+   "id": "bubble-c116591c",
+   "detector_id": "c116591cd985f78f952f381d566bb17d",
+   "code": "ESD",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.16521308541734694,
+    "y0": 0.370177527574021,
+    "x1": 0.17748471244674682,
+    "y1": 0.38836186270193473
+   }
+  },
+  {
+   "id": "bubble-4249c689",
+   "detector_id": "4249c689056f07296d40118e3fdeabc5",
+   "code": "FY",
+   "analyst_confidence": "medium",
+   "bbox": {
+    "x0": 0.643444663639061,
+    "y0": 0.3728490768485916,
+    "x1": 0.6564647571834511,
+    "y1": 0.39079794095441794
+   }
+  },
+  {
+   "id": "bubble-c96862bd",
+   "detector_id": "c96862bd943f730bd8e8d409c3b4e125",
+   "code": "ESDX",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.1159297548630619,
+    "y0": 0.375792395133672,
+    "x1": 0.1291424825908661,
+    "y1": 0.3935488629042674
+   }
+  },
+  {
+   "id": "bubble-3acf52a5",
+   "detector_id": "3acf52a58b3e7924becd9f5cff97cd02",
+   "code": "PI",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.36817387298393023,
+    "y0": 0.38904694116004623,
+    "x1": 0.38088697995918497,
+    "y1": 0.4064220889139525
+   }
+  },
+  {
+   "id": "bubble-5cd063ec",
+   "detector_id": "5cd063ec776b158c5d1c645affaa8388",
+   "code": "FY",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.6547803575244986,
+    "y0": 0.39734468109044896,
+    "x1": 0.6674116678976652,
+    "y1": 0.41484663069982397
+   }
+  },
+  {
+   "id": "bubble-6f85beca",
+   "detector_id": "6f85becaecb2b1d893fa573c2b63d9be",
+   "code": "ESD",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.6676978172904138,
+    "y0": 0.41390378108838577,
+    "x1": 0.6799706367530989,
+    "y1": 0.43220489318744504
+   }
+  },
+  {
+   "id": "bubble-d8300b45",
+   "detector_id": "d8300b45425bbafe5c498212836164ed",
+   "code": "FCV",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.6331388953717313,
+    "y0": 0.44338973532405374,
+    "x1": 0.6460208104688225,
+    "y1": 0.46077260669564263
+   }
+  },
+  {
+   "id": "bubble-291d2e25",
+   "detector_id": "291d2e2542e9f04d82f1fc9878e36900",
+   "code": "FT",
+   "analyst_confidence": "medium",
+   "bbox": {
+    "x0": 0.4967907224264738,
+    "y0": 0.49233218881741375,
+    "x1": 0.5087609566955325,
+    "y1": 0.5093987354258362
+   }
+  },
+  {
+   "id": "bubble-5cbd6be9",
+   "detector_id": "5cbd6be958852911ff7ba338e16c1705",
+   "code": "LG",
+   "analyst_confidence": "medium",
+   "bbox": {
+    "x0": 0.31514883015627415,
+    "y0": 0.5447795495069048,
+    "x1": 0.3278599876296,
+    "y1": 0.5623861854478434
+   }
+  },
+  {
+   "id": "bubble-4c7ff22e",
+   "detector_id": "4c7ff22ed872f581a8b0cea6afaa5124",
+   "code": "FR",
+   "analyst_confidence": "high",
+   "bbox": {
+    "x0": 0.516498604832389,
+    "y0": 0.5850016802321744,
+    "x1": 0.5285468716651962,
+    "y1": 0.6029848715277014
+   }
+  }
+ ]
+}
