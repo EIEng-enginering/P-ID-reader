@@ -163,3 +163,62 @@ def test_a_second_start_while_running_is_refused(tmp_path):
     with pytest.raises(RuntimeError, match="already"):
         service.start(cfg)
     stop_all(state)
+
+
+@pytest.fixture(autouse=False)
+def keep_test_hooks(monkeypatch):
+    """last_config() hides the underscore test hooks (the fake trainer command); these tests need them to survive the round trip."""
+    monkeypatch.setattr(service, "last_config", lambda state: service.read_json(Path(state) / "config.json"))
+
+
+def _cut_off_run(tmp_path, stored="RUNNING", **kw):
+    """A run whose runner is gone (as after a reboot): its saved settings and a service.json that still says it was going."""
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    c = cfg_for(tmp_path, steps=40, delay=0.02, **kw)
+    state = Path(c["state_dir"])
+    state.mkdir(parents=True, exist_ok=True)
+    service.write_json(state / "config.json", dict(service.DEFAULTS, **c))
+    service.write_json(state / "service.json", dict(state=stored, pid=999999, heartbeat_utc=service.now()))
+    return state
+
+
+def test_resume_if_interrupted_restarts_a_run_that_was_cut_off_and_it_finishes(tmp_path, keep_test_hooks):
+    state = _cut_off_run(tmp_path)
+    out = service.resume_if_interrupted(state, tray=False)
+    assert out["action"] == "resumed"
+    assert service.wait_for(state, ("COMPLETED", "FAILED"), timeout=60)["state"] == "COMPLETED"
+    again = service.resume_if_interrupted(state, tray=False)               # finished: nothing to do, and no fresh run is begun
+    assert again["action"] == "none" and "COMPLETED" in again["reason"]
+
+
+def test_resume_if_interrupted_leaves_alone_everything_the_user_or_the_run_ended(tmp_path):
+    assert service.resume_if_interrupted(tmp_path / "never", tray=False)["action"] == "none"          # never started
+    for stored in ("COMPLETED", "FAILED", "CANCELLED"):
+        state = _cut_off_run(tmp_path / stored, stored=stored)
+        assert service.resume_if_interrupted(state, tray=False)["action"] == "none"
+    paused = _cut_off_run(tmp_path / "paused", stored="PAUSED")                                         # user paused, then the PC restarted
+    assert service.resume_if_interrupted(paused, tray=False)["action"] == "none"
+    pause_file = _cut_off_run(tmp_path / "pausefile")
+    (pause_file / "PAUSE").write_text("x")
+    assert service.resume_if_interrupted(pause_file, tray=False)["action"] == "none"
+    cancelling = _cut_off_run(tmp_path / "cancelling", stored="CANCELLING")
+    assert service.resume_if_interrupted(cancelling, tray=False)["action"] == "none"
+
+
+def test_resume_if_interrupted_does_not_touch_a_run_that_is_alive(tmp_path):
+    c = cfg_for(tmp_path, steps=2000, delay=0.05)
+    service.start(c, tray=False)
+    state = Path(c["state_dir"])
+    try:
+        service.wait_for(state, ("RUNNING",), timeout=20)
+        out = service.resume_if_interrupted(state, tray=False)
+        assert out["action"] == "none" and "already running" in out["reason"]
+    finally:
+        stop_all(state)
+
+
+def test_a_pid_from_before_a_reboot_that_is_now_reused_counts_as_gone(tmp_path, keep_test_hooks):
+    state = _cut_off_run(tmp_path)
+    service.write_json(state / "service.json", dict(state="RUNNING", pid=os.getpid(), heartbeat_utc="2020-01-01T00:00:00+00:00"))        # a live pid, but last heard from long before this computer started
+    assert service.resume_if_interrupted(state, tray=False)["action"] == "resumed"
+    stop_all(state)

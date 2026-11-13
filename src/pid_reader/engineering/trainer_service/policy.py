@@ -2,6 +2,7 @@
 import ctypes
 import os
 import shutil
+import time
 from datetime import datetime, timedelta, timezone
 
 PERTH = timezone(timedelta(hours=8))
@@ -73,6 +74,19 @@ def set_low_priority():
         return True
     except OSError:
         return False
+
+
+def boot_time():
+    """When this computer last started (epoch seconds), or None if unknown. A runner whose last heartbeat is older than this is from before a restart."""
+    try:
+        if os.name == "nt":
+            k = ctypes.WinDLL("kernel32")
+            k.GetTickCount64.restype = ctypes.c_uint64
+            return time.time() - k.GetTickCount64() / 1000.0
+        with open("/proc/uptime") as f:
+            return time.time() - float(f.read().split()[0])
+    except (OSError, ValueError, AttributeError):
+        return None
 
 
 def pid_alive(pid):
