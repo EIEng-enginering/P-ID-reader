@@ -60,3 +60,4 @@ def raster_pdf():
 def _no_real_tray_icon(monkeypatch):
     """Tests that start a training run must never launch the real notification-area icon."""
     monkeypatch.setenv("PID_TRAINER_NO_TRAY", "1")
+    monkeypatch.setenv("PID_TRAINER_NO_EVAL", "1")                      # tests must never start a real (hours-long) scoring run

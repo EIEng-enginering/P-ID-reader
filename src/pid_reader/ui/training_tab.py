@@ -170,6 +170,9 @@ class TrainingTab(QWidget):
         if b.get("used_s") is not None:
             parts.append(f"compute used today {_minutes(b['used_s'])}")
         result = s.get("result") or {}
+        ev = s.get("evaluation") or {}
+        if ev.get("message") and s.get("state") == "COMPLETED":
+            parts.append(f"scoring on held-out plans ({str(ev.get('state')).lower()}): {ev['message']}")
         if result.get("weights"):
             parts.append(f"candidate weights: {result['weights']} (sha256 {str(result.get('weights_sha256'))[:12]}…)")
         self.detail.setText("; ".join(parts) or "-")

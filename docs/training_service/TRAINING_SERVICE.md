@@ -58,6 +58,16 @@ Score a model on them with `tools/data/eval_pid2graph.py ... --holdout-manifest 
 Not usable for the four-class detector: ASU (class-agnostic labels), Digitize-PID (numeric class ids without names, images still archived, licence not stated), Roboflow (not downloaded).
 A model whose card pins another checksum (the E5 card does) refuses new weights; score a candidate with its own copied card (CANDIDATE only), never by editing the E5 card.
 
+## Automatic scoring when a run finishes
+When a run completes, the runner scores the new weights on the held-out plans (PID2Graph OPEN100, plus the extra held-out real plans in the tiles manifest), scores the parent run (E5 for the first
+run) the same way, and stores the comparison in `lineage.json` (`eval`, with the pooled per-class precision/recall/F1, macro F1 and valve+instrumentation F1). Each model is scored once and cached under
+`<run folder>/eval/`. The Training tab and `trainer status` show the result (`evaluation`). It runs at low priority and takes about an hour on this laptop; a failure never changes the finished run.
+* **Rule:** a run is **rejected** (skipped by `auto`, never deleted) only when it is clearly worse than its parent: macro F1 down by more than 0.01, or valve+instrumentation F1 down by more than 0.03.
+  Otherwise it stays usable. Settings in the run config: `auto_evaluate` (default on), `auto_reject` (default on; off = the verdict is recorded but nothing is rejected), `eval_root` (the PID2Graph folder).
+* **If the data drive is not connected** the scoring is skipped with a message; connect it and run `python -m pid_reader.cli trainer evaluate [--entry N]`. The logon task also starts a pending scoring
+  after a restart (only when the last run finished and nothing else is running).
+* The scoring uses the authors' labels on public data: a development measurement, not an accuracy claim about your drawings. Each run gets its own CANDIDATE model card (the E5 card pins E5's checksum).
+
 ## Limits
 * Source checkout only (it runs `tools/tr1_train` and needs the optional torch environment, `PIDLAB_TR1_PYTHON` or `C:\PIDWork\venv312_torch`).
 * One run at a time per run folder. The run folder must not be in OneDrive.

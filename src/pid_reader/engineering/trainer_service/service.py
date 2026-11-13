@@ -22,7 +22,8 @@ ROOT = Path(__file__).resolve().parents[4]
 TOOL = ROOT / "tools" / "tr1_train"
 REQUIRED = ("state_dir", "tiles_dir", "torch_python")
 DEFAULTS = dict(epochs=6, lr=0.005, init=None, init_trained=True, threads=2, batch=2, ckpt_every_iters=50, attempt_wall_s=6 * 3600, max_rss_mb=4096,
-                require_ac=True, min_free_memory_mb=2500, min_free_disk_mb=4000, daily_budget_s=0, max_attempts=12)
+                require_ac=True, min_free_memory_mb=2500, min_free_disk_mb=4000, daily_budget_s=0, max_attempts=12,
+                auto_evaluate=True, auto_reject=True, eval_root=r"D:\Data P&ID\PID2Graph_zenodo_14803338")
 STALE_AFTER_S = 45
 
 
@@ -107,7 +108,7 @@ def status(state_dir):
     except (KeyError, ValueError):
         pass
     out = dict(s, alive=alive, heartbeat_age_s=age, controls=dict(pause=(state_dir / "PAUSE").exists(), cancel=(state_dir / "CANCEL").exists()),
-               progress=read_json(state_dir / "progress.json", {}), budget=read_json(state_dir / "budget.json", {}))
+               progress=read_json(state_dir / "progress.json", {}), budget=read_json(state_dir / "budget.json", {}), evaluation=read_json(state_dir / "evaluation.json"))
     if s.get("state") in ("STARTING", "RUNNING", "PAUSING", "PAUSED", "WAITING", "STOPPING", "CANCELLING") and not alive:
         out["state"] = "STOPPED_UNEXPECTEDLY"
         out["message"] = "The runner is no longer running (computer restarted or the process ended). Start again to resume from the last checkpoint."

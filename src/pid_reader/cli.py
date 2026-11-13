@@ -200,10 +200,10 @@ def main(argv: list[str] | None = None) -> int:
     wp.add_argument('--output-dir',required=True)
     wp.add_argument('--store-database',help='Optional independent WP123 SQLite sidecar (never Worksheet DB)')
     tr=sub.add_parser('trainer',help='Background symbol-detector training (detached, low priority): start, status, pause, resume, cancel')
-    tr.add_argument('action',choices=['start','status','pause','resume','cancel','tray','shortcut','autoresume','lineage']);tr.add_argument('--state-dir',help='run folder (default %LOCALAPPDATA%/PIDReader/training/tr1; never OneDrive)')
+    tr.add_argument('action',choices=['start','status','pause','resume','cancel','tray','shortcut','autoresume','lineage','evaluate']);tr.add_argument('--state-dir',help='run folder (default %LOCALAPPDATA%/PIDReader/training/tr1; never OneDrive)')
     tr.add_argument('--tiles-dir');tr.add_argument('--torch-python',default='C:/PIDWork/venv312_torch/Scripts/python.exe');tr.add_argument('--init',help='starting weights (default: the repo E5 weights)')
     tr.add_argument('--from-scratch',action='store_true',help='start from COCO-style --init instead of continuing trained weights');tr.add_argument('--epochs',type=int,default=6)
-    tr.add_argument('--mark',type=int,help='lineage: finished-run id to mark');tr.add_argument('--status',choices=['usable','rejected'],help='lineage: new status for --mark');tr.add_argument('--desktop',help='folder for the shortcut (default: your Desktop)');tr.add_argument('--threads',type=int,default=2);tr.add_argument('--hours-per-day',type=float,default=0.0,help='0 = no daily limit (default)');tr.add_argument('--lr',type=float,default=0.005)
+    tr.add_argument('--mark',type=int,help='lineage: finished-run id to mark');tr.add_argument('--entry',type=int,help='evaluate: finished-run id to score (default: the newest)');tr.add_argument('--status',choices=['usable','rejected'],help='lineage: new status for --mark');tr.add_argument('--desktop',help='folder for the shortcut (default: your Desktop)');tr.add_argument('--threads',type=int,default=2);tr.add_argument('--hours-per-day',type=float,default=0.0,help='0 = no daily limit (default)');tr.add_argument('--lr',type=float,default=0.005)
     wpr=sub.add_parser('wp123-review',help='Append named human decision to isolated WP123 sidecar')
     wpr.add_argument('database');wpr.add_argument('analysis_id');wpr.add_argument('target_id')
     wpr.add_argument('--actor',required=True);wpr.add_argument('--reason',required=True)
@@ -279,8 +279,17 @@ def main(argv: list[str] | None = None) -> int:
                 if args.mark:
                     trainer_service.mark_lineage(state,args.mark,args.status or 'usable')
                 print(canonical_json({'lineage':trainer_service.read_lineage(state)}))
+            elif args.action=='evaluate':
+                from .engineering.trainer_service import evaluate as trainer_eval
+                trainer_service.register_finished_run(state)
+                cfg=dict(trainer_service.DEFAULTS,**(trainer_service.read_json(Path(state)/'config.json',{}) or {}))
+                print(canonical_json(trainer_eval.evaluate_guarded(state,cfg,entry_id=args.entry)))
             elif args.action=='autoresume':
-                print(canonical_json(trainer_service.resume_if_interrupted(state)))
+                out=trainer_service.resume_if_interrupted(state)
+                from .engineering.trainer_service import evaluate as trainer_eval
+                if out.get('action')=='none' and trainer_eval.evaluation_pending(state):
+                    out['evaluation']='started' if trainer_eval.spawn_evaluation(state) else 'not started'
+                print(canonical_json(out))
             elif args.action=='shortcut':
                 from .ui.training_tray import make_desktop_shortcut
                 print(canonical_json({'shortcut':str(make_desktop_shortcut(args.desktop,state))}))
