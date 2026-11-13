@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased - background training service (branch claude/training-service, merged and pushed)
+### Added
+- `engineering/trainer_service` (detached low-priority runner, status/pause/resume/cancel, resource policy), Training tab in the Reader, `trainer` CLI commands.
+- `tools/tr1_train`: `--init-trained` (continue from trained weights) and `--lr`; `tools/data/safe_npy.py` (restricted reader for untrusted .npy), `tools/data/eval_symbol_baseline.py`.
+### Not changed
+- Worksheet R1 contract/API/worker, DB v13, detector gate (.65), the active detector.
+
 ## Unreleased - long-term phase 1 (branch claude/longterm-phase1, merged into main)
 ### Added
 - Strict omission-aware scorer, corpus provenance/adjudication/split checks, blind review package generator, baseline-only evaluation with prediction cache, readiness gates, predeclared target in the ledger, bubble geometry, vertical-text budget, EasyOCR letters/digits allowlist option, text-layer proxy data (TRAIN-only) and tools.

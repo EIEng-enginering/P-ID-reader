@@ -228,3 +228,23 @@ def test_tile_preparation_is_deterministic_and_never_touches_the_held_out_source
     assert [h(p) for p in sorted((tmp_path / "t1").glob("*.png"))] == [h(p) for p in sorted((tmp_path / "t2").glob("*.png"))]
     labels = {b[4] for r in man["splits"]["train"] for b in r["boxes"]}
     assert labels <= {1, 2, 3, 4} and 3 in labels                                        # tank folded into 'general' (3)
+
+
+@needs_torch
+def test_training_can_continue_from_trained_weights_with_a_lower_learning_rate(tmp_path):
+    """--init-trained loads a checkpoint of THIS model (5-class head) instead of a COCO one; --lr overrides the default 0.02."""
+    d = tiles(tmp_path, 2)
+    env = {"PIDLAB_LOCAL_TRAINER_TR1": "on"}
+    common = ["--tiles-dir", str(d), "--python", TORCH_PY, "--epochs", "1", "--threads", "2", "--ckpt-every-iters", "1", "--max-wall-s", "600"]
+    first = run_tool([*common, "--out-dir", str(tmp_path / "first")], env)
+    assert first.returncode == 0, first.stdout + first.stderr
+    weights = tmp_path / "first" / "weights_final.pt"
+    assert weights.is_file()
+    second = run_tool([*common, "--out-dir", str(tmp_path / "second"), "--init", str(weights), "--init-trained", "--lr", "0.002"], env)
+    assert second.returncode == 0, second.stdout + second.stderr
+    man = json.loads((tmp_path / "second" / "TRAINING_MANIFEST.json").read_text())
+    assert man["status"] == "COMPLETED" and man["cfg"]["lr"] == 0.002 and man["cfg"]["init_trained"] is True
+    assert man["final_weights_sha256"] != json.loads((tmp_path / "first" / "TRAINING_MANIFEST.json").read_text())["final_weights_sha256"]
+    # without --init-trained the same weights are refused (a COCO-shaped model cannot take a 5-class head)
+    wrong = run_tool([*common, "--out-dir", str(tmp_path / "third"), "--init", str(weights)], env)
+    assert wrong.returncode != 0

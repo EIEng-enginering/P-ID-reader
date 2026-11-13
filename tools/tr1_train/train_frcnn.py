@@ -98,6 +98,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--tiles-dir", required=True)
     ap.add_argument("--out-dir", required=True)
+    ap.add_argument("--lr", type=float, default=DEFAULTS["lr"], help="peak learning rate (default unchanged: 0.02; use ~0.005 or lower when continuing from trained weights)")
+    ap.add_argument("--init-trained", action="store_true", help="--init is a checkpoint of THIS model (5-class head), e.g. the E5 weights: swap the head first, then load it, so training continues instead of restarting from COCO")
     ap.add_argument("--init", default="none", help="torchvision COCO checkpoint (fasterrcnn_mobilenet_v3_large_fpn-fb6a3cc7.pth) or 'none'")
     ap.add_argument("--resume")
     ap.add_argument("--epochs", type=int, default=DEFAULTS["epochs"])
@@ -110,7 +112,7 @@ def main(argv=None) -> int:
     ap.add_argument("--max-wall-s", type=float, default=0.0, help="soft budget: checkpoint and stop cleanly (0 = none)")
     ap.add_argument("--debug-sleep-per-iter", type=float, default=0.0, help="test hook: sleep after each iteration")
     a = ap.parse_args(argv)
-    cfg = dict(DEFAULTS, seed=a.seed, epochs=a.epochs, batch=a.batch, threads=a.threads, size=a.size)
+    cfg = dict(DEFAULTS, seed=a.seed, epochs=a.epochs, batch=a.batch, threads=a.threads, size=a.size, lr=a.lr, init_trained=bool(a.init_trained))
     t0 = time.monotonic()
     torch.manual_seed(cfg["seed"])
     random.seed(cfg["seed"])
@@ -126,9 +128,11 @@ def main(argv=None) -> int:
     from torchvision.models.detection import fasterrcnn_mobilenet_v3_large_fpn
     from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
     model = fasterrcnn_mobilenet_v3_large_fpn(weights=None, weights_backbone=None, min_size=cfg["size"], max_size=cfg["size"], box_detections_per_img=300)
-    if a.init != "none":
+    if a.init != "none" and not a.init_trained:
         model.load_state_dict(torch.load(a.init, map_location="cpu", weights_only=True))
     model.roi_heads.box_predictor = FastRCNNPredictor(model.roi_heads.box_predictor.cls_score.in_features, len(classes) + 1)
+    if a.init != "none" and a.init_trained:
+        model.load_state_dict(torch.load(a.init, map_location="cpu", weights_only=True))
     opt = torch.optim.SGD([p for p in model.parameters() if p.requires_grad], lr=cfg["lr"], momentum=cfg["momentum"], weight_decay=cfg["wd"])
     steps_per_epoch = math.ceil(len(recs) / cfg["batch"])
     n_it = steps_per_epoch * cfg["epochs"]

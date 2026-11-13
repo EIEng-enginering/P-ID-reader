@@ -199,6 +199,11 @@ def main(argv: list[str] | None = None) -> int:
     wp.add_argument('--page',type=int,default=1,help='PDF page the detections (and an OCR CSV) belong to (default 1)')
     wp.add_argument('--output-dir',required=True)
     wp.add_argument('--store-database',help='Optional independent WP123 SQLite sidecar (never Worksheet DB)')
+    tr=sub.add_parser('trainer',help='Background symbol-detector training (detached, low priority): start, status, pause, resume, cancel')
+    tr.add_argument('action',choices=['start','status','pause','resume','cancel','tray','shortcut']);tr.add_argument('--state-dir',help='run folder (default %LOCALAPPDATA%/PIDReader/training/tr1; never OneDrive)')
+    tr.add_argument('--tiles-dir');tr.add_argument('--torch-python',default='C:/PIDWork/venv312_torch/Scripts/python.exe');tr.add_argument('--init',help='starting weights (default: the repo E5 weights)')
+    tr.add_argument('--from-scratch',action='store_true',help='start from COCO-style --init instead of continuing trained weights');tr.add_argument('--epochs',type=int,default=6)
+    tr.add_argument('--desktop',help='folder for the shortcut (default: your Desktop)');tr.add_argument('--threads',type=int,default=2);tr.add_argument('--hours-per-day',type=float,default=2.0,help='0 = no daily limit');tr.add_argument('--lr',type=float,default=0.005)
     wpr=sub.add_parser('wp123-review',help='Append named human decision to isolated WP123 sidecar')
     wpr.add_argument('database');wpr.add_argument('analysis_id');wpr.add_argument('target_id')
     wpr.add_argument('--actor',required=True);wpr.add_argument('--reason',required=True)
@@ -259,6 +264,24 @@ def main(argv: list[str] | None = None) -> int:
                 errors=store.verify_audit()
                 print(canonical_json({'audit_ok':not errors,'errors':errors}))
             return 0 if not errors else 2
+        if args.cmd=='trainer':
+            from .engineering.trainer_service import service as trainer_service
+            state=args.state_dir or str(trainer_service.default_state_dir())
+            if args.action=='start':
+                root=Path(__file__).resolve().parents[2]
+                cfg=dict(state_dir=state,tiles_dir=args.tiles_dir or 'C:/PIDWork/tr1/tiles',torch_python=args.torch_python,epochs=args.epochs,threads=args.threads,
+                         daily_budget_s=int(args.hours_per_day*3600),lr=args.lr,init=args.init or str(root/'models'/'E5_weights_epoch_02.pt'),init_trained=not args.from_scratch)
+                print(canonical_json(trainer_service.start(cfg)))
+            elif args.action=='status':
+                print(canonical_json(trainer_service.status(state)))
+            elif args.action=='shortcut':
+                from .ui.training_tray import make_desktop_shortcut
+                print(canonical_json({'shortcut':str(make_desktop_shortcut(args.desktop,state))}))
+            elif args.action=='tray':
+                print(canonical_json({'tray_launched':trainer_service.ensure_tray(state),'state_dir':state}))
+            else:
+                getattr(trainer_service,args.action)(state);print(canonical_json({'requested':args.action,'state_dir':state}))
+            return 0
         if args.cmd=='recover-wp123':
             from .engineering.wp123_recovery import read_ocr_csv,read_detectors,recover_wp123,save_wp123
             from .engineering.wp123_roi import supplemental_ocr

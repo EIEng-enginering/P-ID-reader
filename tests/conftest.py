@@ -54,3 +54,9 @@ def raster_pdf():
     c.drawImage(ImageReader(Image.new("RGB",(64,64),"white")),30,30,width=100,height=100)
     c.showPage();c.save()
     return b.getvalue()
+
+
+@pytest.fixture(autouse=True)
+def _no_real_tray_icon(monkeypatch):
+    """Tests that start a training run must never launch the real notification-area icon."""
+    monkeypatch.setenv("PID_TRAINER_NO_TRAY", "1")
