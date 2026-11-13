@@ -203,7 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     tr.add_argument('action',choices=['start','status','pause','resume','cancel','tray','shortcut','autoresume']);tr.add_argument('--state-dir',help='run folder (default %LOCALAPPDATA%/PIDReader/training/tr1; never OneDrive)')
     tr.add_argument('--tiles-dir');tr.add_argument('--torch-python',default='C:/PIDWork/venv312_torch/Scripts/python.exe');tr.add_argument('--init',help='starting weights (default: the repo E5 weights)')
     tr.add_argument('--from-scratch',action='store_true',help='start from COCO-style --init instead of continuing trained weights');tr.add_argument('--epochs',type=int,default=6)
-    tr.add_argument('--desktop',help='folder for the shortcut (default: your Desktop)');tr.add_argument('--threads',type=int,default=2);tr.add_argument('--hours-per-day',type=float,default=2.0,help='0 = no daily limit');tr.add_argument('--lr',type=float,default=0.005)
+    tr.add_argument('--desktop',help='folder for the shortcut (default: your Desktop)');tr.add_argument('--threads',type=int,default=2);tr.add_argument('--hours-per-day',type=float,default=0.0,help='0 = no daily limit (default)');tr.add_argument('--lr',type=float,default=0.005)
     wpr=sub.add_parser('wp123-review',help='Append named human decision to isolated WP123 sidecar')
     wpr.add_argument('database');wpr.add_argument('analysis_id');wpr.add_argument('target_id')
     wpr.add_argument('--actor',required=True);wpr.add_argument('--reason',required=True)

@@ -135,6 +135,10 @@ def test_the_runner_runs_at_below_normal_priority(tmp_path):
     stop_all(state)
 
 
+def test_the_default_has_no_daily_compute_limit():
+    assert service.DEFAULTS["daily_budget_s"] == 0
+
+
 def test_a_dead_runner_is_reported_as_stopped_unexpectedly(tmp_path):
     state = tmp_path / "s"
     state.mkdir()

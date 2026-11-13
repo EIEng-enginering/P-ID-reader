@@ -4,7 +4,7 @@ Trains the learned symbol detector (TR1, Faster R-CNN) in the background so you 
 detector, the project database or any engineering data.
 
 ## Use it
-**In the Reader:** open the **Training** tab. Check the settings (defaults: continue from the repo's E5 weights, 6 epochs, 2 CPU threads, 2 compute hours per day, tiles in
+**In the Reader:** open the **Training** tab. Check the settings (defaults: continue from the repo's E5 weights, 6 epochs, 2 CPU threads, no daily compute limit (set Compute hours per day to cap it), tiles in
 `C:\PIDWork\tr1\tiles`, run folder `%LOCALAPPDATA%\PIDReader\training\tr1`), press **Start training**. Then **Pause / Resume** and **Cancel** as needed; the tab shows state,
 progress, loss, speed, estimated time left and the compute used today. It only reads status files (every 3 s, only while the tab is visible), so it never freezes the window.
 
@@ -14,7 +14,7 @@ progress, loss, speed, estimated time left and the compute used today. It only r
 * A **detached runner process** supervises the guarded trainer in `tools/tr1_train`. Closing the Reader does **not** stop it. If the computer restarts, press Start again: it resumes from the
   last checkpoint (the trainer restores the optimiser, learning-rate schedule and random state, so a paused or interrupted run finishes with the same weights as an uninterrupted one).
 * **Low impact:** runs at BELOW_NORMAL priority on 2 of the 4 cores by default, so your own work keeps the CPU. It waits (state *Waiting*) on battery power, when free memory is under
-  2.5 GB, when free disk is under 4 GB, or when today's compute-hours limit (Perth date) is reached, and continues by itself when that clears.
+  2.5 GB, when free disk is under 4 GB, or or, only if you set one, when today's compute-hours limit (Perth date) is reached, and continues by itself when that clears.
 * **Safe stops:** pause, cancel, a policy wait and the daily limit all stop the trainer at a checkpoint (the guard kills the whole process tree; a Job Object also kills it if the runner dies).
   Losing at most `ckpt_every_iters` (50) iterations. Memory is capped at 4 GiB for the whole tree.
 * **Files** (all in the run folder): `config.json`, `service.json` (state), `progress.json`, `budget.json`, `PAUSE`/`CANCEL` control files, `service_events.jsonl` (hash-chained),
@@ -37,7 +37,7 @@ It starts by itself whenever a run starts (from the Training tab or the CLI) and
 It runs `python -m pid_reader.cli trainer autoresume`, which restarts the run **only if it was cut off while it was meant to be going** (restart, crash, closing the Claude app, logoff).
 It never starts a new run and never overrides you: a paused, stopped, cancelled, failed or finished run is left alone, and a run that is already alive is not touched.
 A saved process id from before the restart is recognised as stale (its last heartbeat predates the boot time), so a reused id cannot fool it.
-The runner still honours the battery, memory, disk and daily-hours limits. Remove the task with `powershell -File tools/training/Install-ResumeTask.ps1 -Remove`.
+The runner still honours the battery, memory and disk limits (and a daily-hours limit only if you set one). Remove the task with `powershell -File tools/training/Install-ResumeTask.ps1 -Remove`.
 A run started from a process that Claude launched ends when the Claude app is closed; start it from the desktop shortcut, the tray icon or this task to keep it independent.
 
 ## Limits

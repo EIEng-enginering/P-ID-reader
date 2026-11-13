@@ -87,7 +87,7 @@ class TrainingTab(QWidget):
         self.hours = QDoubleSpinBox()
         self.hours.setRange(0, 24)
         self.hours.setSingleStep(0.5)
-        self.hours.setValue(2.0)
+        self.hours.setValue(0)
         self.hours.setSpecialValueText("no daily limit")
         self.lr = QDoubleSpinBox()
         self.lr.setDecimals(4)
