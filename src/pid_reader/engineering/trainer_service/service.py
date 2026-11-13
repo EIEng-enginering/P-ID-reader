@@ -74,7 +74,7 @@ def validate(cfg):
         problems.append("torch_python does not exist (the optional torch environment is not installed)")
     if not (Path(cfg["tiles_dir"]) / "TILES_MANIFEST.json").is_file():
         problems.append("tiles_dir has no TILES_MANIFEST.json (prepare tiles first)")
-    if cfg.get("init") and not Path(cfg["init"]).is_file():
+    if cfg.get("init") and cfg["init"] != "auto" and not Path(cfg["init"]).is_file():
         problems.append("init weights file does not exist")
     if not (TOOL / "run_training.py").is_file():
         problems.append("tools/tr1_train is missing (training runs from a source checkout only)")
@@ -114,17 +114,99 @@ def status(state_dir):
     return out
 
 
+LINEAGE_FILE = "lineage.json"
+E5_WEIGHTS = ROOT / "models" / "E5_weights_epoch_02.pt"
+
+
+def _sha256(path):
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def read_lineage(state_dir):
+    """Every finished run, oldest first: id, permanent weights copy, checksum, parent run, status ('usable' or 'rejected'). Append-only apart from status/notes."""
+    return read_json(Path(state_dir) / LINEAGE_FILE, []) or []
+
+
+def register_finished_run(state_dir):
+    """Keep a permanent, checksummed copy of a finished run's weights in <state>/lineage/ and record it, so the next run can build on it.
+    Idempotent (the same weights are registered once). Returns the entry, or None when there is no finished run to register."""
+    import shutil
+    state = Path(state_dir)
+    run = state / "run"
+    manifest = read_json(run / "TRAINING_MANIFEST.json") or {}
+    final = run / "weights_final.pt"
+    if manifest.get("status") != "COMPLETED" or not final.is_file():
+        return None
+    sha = _sha256(final)
+    entries = read_lineage(state)
+    for e in entries:
+        if e.get("sha256") == sha:
+            return e
+    n = max((e["id"] for e in entries), default=0) + 1
+    dest = state / "lineage" / f"run{n:03d}_weights.pt"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(final, dest)
+    if _sha256(dest) != sha:
+        dest.unlink()
+        raise OSError("the lineage copy of the weights does not match the original")
+    cfg = read_json(state / "config.json", {}) or {}
+    entry = dict(id=n, weights=str(dest), sha256=sha, iters=manifest.get("iters"), epochs=cfg.get("epochs"), lr=cfg.get("lr"), started_from=cfg.get("init"),
+                 parent=cfg.get("init_parent"), tiles_manifest_sha256=manifest.get("tiles_manifest_sha256"), finished_utc=now(), status="usable", notes="")
+    write_json(state / LINEAGE_FILE, entries + [entry])
+    return entry
+
+
+def mark_lineage(state_dir, run_id, status, notes=None):
+    """Mark a finished run 'usable' (later runs may build on it) or 'rejected' (skipped by 'auto', e.g. it scored worse)."""
+    if status not in ("usable", "rejected"):
+        raise ValueError("status must be 'usable' or 'rejected'")
+    entries = read_lineage(state_dir)
+    hit = [e for e in entries if e["id"] == run_id]
+    if not hit:
+        raise ValueError(f"no finished run {run_id} in the lineage")
+    hit[0]["status"] = status
+    if notes is not None:
+        hit[0]["notes"] = notes
+    write_json(Path(state_dir) / LINEAGE_FILE, entries)
+    return hit[0]
+
+
+def latest_usable(state_dir):
+    for e in reversed(read_lineage(state_dir)):
+        if e.get("status", "usable") != "rejected" and Path(e["weights"]).is_file():
+            return e
+    return None
+
+
+def resolve_init(state_dir, spec):
+    """(weights path, parent run id). 'auto' = build on the newest usable finished run, or the repo's E5 weights when there is none yet."""
+    if spec in (None, "", "auto"):
+        e = latest_usable(state_dir)
+        return (e["weights"], e["id"]) if e else (str(E5_WEIGHTS), None)
+    return spec, next((e["id"] for e in read_lineage(state_dir) if e["weights"] == spec), None)
+
+
 def default_config(state_dir=None):
     """The settings a one-click Start uses when there is no previous run: continue from the repo's E5 weights on the newest prepared tiles."""
     tiles = sorted((p for p in Path("C:/PIDWork/tr1").glob("tiles*") if (p / "TILES_MANIFEST.json").is_file()), key=lambda p: p.stat().st_mtime) if Path("C:/PIDWork/tr1").exists() else []
     return dict(state_dir=str(state_dir or default_state_dir()), tiles_dir=str(tiles[-1]) if tiles else r"C:\PIDWork\tr1\tiles",
-                torch_python=os.environ.get("PIDLAB_TR1_PYTHON", r"C:\PIDWork\venv312_torch\Scripts\python.exe"), init=str(ROOT / "models" / "E5_weights_epoch_02.pt"), init_trained=True)
+                torch_python=os.environ.get("PIDLAB_TR1_PYTHON", r"C:\PIDWork\venv312_torch\Scripts\python.exe"), init="auto", init_trained=True)
 
 
 def last_config(state_dir):
     """The frozen settings of the previous run in this folder (what 'Start' repeats), or None."""
     c = read_json(Path(state_dir) / "config.json")
-    return {k: v for k, v in c.items() if not k.startswith("_")} if c else None
+    if not c:
+        return None
+    out = {k: v for k, v in c.items() if not k.startswith("_") and k not in ("init_spec", "init_parent")}
+    if out.get("init"):
+        out["init"] = c.get("init_spec", "auto")                       # repeat the CHOICE ('auto' = build on the newest run), not last time's concrete file
+    return out
 
 
 TRAY_INFO = default_state_dir().parent / "tray.json"
@@ -161,6 +243,10 @@ def archive_finished_run(state):
     n = 1
     while (state / f"run.completed.{n}").exists():
         n += 1
+    try:
+        register_finished_run(state)                                       # keep the weights for the next run to build on before the folder is moved aside
+    except OSError:
+        pass
     for name, target in (("run", f"run.completed.{n}"), ("run.events.jsonl", f"run.completed.{n}.events.jsonl"), ("progress.json", f"run.completed.{n}.progress.json")):
         if (state / name).exists():
             os.replace(state / name, state / target)
@@ -179,6 +265,16 @@ def start(cfg, python=None, tray=True):
     if cur.get("state") == "COMPLETED":
         archive_finished_run(state)
     frozen = dict(DEFAULTS, **cfg)
+    spec = frozen.get("init")
+    if spec:
+        prev = read_json(state / "config.json", {}) or {}
+        if spec == "auto" and cur.get("state") not in ("NOT_STARTED", "COMPLETED") and prev.get("init") and Path(prev["init"]).is_file():
+            frozen["init"], frozen["init_parent"] = prev["init"], prev.get("init_parent")      # the same run carries on: keep the weights it began from
+        else:
+            frozen["init"], frozen["init_parent"] = resolve_init(state, spec)
+        frozen["init_spec"] = spec
+        if not Path(frozen["init"]).is_file():
+            raise ValueError("init weights file does not exist")
     write_json(state / "config.json", frozen)
     for name in ("CANCEL", "PAUSE", "ATTEMPT_CANCEL"):
         try:

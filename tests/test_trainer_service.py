@@ -22,7 +22,7 @@ FAKE = textwrap.dedent('''
             time.sleep(delay)
             log.write(json.dumps({"iter": i, "epoch": 1, "loss": 1.0 / i}) + "\\n"); log.flush()
             (out / "ckpt_latest.pt").write_text(str(i))
-    (out / "weights_final.pt").write_bytes(b"w")
+    (out / "weights_final.pt").write_bytes(b"w" + str(time.time_ns()).encode())          # every run produces different weights
     (out / "TRAINING_MANIFEST.json").write_text(json.dumps({"status": "COMPLETED", "iters": steps, "final_weights": "weights_final.pt", "final_weights_sha256": "ab" * 32}))
 ''')
 
@@ -226,3 +226,85 @@ def test_a_pid_from_before_a_reboot_that_is_now_reused_counts_as_gone(tmp_path, 
     service.write_json(state / "service.json", dict(state="RUNNING", pid=os.getpid(), heartbeat_utc="2020-01-01T00:00:00+00:00"))        # a live pid, but last heard from long before this computer started
     assert service.resume_if_interrupted(state, tray=False)["action"] == "resumed"
     stop_all(state)
+
+
+def _finished_run(state, payload=b"weights-1"):
+    run = Path(state) / "run"
+    run.mkdir(parents=True, exist_ok=True)
+    (run / "weights_final.pt").write_bytes(payload)
+    (run / "TRAINING_MANIFEST.json").write_text(json.dumps({"status": "COMPLETED", "iters": 10}))
+
+
+def test_a_finished_run_is_kept_permanently_and_registered_once(tmp_path):
+    state = tmp_path / "s"
+    assert service.register_finished_run(state) is None                       # nothing finished yet
+    _finished_run(state)
+    e1 = service.register_finished_run(state)
+    assert e1["id"] == 1 and Path(e1["weights"]).read_bytes() == b"weights-1" and e1["status"] == "usable"
+    assert service.register_finished_run(state)["id"] == 1 and len(service.read_lineage(state)) == 1          # same weights: registered once
+    (state / "run" / "TRAINING_MANIFEST.json").write_text(json.dumps({"status": "FAILED"}))
+    (state / "run" / "weights_final.pt").write_bytes(b"other")
+    assert service.register_finished_run(state) is None                       # an unfinished run is never registered
+
+
+def test_auto_builds_on_the_newest_usable_run_and_skips_rejected_ones(tmp_path):
+    state = tmp_path / "s"
+    path, parent = service.resolve_init(state, "auto")
+    assert path == str(service.E5_WEIGHTS) and parent is None                  # nothing to build on yet: the repo's E5 weights
+    _finished_run(state, b"one")
+    service.register_finished_run(state)
+    _finished_run(state, b"two")
+    service.register_finished_run(state)
+    assert service.resolve_init(state, "auto")[1] == 2
+    service.mark_lineage(state, 2, "rejected", notes="scored worse")
+    assert service.resolve_init(state, "auto")[1] == 1                         # skips the rejected run
+    service.mark_lineage(state, 1, "rejected")
+    assert service.resolve_init(state, "auto")[1] is None
+    with pytest.raises(ValueError):
+        service.mark_lineage(state, 9, "usable")
+    explicit = tmp_path / "mine.pt"
+    explicit.write_bytes(b"x")
+    assert service.resolve_init(state, str(explicit)) == (str(explicit), None)
+
+
+def test_each_new_run_starts_from_the_previous_run_so_the_work_accumulates(tmp_path):
+    c = cfg_for(tmp_path, steps=15, delay=0.01, init="auto")
+    state = Path(c["state_dir"])
+    service.start(c, tray=False)
+    assert service.wait_for(state, ("COMPLETED", "FAILED"), timeout=60)["state"] == "COMPLETED"
+    first = service.read_json(state / "config.json")
+    assert first["init"] == str(service.E5_WEIGHTS) and first["init_parent"] is None and first["init_spec"] == "auto"          # first run: from E5
+    service.start(c, tray=False)                                               # the second run
+    assert service.wait_for(state, ("COMPLETED", "FAILED"), timeout=60)["state"] == "COMPLETED"
+    lineage = service.read_lineage(state)
+    second = service.read_json(state / "config.json")
+    assert second["init"] == lineage[0]["weights"] and second["init_parent"] == 1          # second run: from the first run's weights
+    assert (state / "run.completed.1").is_dir() and len(lineage) == 2 and lineage[1]["parent"] == 1
+    assert Path(lineage[0]["weights"]).is_file() and Path(lineage[1]["weights"]).is_file() and lineage[0]["sha256"] != lineage[1]["sha256"]
+
+
+def test_last_config_repeats_the_choice_not_last_times_file(tmp_path):
+    state = tmp_path / "s"
+    state.mkdir()
+    service.write_json(state / "config.json", dict(service.DEFAULTS, state_dir=str(state), init=str(service.E5_WEIGHTS)))          # an older run frozen with a concrete file
+    assert service.last_config(state)["init"] == "auto"
+    service.write_json(state / "config.json", dict(service.DEFAULTS, state_dir=str(state), init="C:/x/y.pt", init_spec="C:/x/y.pt", init_parent=None))
+    assert service.last_config(state)["init"] == "C:/x/y.pt" and "init_parent" not in service.last_config(state)
+
+
+def test_a_run_that_carries_on_keeps_the_weights_it_began_from(tmp_path, keep_test_hooks):
+    c = cfg_for(tmp_path, steps=15, delay=0.01, init="auto")
+    state = Path(c["state_dir"])
+    state.mkdir(parents=True, exist_ok=True)
+    began = tmp_path / "began_from.pt"
+    began.write_bytes(b"x")
+    service.write_json(state / "config.json", dict(service.DEFAULTS, **dict(c, init=str(began), init_parent=None, init_spec="auto")))
+    service.write_json(state / "service.json", dict(state="RUNNING", pid=999999, heartbeat_utc=service.now()))                  # cut off mid-run
+    # a newer run exists in the lineage meanwhile
+    (state / "lineage").mkdir()
+    newer = state / "lineage" / "run001_weights.pt"
+    newer.write_bytes(b"newer")
+    service.write_json(state / "lineage.json", [dict(id=1, weights=str(newer), sha256="z", status="usable")])
+    service.start(c, tray=False)
+    assert service.read_json(state / "config.json")["init"] == str(began)      # resumed run: unchanged, so it stays consistent with its checkpoint
+    assert service.wait_for(state, ("COMPLETED", "FAILED"), timeout=60)["state"] == "COMPLETED"

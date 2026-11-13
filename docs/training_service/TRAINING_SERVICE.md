@@ -40,6 +40,16 @@ A saved process id from before the restart is recognised as stale (its last hear
 The runner still honours the battery, memory and disk limits (and a daily-hours limit only if you set one). Remove the task with `powershell -File tools/training/Install-ResumeTask.ps1 -Remove`.
 A run started from a process that Claude launched ends when the Claude app is closed; start it from the desktop shortcut, the tray icon or this task to keep it independent.
 
+## Cumulative training (each run builds on the last)
+**Start from weights = `auto`** (the default in the tab, the CLI and the tray's Start): a new run starts from the newest *usable* finished run, so the work adds up. The first run starts from the
+repo's E5 weights. When a run finishes, its weights are copied permanently to `<run folder>/lineage/runNNN_weights.pt` (checksummed) and recorded in `lineage.json` with its parent run, settings
+and tile-set checksum; the finished run folder is also kept as `run.completed.N`. Nothing is overwritten or deleted.
+* `python -m pid_reader.cli trainer lineage` lists the chain. `... lineage --mark N --status rejected` makes `auto` skip run N (use it when a run scores worse on held-out plans), `--status usable` undoes it.
+* A run that was cut off and resumed keeps the weights it began from (its checkpoint continues it); only a *new* run picks up the latest.
+* Pick a specific weights file instead of `auto` to branch from an older run or from E5.
+* Cautions: gains shrink and a model can overfit if later runs reuse the same data, so score each run on the held-out plans before building on it; a later run on a different dataset should mix in
+  the earlier data or it can forget the earlier classes; consider a lower learning rate (`--lr`) for later rounds. The optimiser and learning-rate schedule restart for each new run (they are restored only when resuming the same run).
+
 ## Limits
 * Source checkout only (it runs `tools/tr1_train` and needs the optional torch environment, `PIDLAB_TR1_PYTHON` or `C:\PIDWork\venv312_torch`).
 * One run at a time per run folder. The run folder must not be in OneDrive.
