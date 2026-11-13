@@ -308,3 +308,22 @@ def test_a_run_that_carries_on_keeps_the_weights_it_began_from(tmp_path, keep_te
     service.start(c, tray=False)
     assert service.read_json(state / "config.json")["init"] == str(began)      # resumed run: unchanged, so it stays consistent with its checkpoint
     assert service.wait_for(state, ("COMPLETED", "FAILED"), timeout=60)["state"] == "COMPLETED"
+
+
+def test_a_finished_run_triggers_the_scoring_step_and_the_switch_turns_it_off(tmp_path):
+    (tmp_path / "on").mkdir()
+    (tmp_path / "off").mkdir()
+    c = cfg_for(tmp_path / "on", steps=15, delay=0.01, init="auto")
+    service.start(c, tray=False)
+    state = Path(c["state_dir"])
+    assert service.wait_for(state, ("COMPLETED", "FAILED"), timeout=60)["state"] == "COMPLETED"
+    time.sleep(1.0)                                                       # the runner scores right after completing; the conftest switch makes it report a skip
+    evaluation = service.read_json(state / "evaluation.json")
+    assert evaluation and evaluation["state"] == "SKIPPED" and "PID_TRAINER_NO_EVAL" in evaluation["message"]
+    assert service.status(state)["evaluation"]["state"] == "SKIPPED"
+    off = cfg_for(tmp_path / "off", steps=15, delay=0.01, init="auto", auto_evaluate=False)
+    service.start(off, tray=False)
+    state2 = Path(off["state_dir"])
+    assert service.wait_for(state2, ("COMPLETED", "FAILED"), timeout=60)["state"] == "COMPLETED"
+    time.sleep(1.0)
+    assert not (state2 / "evaluation.json").exists()

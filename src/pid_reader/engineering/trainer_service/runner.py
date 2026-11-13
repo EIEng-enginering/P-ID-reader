@@ -219,6 +219,12 @@ def run(cfg):
             except Exception:                                             # noqa: BLE001  never let bookkeeping turn a finished run into a failure
                 pass
             log.add("COMPLETED")
+            if cfg.get("auto_evaluate", True):                            # score the new weights on the held-out plans, compare with the parent, reject if clearly worse
+                try:
+                    from .evaluate import evaluate_guarded
+                    evaluate_guarded(state, cfg, cancel=lambda: (state / "CANCEL").exists())
+                except Exception:                                         # noqa: BLE001  scoring never turns a finished run into a failure
+                    pass
             return "COMPLETED"
         if interrupted:
             continue                                                    # pause/cancel/policy: loop decides what happens next
