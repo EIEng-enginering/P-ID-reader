@@ -14,7 +14,7 @@ progress, loss, speed, estimated time left and the compute used today. It only r
 * A **detached runner process** supervises the guarded trainer in `tools/tr1_train`. Closing the Reader does **not** stop it. If the computer restarts, press Start again: it resumes from the
   last checkpoint (the trainer restores the optimiser, learning-rate schedule and random state, so a paused or interrupted run finishes with the same weights as an uninterrupted one).
 * **Low impact:** runs at BELOW_NORMAL priority on 2 of the 4 cores by default, so your own work keeps the CPU. It waits (state *Waiting*) on battery power, when free memory is under
-  2.5 GB, when free disk is under 4 GB, or or, only if you set one, when today's compute-hours limit (Perth date) is reached, and continues by itself when that clears.
+  2.5 GB, when free disk is under 4 GB, or, only if you set one, when today's compute-hours limit (Perth date) is reached, and continues by itself when that clears.
 * **Safe stops:** pause, cancel, a policy wait and the daily limit all stop the trainer at a checkpoint (the guard kills the whole process tree; a Job Object also kills it if the runner dies).
   Losing at most `ckpt_every_iters` (50) iterations. Memory is capped at 4 GiB for the whole tree.
 * **Files** (all in the run folder): `config.json`, `service.json` (state), `progress.json`, `budget.json`, `PAUSE`/`CANCEL` control files, `service_events.jsonl` (hash-chained),
