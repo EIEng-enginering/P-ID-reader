@@ -248,3 +248,54 @@ def test_training_can_continue_from_trained_weights_with_a_lower_learning_rate(t
     # without --init-trained the same weights are refused (a COCO-shaped model cannot take a 5-class head)
     wrong = run_tool([*common, "--out-dir", str(tmp_path / "third"), "--init", str(weights)], env)
     assert wrong.returncode != 0
+
+
+def test_full_tile_preparation_uses_every_plan_keeps_holdouts_apart_and_is_deterministic(tmp_path):
+    import numpy as np
+    from PIL import Image
+    sys.path.insert(0, str(TOOL))
+    import prepare_tiles_full as F
+
+    def plan(sub, n, w=1500, h=1100, ext="png"):
+        d = tmp_path / "src" / "PID2Graph" / "Complete" / sub
+        d.mkdir(parents=True, exist_ok=True)
+        Image.fromarray(np.full((h, w), 255, dtype=np.uint8)).save(d / f"{n}.{ext}")
+        nodes = "".join(f'<node id="n{i}"><data key="d0">{lab}</data><data key="d1">{x}</data><data key="d2">{y}</data><data key="d3">{x + 60}</data><data key="d4">{y + 50}</data></node>'
+                        for i, (lab, x, y) in enumerate([("valve", 100, 100), ("valve", 400, 300), ("instrumentation", 700, 200), ("tank", 900, 500), ("arrow", 300, 700), ("crossing", 50, 900)]))
+        (d / f"{n}.graphml").write_text(
+            '<?xml version="1.0"?><graphml xmlns="http://graphml.graphdrawing.org/xmlns">'
+            '<key id="d0" for="node" attr.name="label" attr.type="string"/><key id="d1" for="node" attr.name="xmin" attr.type="int"/>'
+            '<key id="d2" for="node" attr.name="ymin" attr.type="int"/><key id="d3" for="node" attr.name="xmax" attr.type="int"/>'
+            '<key id="d4" for="node" attr.name="ymax" attr.type="int"/><graph edgedefault="undirected">' + nodes + '</graph></graphml>', encoding="utf-8")
+    for n in (0, 5, 70, 71, 87, 88):                                     # 70 and 87 are held out (>= 70, every 17th); 0, 5, 71, 88 train
+        plan("Dataset PID", n)
+    plan("PID2Graph Synthetic", 3, ext="jpg")
+    plan("PID2Graph Synthetic", 4, ext="jpg")
+    plan("PID2Graph OPEN100", 1)
+    assert [i for i in (0, 5, 70, 71, 87, 88) if F.is_holdout(i)] == [70, 87]
+    m1 = F.main(str(tmp_path / "src"), str(tmp_path / "t1"), real_per_plan=6, synthetic_per_plan=4, validation_per_plan=2)
+    m2 = F.main(str(tmp_path / "src"), str(tmp_path / "t2"), real_per_plan=6, synthetic_per_plan=4, validation_per_plan=2)
+    assert m1 == m2
+    man = json.loads((tmp_path / "t1" / "TILES_MANIFEST.json").read_text())
+    train, val = man["splits"]["train"], man["splits"]["validation"]
+    assert len(train) == 4 * 6 + 2 * 4 and len(val) == 2 * 2                              # every non-held-out real plan + every synthetic plan
+    assert {r["source"] for r in train} == {f"Dataset PID/{n}.png" for n in (0, 5, 71, 88)} | {"PID2Graph Synthetic/3.jpg", "PID2Graph Synthetic/4.jpg"}
+    assert man["holdout_plans"] == ["Dataset PID/70.png", "Dataset PID/87.png"]
+    assert not {r["source"] for r in train} & set(man["holdout_plans"])                  # held-out plans never reach training
+    assert not any("OPEN100" in r["source"] for s in man["splits"].values() for r in s) and all("OPEN100" not in k for k in man["source_files"])
+    labels = {b[4] for r in train for b in r["boxes"]}
+    assert labels == {1, 2, 3, 4}                                                          # all four classes present: arrow (4) and tank folded into general (3); crossing is not a symbol
+    h = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+    assert [h(p) for p in sorted((tmp_path / "t1").glob("*.png"))] == [h(p) for p in sorted((tmp_path / "t2").glob("*.png"))]
+
+
+def test_class_balanced_sampling_puts_rare_classes_in_more_tiles_than_chance():
+    import random
+    import numpy as np
+    sys.path.insert(0, str(TOOL))
+    import prepare_tiles_full as F
+    objs = [dict(label="valve", box=[100 + 20 * i, 100, 130 + 20 * i, 140]) for i in range(60)] + [dict(label="arrow", box=[3000, 3000, 3040, 3030])]
+    im = np.zeros((4000, 4000), dtype=np.uint8)
+    hits = sum(1 for x0, y0 in F.tiles_for_plan(random.Random(1), im, objs, 400)
+               if x0 <= 3000 <= x0 + F.TILE and y0 <= 3000 <= y0 + F.TILE)
+    assert hits > 100                  # 1 arrow among 61 objects: object-by-object sampling would give ~1 tile in 60 (about 7 of 400)
