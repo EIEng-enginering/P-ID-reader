@@ -37,7 +37,7 @@ It starts by itself whenever a run starts (from the Training tab or the CLI) and
 It runs `python -m pid_reader.cli trainer autoresume`, which restarts the run **only if it was cut off while it was meant to be going** (restart, crash, closing the Claude app, logoff).
 It never starts a new run and never overrides you: a paused, stopped, cancelled, failed or finished run is left alone, and a run that is already alive is not touched.
 A saved process id from before the restart is recognised as stale (its last heartbeat predates the boot time), so a reused id cannot fool it.
-The runner still honours the battery, memory, disk and daily-hours limits. Remove the task with `powershell -File tools	raining\Install-ResumeTask.ps1 -Remove`.
+The runner still honours the battery, memory, disk and daily-hours limits. Remove the task with `powershell -File tools/training/Install-ResumeTask.ps1 -Remove`.
 A run started from a process that Claude launched ends when the Claude app is closed; start it from the desktop shortcut, the tray icon or this task to keep it independent.
 
 ## Limits
