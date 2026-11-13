@@ -213,6 +213,11 @@ def run(cfg):
             S.update(state="COMPLETED", reason=None, result=dict(weights=str(final) if final.exists() else None, weights_sha256=manifest.get("final_weights_sha256"),
                                                                     iters=manifest.get("iters"), candidate_only=True,
                                                                     note="CANDIDATE only: not validated on the owner's drawings; the active detector is unchanged"))
+            try:
+                from .service import register_finished_run
+                register_finished_run(state)                              # a permanent copy for the next run to build on
+            except Exception:                                             # noqa: BLE001  never let bookkeeping turn a finished run into a failure
+                pass
             log.add("COMPLETED")
             return "COMPLETED"
         if interrupted:

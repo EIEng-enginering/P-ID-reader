@@ -95,7 +95,8 @@ class TrainingTab(QWidget):
         self.lr.setSingleStep(0.001)
         self.lr.setValue(0.005)
         self.tiles = QLineEdit(str(Path(os.environ.get("PIDLAB_TR1_TILES", r"C:\PIDWork\tr1\tiles"))))
-        self.init = QLineEdit(str(ROOT / "models" / "E5_weights_epoch_02.pt"))
+        self.init = QLineEdit("auto")
+        self.init.setToolTip("auto = build on the newest finished run (the repo's E5 weights the first time), so the work adds up. Or browse to a weights file.")
         self.torch_python = QLineEdit(os.environ.get("PIDLAB_TR1_PYTHON", r"C:\PIDWork\venv312_torch\Scripts\python.exe"))
         self.state_dir = QLineEdit(str(service.default_state_dir()))
         sform.addRow("Epochs", self.epochs)
@@ -212,6 +213,10 @@ class TrainingTab(QWidget):
         cfg.update(self.extra_config)
         return cfg
 
+    def _start_from(self, cfg):
+        path, parent = service.resolve_init(cfg["state_dir"], cfg.get("init") or "auto")
+        return (f"finished run {parent}'s weights (building on earlier work)" if parent else Path(path).name)
+
     def start(self):
         cfg = self.config()
         problems = service.validate(cfg)
@@ -220,7 +225,7 @@ class TrainingTab(QWidget):
             return
         hours = "no daily limit" if not cfg["daily_budget_s"] else f"up to {cfg['daily_budget_s'] / 3600:g} compute hours per day"
         text = (f"Start background training of the symbol detector?\n\n• {cfg['epochs']} epochs, {cfg['threads']} CPU threads at low priority, {hours}\n"
-                "• runs only on AC power; pauses itself when memory or disk is low\n• keeps going if you close the Reader; resumes from the last checkpoint\n"
+                f"• starts from: {self._start_from(cfg)}\n• runs only on AC power; pauses itself when memory or disk is low\n• keeps going if you close the Reader; resumes from the last checkpoint\n"
                 "• the result is a CANDIDATE model; the active detector is not changed")
         if QMessageBox.question(self, "Start training", text) != QMessageBox.StandardButton.Yes:
             return
