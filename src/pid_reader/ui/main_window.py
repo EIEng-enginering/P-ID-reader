@@ -30,6 +30,7 @@ from .viewer import LAYER_COLOURS, LAYER_LABELS, DrawingView
 from .wp123_tab import Wp123Tab
 from .wp456_tab import Wp456Tab
 from .model_lab_tab import ModelLabTab
+from .training_tab import TrainingTab
 
 ORG, APP = "EnhanceIntegrationEngineering", "PIDReader"
 LIMITS_TEXT = (
@@ -397,6 +398,7 @@ class MainWindow(QMainWindow):
         self.wp123_tab = Wp123Tab(self); self.tabs.addTab(self.wp123_tab, "WP-01–03 proposals")
         self.wp456_tab = Wp456Tab(self); self.tabs.addTab(self.wp456_tab, "WP-04–06 proposals")
         self.model_lab_tab = ModelLabTab(self); self.tabs.addTab(self.model_lab_tab, "Model comparison")
+        self.training_tab = TrainingTab(self); self.tabs.addTab(self.training_tab, "Training")
 
         self.sheet_tab = SheetInfoTab(self); self.tabs.addTab(self.sheet_tab, "Sheet info")
         self.quality_tab = QualityTab(self); self.tabs.addTab(self.quality_tab, "Quality")

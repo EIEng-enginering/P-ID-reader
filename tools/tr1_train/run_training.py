@@ -89,6 +89,8 @@ def main(argv=None) -> int:
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--python", default=sys.executable, help="interpreter of the torch component")
     ap.add_argument("--init", default="none")
+    ap.add_argument("--init-trained", action="store_true", help="--init is trained weights of this model (continue training)")
+    ap.add_argument("--lr", type=float, default=0.02)
     ap.add_argument("--resume-latest", action="store_true")
     ap.add_argument("--epochs", type=int, default=2)
     ap.add_argument("--limit-tiles", type=int, default=0)
@@ -118,6 +120,7 @@ def main(argv=None) -> int:
     out.mkdir(parents=True, exist_ok=True)
     cmd = [a.python, "-B", str(HERE / "train_frcnn.py"), "--tiles-dir", a.tiles_dir, "--out-dir", str(out), "--init", a.init, "--epochs", str(a.epochs),
            "--threads", str(a.threads), "--seed", str(a.seed), "--ckpt-every-iters", str(a.ckpt_every_iters)]
+    cmd += ["--lr", str(a.lr)] + (["--init-trained"] if a.init_trained else [])
     if a.limit_tiles:
         cmd += ["--limit-tiles", str(a.limit_tiles)]
     if a.resume_latest:
