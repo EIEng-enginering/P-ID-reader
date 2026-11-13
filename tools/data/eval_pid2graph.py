@@ -37,6 +37,18 @@ def plans(root):
     return out
 
 
+def holdout_plans(root, manifest):
+    """The extra held-out REAL plans listed by prepare_tiles_full.py under ``holdout_plans`` (never trained on), as (graphml, image) pairs."""
+    base = Path(root) / "PID2Graph" / "Complete"
+    out = []
+    for rel in json.loads(Path(manifest).read_text(encoding="utf8"))["holdout_plans"]:
+        img = base / rel
+        g = img.with_suffix(".graphml")
+        if g.is_file() and img.is_file():
+            out.append((g, img))
+    return out
+
+
 def iou(a, b):
     ix, iy = max(0, min(a[2], b[2]) - max(a[0], b[0])), max(0, min(a[3], b[3]) - max(a[1], b[1]))
     i = ix * iy
@@ -84,15 +96,17 @@ def main():
     ap.add_argument("--tag", default=None)
     ap.add_argument("--threads", type=int, default=2)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--holdout-manifest", default=None, help="score the extra held-out real plans listed in this TILES_MANIFEST.json instead of OPEN100 (use --plans 100 for all of them)")
     a = ap.parse_args()
     from PIL import Image
     Image.MAX_IMAGE_PIXELS = None
     tag = a.tag or Path(a.weights).stem
     work = Path(a.out) / tag
     work.mkdir(parents=True, exist_ok=True)
-    chosen = plans(a.root)[:a.plans]
+    which = "holdout" if a.holdout_manifest else "open100"
+    chosen = (holdout_plans(a.root, a.holdout_manifest) if a.holdout_manifest else plans(a.root))[:a.plans]
     if not chosen:
-        sys.exit("no OPEN100 plans found under --root")
+        sys.exit(f"no {which} plans found under --root")
     total = {c: dict(tp=0, fp=0, fn=0) for c in CLASSES}
     per_plan = []
     for g, img in chosen:
@@ -112,9 +126,10 @@ def main():
             for k in ("tp", "fp", "fn"):
                 total[c][k] += r[c][k]
     both = {k: total["valve"][k] + total["instrumentation"][k] for k in ("tp", "fp", "fn")}
-    out = dict(label="DEVELOPMENT MEASUREMENT on public PID2Graph OPEN100 (held out from training); not an accuracy claim about the owner's drawings", weights=a.weights, plans=len(chosen),
+    what = "the extra held-out real Dataset PID plans" if a.holdout_manifest else "OPEN100"
+    out = dict(label=f"DEVELOPMENT MEASUREMENT on public PID2Graph {what} (held out from training); not an accuracy claim about the owner's drawings", weights=a.weights, plans=len(chosen),
                score_threshold=a.threshold, iou=0.5, per_class={c: prf(**total[c]) for c in CLASSES}, valve_plus_instrumentation=prf(**both), per_plan=per_plan)
-    (Path(a.out) / f"{tag}_open100_results.json").write_text(json.dumps(out, indent=1), encoding="utf8")
+    (Path(a.out) / f"{tag}_{which}_results.json").write_text(json.dumps(out, indent=1), encoding="utf8")
     print(json.dumps({k: out[k] for k in ("plans", "score_threshold", "per_class", "valve_plus_instrumentation")}, indent=1))
 
 

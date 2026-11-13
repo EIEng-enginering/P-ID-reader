@@ -50,6 +50,14 @@ and tile-set checksum; the finished run folder is also kept as `run.completed.N`
 * Cautions: gains shrink and a model can overfit if later runs reuse the same data, so score each run on the held-out plans before building on it; a later run on a different dataset should mix in
   the earlier data or it can forget the earlier classes; consider a lower learning rate (`--lr`) for later rounds. The optimiser and learning-rate schedule restart for each new run (they are restored only when resuming the same run).
 
+## Training on all the data (full tile set)
+`tools/tr1_train/prepare_tiles_full.py <pid2graph_root> <out_dir>` builds tiles from EVERY usable PID2Graph plan (the older `prepare_tiles.py` only sampled 70 real plans and 3 tiles per synthetic plan).
+Train = all 500 real Dataset PID plans except 26 held out + all 250 synthetic plans (about 22,000 tiles, class-balanced so `general` and `arrow` are not drowned out). Held out and never trained on:
+PID2Graph OPEN100 (12 authors' test plans) and 26 real plans (index >= 70, every 17th: unseen by E5 and trainer run 1, so comparisons on them are fair; listed under `holdout_plans` in the manifest).
+Score a model on them with `tools/data/eval_pid2graph.py ... --holdout-manifest <tiles_dir>/TILES_MANIFEST.json --plans 100` (OPEN100 is the default).
+Not usable for the four-class detector: ASU (class-agnostic labels), Digitize-PID (numeric class ids without names, images still archived, licence not stated), Roboflow (not downloaded).
+A model whose card pins another checksum (the E5 card does) refuses new weights; score a candidate with its own copied card (CANDIDATE only), never by editing the E5 card.
+
 ## Limits
 * Source checkout only (it runs `tools/tr1_train` and needs the optional torch environment, `PIDLAB_TR1_PYTHON` or `C:\PIDWork\venv312_torch`).
 * One run at a time per run folder. The run folder must not be in OneDrive.

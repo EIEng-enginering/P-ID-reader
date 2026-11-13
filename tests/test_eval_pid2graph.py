@@ -36,3 +36,17 @@ def test_symbol_baseline_ap_is_perfect_for_perfect_detections_and_lower_when_box
     miss = [([[0, 0, .1, .1, .9, 0], [.8, .8, .9, .9, .8, 0]], gt)]
     r = B.evaluate(miss)
     assert r["ap50"] < 1.0 and r["max_recall"] == .5
+
+
+def test_holdout_plans_come_from_the_manifest_and_skip_missing_files(tmp_path):
+    import json
+    base = tmp_path / "PID2Graph" / "Complete" / "Dataset PID"
+    base.mkdir(parents=True)
+    for n in (70, 87):
+        (base / f"{n}.png").write_bytes(b"x")
+        (base / f"{n}.graphml").write_text("<g/>")
+    (base / "104.png").write_bytes(b"x")                                         # no graph file: skipped
+    man = tmp_path / "TILES_MANIFEST.json"
+    man.write_text(json.dumps({"holdout_plans": ["Dataset PID/70.png", "Dataset PID/87.png", "Dataset PID/104.png", "Dataset PID/999.png"]}))
+    got = E.holdout_plans(tmp_path, man)
+    assert [g.stem for g, _ in got] == ["70", "87"] and all(i.suffix == ".png" for _, i in got)
