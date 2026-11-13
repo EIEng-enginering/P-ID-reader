@@ -200,7 +200,7 @@ def main(argv: list[str] | None = None) -> int:
     wp.add_argument('--output-dir',required=True)
     wp.add_argument('--store-database',help='Optional independent WP123 SQLite sidecar (never Worksheet DB)')
     tr=sub.add_parser('trainer',help='Background symbol-detector training (detached, low priority): start, status, pause, resume, cancel')
-    tr.add_argument('action',choices=['start','status','pause','resume','cancel','tray','shortcut']);tr.add_argument('--state-dir',help='run folder (default %LOCALAPPDATA%/PIDReader/training/tr1; never OneDrive)')
+    tr.add_argument('action',choices=['start','status','pause','resume','cancel','tray','shortcut','autoresume']);tr.add_argument('--state-dir',help='run folder (default %LOCALAPPDATA%/PIDReader/training/tr1; never OneDrive)')
     tr.add_argument('--tiles-dir');tr.add_argument('--torch-python',default='C:/PIDWork/venv312_torch/Scripts/python.exe');tr.add_argument('--init',help='starting weights (default: the repo E5 weights)')
     tr.add_argument('--from-scratch',action='store_true',help='start from COCO-style --init instead of continuing trained weights');tr.add_argument('--epochs',type=int,default=6)
     tr.add_argument('--desktop',help='folder for the shortcut (default: your Desktop)');tr.add_argument('--threads',type=int,default=2);tr.add_argument('--hours-per-day',type=float,default=2.0,help='0 = no daily limit');tr.add_argument('--lr',type=float,default=0.005)
@@ -274,6 +274,8 @@ def main(argv: list[str] | None = None) -> int:
                 print(canonical_json(trainer_service.start(cfg)))
             elif args.action=='status':
                 print(canonical_json(trainer_service.status(state)))
+            elif args.action=='autoresume':
+                print(canonical_json(trainer_service.resume_if_interrupted(state)))
             elif args.action=='shortcut':
                 from .ui.training_tray import make_desktop_shortcut
                 print(canonical_json({'shortcut':str(make_desktop_shortcut(args.desktop,state))}))

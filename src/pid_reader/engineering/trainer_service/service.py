@@ -99,7 +99,11 @@ def status(state_dir):
     alive = policy.pid_alive(s.get("pid"))
     age = None
     try:
-        age = (datetime.now(timezone.utc) - datetime.fromisoformat(s["heartbeat_utc"])).total_seconds()
+        beat = datetime.fromisoformat(s["heartbeat_utc"])
+        age = (datetime.now(timezone.utc) - beat).total_seconds()
+        boot = policy.boot_time()
+        if alive and boot is not None and beat.timestamp() < boot - 5:          # last heard from before the computer started: the pid now belongs to something else
+            alive = False
     except (KeyError, ValueError):
         pass
     out = dict(s, alive=alive, heartbeat_age_s=age, controls=dict(pause=(state_dir / "PAUSE").exists(), cancel=(state_dir / "CANCEL").exists()),
@@ -202,6 +206,36 @@ def start(cfg, python=None, tray=True):
         except OSError:
             launched = False                                            # the icon is a convenience; training must start regardless
     return dict(pid=proc.pid, state_dir=str(state), tray_launched=launched)
+
+
+ACTIVE_STATES = ("STARTING", "RUNNING", "PAUSING", "PAUSED", "WAITING", "STOPPING", "CANCELLING")
+
+
+def resume_if_interrupted(state_dir, python=None, tray=True):
+    """For the 'resume after reboot' scheduled task. Restarts a run ONLY if it was cut off (restart, crash, logoff) while it was meant to be going.
+    It never starts a new run, and never overrides the user: a paused, cancelled, completed, failed or never-started run is left alone."""
+    state = Path(state_dir)
+    cur = status(state)
+    if cur.get("state") == "NOT_STARTED":
+        return dict(action="none", reason="no run has been started")
+    stored = (read_json(state / "service.json") or {}).get("state")
+    gone = not cur.get("alive")
+    if stored not in ACTIVE_STATES:
+        return dict(action="none", reason=f"the last run ended as {stored}; nothing to resume")
+    if not gone:
+        return dict(action="none", reason="the runner is already running")
+    if (state / "PAUSE").exists() or stored in ("PAUSING", "PAUSED"):
+        return dict(action="none", reason="you paused this run; it stays paused until you resume it")
+    if (state / "CANCEL").exists() or stored in ("STOPPING", "CANCELLING"):
+        return dict(action="none", reason="you stopped this run; it stays stopped")
+    cfg = last_config(state)
+    if not cfg:
+        return dict(action="none", reason="no saved settings to resume from")
+    try:
+        out = start(cfg, python=python, tray=tray)
+    except (ValueError, RuntimeError) as exc:
+        return dict(action="none", reason=f"could not resume: {exc}")
+    return dict(action="resumed", **out)
 
 
 def pause(state_dir):
