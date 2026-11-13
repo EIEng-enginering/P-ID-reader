@@ -120,6 +120,7 @@ def write_ico(path):
 
     from PIL import Image
     from PySide6.QtCore import QBuffer, QIODevice
+    QApplication.instance() or QApplication(sys.argv[:1])               # drawing a pixmap needs an application object (the CLI has none)
     pix = make_icon("RUNNING", .66, 256).pixmap(256, 256)
     buf = QBuffer()
     buf.open(QIODevice.OpenModeFlag.WriteOnly)

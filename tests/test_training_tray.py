@@ -217,3 +217,13 @@ def test_a_second_interactive_start_explains_instead_of_doing_nothing(qapp, tmp_
         assert T.main(["--state-dir", str(tmp_path / "s")]) == 0 and shown == []              # non-interactive: silent
     finally:
         other.kill()
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows shortcuts")
+def test_the_shortcut_command_works_from_a_plain_process_with_no_qt_application(tmp_path):
+    import subprocess
+    env = dict(os.environ, PYTHONPATH=str(T.ROOT / "src"), PID_TRAINER_NO_TRAY="1")
+    r = subprocess.run([sys.executable, "-m", "pid_reader.cli", "trainer", "shortcut", "--desktop", str(tmp_path / "desk"), "--state-dir", str(tmp_path / "state")],
+                       capture_output=True, text=True, env=env, timeout=120)
+    assert r.returncode == 0, r.stderr
+    assert (tmp_path / "desk" / "PID Reader Training.lnk").is_file()
